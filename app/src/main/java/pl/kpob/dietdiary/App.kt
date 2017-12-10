@@ -1,6 +1,7 @@
 package pl.kpob.dietdiary
 
 import android.app.Application
+import android.support.multidex.MultiDexApplication
 import com.google.firebase.database.FirebaseDatabase
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -10,7 +11,7 @@ import net.danlew.android.joda.JodaTimeAndroid
 /**
  * Created by kpob on 20.10.2017.
  */
-class App: Application() {
+class App: MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
