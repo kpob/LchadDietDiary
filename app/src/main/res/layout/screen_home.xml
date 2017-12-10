@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar" />
+
+    <!--<com.github.mikephil.charting.charts.BarChart-->
+        <!--android:id="@+id/chart"-->
+        <!--android:layout_marginTop="?android:attr/actionBarSize"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/meals"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_light"/>
+
+
+    <com.dekoservidoni.omfm.OneMoreFabMenu
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:content_options="@menu/content_options"
+        app:color_main_button="@color/colorPrimaryDark"
+        app:color_secondary_buttons="@color/colorPrimary"/>
+
+</FrameLayout>

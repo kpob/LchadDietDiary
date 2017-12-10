@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "408346058010",
+    "firebase_url": "https://dietdiary-6764b.firebaseio.com",
+    "project_id": "dietdiary-6764b",
+    "storage_bucket": "dietdiary-6764b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408346058010:android:6fac4a18f95d4262",
+        "android_client_info": {
+          "package_name": "pl.kpob.dietdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408346058010-qbug289m0m5p92mv2m6lgsk9tvv54vs4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzgCocXLCbB9Dqdi1A3RlWCX3_2v7Yrqg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

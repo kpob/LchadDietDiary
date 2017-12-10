@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kmflkdsmflkdsmflk"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+
+    <TextView
+        android:id="@+id/meal_lct"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|right"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="3.4 g" />
+
+    <TextView
+        android:id="@+id/meal_calories"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:gravity="center_vertical|right"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="324 kcal" />
+</LinearLayout>

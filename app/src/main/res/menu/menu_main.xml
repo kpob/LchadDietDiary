@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_new_ingredient"
+        android:title="Nowy składnik"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_all_ingredients"
+        android:title="Lista składników"
+        app:showAsAction="never"/>
+
+</menu>
