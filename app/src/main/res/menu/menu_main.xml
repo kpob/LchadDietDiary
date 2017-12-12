@@ -12,4 +12,9 @@
         android:title="Lista składników"
         app:showAsAction="never"/>
 
+    <!--<item-->
+        <!--android:id="@+id/action_ocr"-->
+        <!--android:title="Ocr"-->
+        <!--app:showAsAction="never"/>-->
+
 </menu>

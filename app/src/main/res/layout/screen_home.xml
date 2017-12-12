@@ -7,18 +7,19 @@
 
     <include layout="@layout/toolbar" />
 
-    <!--<com.github.mikephil.charting.charts.BarChart-->
-        <!--android:id="@+id/chart"-->
-        <!--android:layout_marginTop="?android:attr/actionBarSize"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:src="@drawable/stas"
+        android:scaleType="centerCrop"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/meals"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary_light"/>
+        android:layout_height="match_parent"
+        android:background="@color/primary_light_transparent"/>
 
 
     <com.dekoservidoni.omfm.OneMoreFabMenu
