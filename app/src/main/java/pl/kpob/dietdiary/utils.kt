@@ -37,6 +37,14 @@ inline fun <T> usingRealm(crossinline f: (Realm) -> T) = Realm.getDefaultInstanc
     f(it)
 }
 
+
+inline fun <T> realmAsyncTransaction(crossinline f: (Realm) -> T, crossinline cb: () -> Unit) = Realm.getDefaultInstance().use {
+    val realm = Realm.getDefaultInstance()
+    realm.executeTransactionAsync(
+            { f(it)}, {cb(); realm.close()}, {cb(); realm.close()}
+    )
+}
+
 val firebaseDb get() = FirebaseDatabase.getInstance().reference
 
 fun DatabaseReference.addIngredient(i: FbIngredient, update: Boolean = false) {

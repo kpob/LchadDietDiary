@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
-import pl.kpob.dietdiary.db.IngredientDTO
+import pl.kpob.dietdiary.Ingredient
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
+import pl.kpob.dietdiary.db.IngredientDTO
 import pl.kpob.dietdiary.screens.IngredientsListScreen
 
 /**
@@ -27,19 +28,19 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
         View.inflate(ctx, R.layout.screen_ingredients_list, this)
     }
 
-    fun initList(data: List<IngredientDTO>) {
+    fun initList(data: List<Ingredient>) {
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = Adapter(data)
     }
 
-    fun updateList(data: List<IngredientDTO>) {
+    fun updateList(data: List<Ingredient>) {
         (list.adapter as Adapter).let {
             it.data = data
             it.notifyDataSetChanged()
         }
     }
 
-    inner class Adapter(var data: List<IngredientDTO>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class Adapter(var data: List<Ingredient>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
         var groups = data.groupBy { it.category }.toList()

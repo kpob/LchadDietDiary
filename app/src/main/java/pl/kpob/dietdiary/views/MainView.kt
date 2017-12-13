@@ -86,11 +86,12 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             } else {
                 holder?.itemView?.let {
                     val meals = data[ranges.indexOfFirst { it.first > position }].second
-                    it.find<TextView>(R.id.time).text = meals[0].date
+                    it.find<TextView>(R.id.time).text = if(meals[0].isToday) "Dzisiaj" else meals[0].date
                     val totalLtc = meals.map { it.lct }.sum()
                     it.find<TextView>(R.id.meal_lct).text =  String.format("%.2f g", totalLtc)
                     val totalCalories = meals.map { it.calories }.sum()
                     it.find<TextView>(R.id.meal_calories).text =  String.format("%.2f kcal", totalCalories)
+                    it.onClick { screen.onLabelClick(meals) }
                 }
             }
         }
@@ -104,8 +105,6 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
             return object : RecyclerView.ViewHolder(View.inflate(context, if (viewType == 1) R.layout.item_meal else R.layout.item_meal_header, null)) {}
         }
-
-
 
     }
 }

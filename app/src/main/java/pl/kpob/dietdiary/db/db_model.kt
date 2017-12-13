@@ -20,16 +20,22 @@ open class IngredientDTO(
         open var calories: Float = .0f,
         open var category: Int = 0,
         open var useCount: Int = 0
-): RealmObject() {
+): RealmObject()
 
-    override fun toString(): String {
-        return name
-    }
-
-    fun toFirebase(deleted: Boolean = false): FbIngredient = FbIngredient(
-            id, name, mtc, lct, carbohydrates, protein, salt, roughage, calories, category, deleted
-    )
+object IngredientContract {
+    val ID = "id"
+    val NAME = "name"
+    val MCT = "mtc"
+    val LCT = "lct"
+    val CARBOHYDRATE = "carbohydrates"
+    val PROTEIN = "protein"
+    val SALT = "salt"
+    val ROUGHAGE = "roughage"
+    val CALORIES = "calories"
+    val CATEGORY = "category"
+    val USE_COUNT= "useCount"
 }
+
 
 open class MealDTO(
         @PrimaryKey open var id: String = "",
@@ -38,10 +44,22 @@ open class MealDTO(
         open var ingredients: RealmList<MealIngredientDTO> = RealmList()
 ): RealmObject()
 
+object MealContract {
+        val ID = "id"
+        val TIME = "time"
+        val NAME = "name"
+        val INGREDIENTS = "ingredients"
+}
+
 open class MealIngredientDTO(
         open var ingredientId: String = "",
         open var weight: Float = .0f
 ): RealmObject()
+
+object MealIngredientContract {
+    val INGREDIENT_ID = "ingredientId"
+    val WEIGHT = "weight"
+}
 
 enum class IngredientCategory(val value: Int, val label: String) {
     PORRIDGE(1, "Kaszka"),
@@ -59,4 +77,9 @@ enum class IngredientCategory(val value: Int, val label: String) {
         fun stringValues() = values().map { it.label }
     }
 
+}
+
+object MealIngredient {
+    val ID = "ingredientId"
+    val WEIGHT = "weight"
 }

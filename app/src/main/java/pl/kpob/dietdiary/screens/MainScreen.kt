@@ -3,16 +3,14 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import com.wealthfront.magellan.rx.RxScreen
-import io.realm.Sort
 import org.jetbrains.anko.AnkoLogger
 import org.joda.time.DateTime
 import pl.kpob.dietdiary.Meal
 import pl.kpob.dietdiary.MealType
 import pl.kpob.dietdiary.R
-import pl.kpob.dietdiary.db.MealDTO
 import pl.kpob.dietdiary.firebase.FirebaseSaver
-import pl.kpob.dietdiary.mapper.MealMapper
-import pl.kpob.dietdiary.usingRealm
+import pl.kpob.dietdiary.repo.AllMealsSortedSpecification
+import pl.kpob.dietdiary.repo.MealRepository
 import pl.kpob.dietdiary.views.MainView
 import pl.kpob.dietdiary.views.utils.TimePicker
 
@@ -22,18 +20,18 @@ import pl.kpob.dietdiary.views.utils.TimePicker
  */
 class MainScreen : RxScreen<MainView>(), AnkoLogger {
 
+    private val repo by lazy { MealRepository() }
+
     private val fbSaver by lazy { FirebaseSaver() }
 
-    private val meals get() = usingRealm {
-        MealMapper.map(it.where(MealDTO::class.java).findAllSorted("time", Sort.DESCENDING))
-    }
+    private val meals get() = repo.withRealmQuery { AllMealsSortedSpecification(it) }
 
     override fun createView(context: Context?) = MainView(context!!)
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
         view?.let {
-            it.toolbarTitle = "Dziennik Stasia"
+            it.toolbarTitle = context?.getString(R.string.app_name) ?: ""
             it.initMenu(R.menu.menu_main) {
                 when (it) {
                     R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
@@ -62,12 +60,7 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
         }
     }
 
-
-    fun updateData() {
-        view.postDelayed({ view?.showMeals(meals) }, 1000)
-    }
-
-    fun onItemLongClick(item: Meal): Boolean = true
+    fun updateData() = view.postDelayed({ view?.showMeals(meals) }, 1000)
 
     fun onDeleteClick(item: Meal) = showDialog {
         AlertDialog.Builder(activity)
@@ -85,6 +78,10 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
 
     private fun Meal.updateTimestamp(newValue: Long) {
         fbSaver.updateMealTime(id, newValue)
+    }
+
+    fun onLabelClick(meals: List<Meal>) {
+        navigator.goTo(PieChartScreen(meals.map { it.id }))
     }
 
 

@@ -3,10 +3,12 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
-import pl.kpob.dietdiary.*
-import pl.kpob.dietdiary.db.DataSaver
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.firebase.FirebaseSaver
+import pl.kpob.dietdiary.nextId
+import pl.kpob.dietdiary.realmAsyncTransaction
+import pl.kpob.dietdiary.repo.IngredientRepository
+import pl.kpob.dietdiary.repo.RealmAddTransaction
 import pl.kpob.dietdiary.server.FbIngredient
 import pl.kpob.dietdiary.views.AddIngredientView
 
@@ -16,10 +18,9 @@ import pl.kpob.dietdiary.views.AddIngredientView
 class AddIngredientScreen(private val ingredient: FbIngredient? = null) : RxScreen<AddIngredientView>(), AnkoLogger {
 
     private val fbSaver by lazy { FirebaseSaver() }
+    private val repo by lazy { IngredientRepository() }
 
-    override fun createView(context: Context?): AddIngredientView {
-        return AddIngredientView(context!!)
-    }
+    override fun createView(context: Context?) = AddIngredientView(context!!)
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
@@ -42,8 +43,9 @@ class AddIngredientScreen(private val ingredient: FbIngredient? = null) : RxScre
         }
         fbSaver.saveIngredient(i, update)
 
-        DataSaver.saveIngredient(i) {
-            navigator.goBack()
-        }
+        realmAsyncTransaction(
+                f = { repo.insert(i.toRealm(), RealmAddTransaction(it)) },
+                cb = { navigator.goBack() }
+        )
     }
 }

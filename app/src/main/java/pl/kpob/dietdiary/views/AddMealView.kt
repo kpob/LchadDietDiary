@@ -58,7 +58,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             .forEachChild {
                 when(it) {
                     is ReSpinner -> {
-                        it.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, screen.data).apply {
+                        it.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, screen.possibleIngredients).apply {
                             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         }
                     }
@@ -71,24 +71,24 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                 }
             }
 
-    private fun obtainData(): List<Pair<IngredientDTO, Float>> =
-        container.mapTypedChild<ViewGroup, Pair<IngredientDTO, Float>> {
+    private fun obtainData(): List<Pair<Ingredient, Float>> =
+        container.mapTypedChild<ViewGroup, Pair<Ingredient, Float>> {
             rowToData(it)
         }
 
-    private fun rowToData(v: ViewGroup): Pair<IngredientDTO, Float> {
-        var i = IngredientDTO()
+    private fun rowToData(v: ViewGroup): Pair<Ingredient, Float> {
+        var i: Ingredient? = null
         var w = .0f
         v.forEachChild {
             when(it) {
-                is ReSpinner -> i = it.selectedItem as IngredientDTO
+                is ReSpinner -> i = it.selectedItem as Ingredient
                 is EditText -> w = try { it.text.toString().toFloat() } catch (e: Exception) { .0f }
             }
         }
-        return i to w
+        return i!! to w
     }
 
-    fun setExistingData(ingredients: List<MealIngredientDTO>, data: List<IngredientDTO>) {
+    fun setExistingData(ingredients: List<MealIngredient>, data: List<Ingredient>) {
         (0 until ingredients.size).forEach { addRow() }
 
         info { "cc ${container.childCount}" }
@@ -96,7 +96,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
 
             vg.forEachChild {
                 when(it) {
-                    is ReSpinner -> it.setSelection(data.indexOfFirst { it.id == ingredients[idx].ingredientId })
+                    is ReSpinner -> it.setSelection(data.indexOfFirst { it.id == ingredients[idx].id })
                     is EditText -> it.setText(ingredients[idx].weight.toString())
                 }
             }

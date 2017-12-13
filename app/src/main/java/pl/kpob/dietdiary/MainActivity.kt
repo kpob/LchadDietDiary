@@ -1,40 +1,47 @@
 package pl.kpob.dietdiary
 
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
+import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
-import pl.kpob.dietdiary.db.DataSaver
-import pl.kpob.dietdiary.firebase.FirebaseSaver
+import org.jetbrains.anko.info
+import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.firebase.valueEventListener
+import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.screens.MainScreen
 import pl.kpob.dietdiary.server.FbIngredient
 import pl.kpob.dietdiary.server.FbMeal
-import com.google.firebase.auth.FirebaseAuth
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 
 class MainActivity : SingleActivity(), AnkoLogger {
 
-    private val fbSaver: FirebaseSaver by lazy { FirebaseSaver() }
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val mealRepo = MealRepository()
+    private val ingredientRepo = IngredientRepository()
 
+    private lateinit var realm: Realm
 
     private val ingredientsListener = valueEventListener {
 
         dataChanged {
             val ingredients = it?.children?.map { it.getValue(FbIngredient::class.java)!! } ?: return@dataChanged
-            if(ingredients.isEmpty()) {
-                addPredefinedData()
-            } else {
-                DataSaver.updateIngredients(ingredients) {
-                    updateView()
+            val ingredientsToDelete = ingredients.filter { it.deleted }
+            val ingredientsToSave = ingredients.subtract(ingredientsToDelete).map { it.toRealm() }
+            val idsToDelete = ingredientsToDelete.map { it.id }.toTypedArray()
+
+            usingRealm {
+                it.executeTransactionAsync {
+                    ingredientRepo.insert(ingredientsToSave, RealmAddTransaction(it))
+                    val spec = IngredientsByIdsSpecification(it, idsToDelete)
+                    ingredientRepo.delete(spec, RealmRemoveTransaction())
                 }
             }
+
         }
     }
 
@@ -42,8 +49,15 @@ class MainActivity : SingleActivity(), AnkoLogger {
 
         dataChanged {
             val meals = it?.children?.map { it.getValue(FbMeal::class.java)!! } ?: return@dataChanged
-            DataSaver.updateMeals(meals) {
-                updateView()
+            val mealsToDelete = meals.filter { it.deleted }
+            val mealsToSave = meals.subtract(mealsToDelete).map { it.toRealm() }
+            val idsToDelete = mealsToDelete.map { it.id }.toTypedArray()
+
+            usingRealm {
+                it.executeTransactionAsync {
+                    mealRepo.insert(mealsToSave, RealmAddTransaction(it))
+                    mealRepo.delete(MealsByIdsSpecification(it, idsToDelete), RealmRemoveTransaction())
+                }
             }
         }
 
@@ -70,18 +84,22 @@ class MainActivity : SingleActivity(), AnkoLogger {
                     }
                 }
 
-    }
-
-    private fun addPredefinedData() {
-        val data = PredefinedDataProvider.data
-        DataSaver.saveIngredients(data)
-        fbSaver.saveIngredients(data)
+        realm = Realm.getDefaultInstance().apply {
+            addChangeListener {
+                info { "db changed" }
+                updateView()
+            }
+        }
     }
 
     override fun onDestroy() {
         firebaseDb.ingredientsRef.removeEventListener(ingredientsListener)
         firebaseDb.mealsRef.removeEventListener(mealsListener)
         auth.signOut()
+        realm.let {
+            it.removeAllChangeListeners()
+            it.close()
+        }
         super.onDestroy()
     }
 
