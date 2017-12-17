@@ -2,9 +2,8 @@ package pl.kpob.dietdiary.repo
 
 import io.realm.Realm
 import io.realm.Sort
-import pl.kpob.dietdiary.MealType
+import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.db.*
-import pl.kpob.dietdiary.usingRealm
 
 /**
  * Created by kpob on 11.12.2017.
@@ -76,5 +75,12 @@ class IngredientsByIdsSpecification(private val realm: Realm, private val ids: A
 
     override val collection: List<IngredientDTO>
         get() = realm.where(IngredientDTO::class.java).`in`(IngredientContract.ID, ids).findAll()
+
+}
+
+class AllTagsSpecification(private val realm: Realm, private val ids: Array<String>): Specification<TagDTO> {
+
+    override val collection: List<TagDTO>
+        get() = realm.where(TagDTO::class.java).findAll()
 
 }

@@ -2,8 +2,7 @@ package pl.kpob.dietdiary.firebase
 
 import com.google.firebase.database.DatabaseReference
 import pl.kpob.dietdiary.*
-import pl.kpob.dietdiary.server.FbIngredient
-import pl.kpob.dietdiary.server.FbMeal
+import pl.kpob.dietdiary.domain.Meal
 
 /**
  * Created by kpob on 27.10.2017.

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.realm.Realm
-import pl.kpob.dietdiary.server.FbIngredient
-import pl.kpob.dietdiary.server.FbMeal
+import pl.kpob.dietdiary.firebase.FbIngredient
+import pl.kpob.dietdiary.firebase.FbMeal
 import java.util.*
 
 /**

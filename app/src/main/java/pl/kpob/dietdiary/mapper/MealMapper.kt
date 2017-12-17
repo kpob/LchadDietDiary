@@ -2,7 +2,7 @@ package pl.kpob.dietdiary.mapper
 
 import org.jetbrains.anko.AnkoLogger
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.Meal
+import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.db.MealDTO
 import pl.kpob.dietdiary.repo.Mapper
 

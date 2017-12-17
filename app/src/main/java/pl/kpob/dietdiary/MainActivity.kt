@@ -9,11 +9,11 @@ import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
+import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.valueEventListener
 import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.screens.MainScreen
-import pl.kpob.dietdiary.server.FbIngredient
-import pl.kpob.dietdiary.server.FbMeal
+import pl.kpob.dietdiary.firebase.FbMeal
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 
+kapt {
+    generateStubs = true
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
@@ -22,6 +26,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    java {
+//        srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+//    }
 }
 
 dependencies {
@@ -50,16 +58,23 @@ dependencies {
     compile 'net.codecrafted:lineartimepicker:1.0.0'
     compile 'com.github.florent37:singledateandtimepicker:1.2.2'
 
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-
     def anko_version = '0.10.2'
     compile "org.jetbrains.anko:anko-commons:$anko_version"
     compile "org.jetbrains.anko:anko-sdk25-listeners:$anko_version"
+    compile "org.jetbrains.anko:anko-design:$anko_version"
+    compile "org.jetbrains.anko:anko-sdk25:$anko_version"
+    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
 
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.adroitandroid:ChipCloud:2.2.1'
+
+    compile project(':mapper-annotation')
+    kapt project(':mapper-proccesor')
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,7 +1,7 @@
-package pl.kpob.dietdiary
+package pl.kpob.dietdiary.domain
 
+import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
-import pl.kpob.dietdiary.server.FbIngredient
 
 /**
  * Created by kpob on 21.10.2017.
@@ -39,26 +39,6 @@ data class MealIngredient(
         val calories: Float,
         val weight: Float
 )
-
-data class Ingredient(
-        val id: String,
-        val name: String,
-        val mct: Float,
-        val lct: Float,
-        val carbohydrates: Float,
-        val protein: Float,
-        val salt: Float,
-        val roughage: Float,
-        val calories: Float,
-        val category: Int,
-        val useCount: Int
-) {
-    override fun toString(): String = name
-
-    fun toFirebase(deleted: Boolean = false): FbIngredient = FbIngredient(
-            id, name, mct, lct, carbohydrates, protein, salt, roughage, calories, category, deleted
-    )
-}
 
 enum class MealType(val string: String, val icon: Int, val filters: List<IngredientCategory>) {
     MILK("Mleczko", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS)),

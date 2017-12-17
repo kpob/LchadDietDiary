@@ -5,10 +5,13 @@ import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.*
+import pl.kpob.dietdiary.domain.Ingredient
+import pl.kpob.dietdiary.domain.Meal
+import pl.kpob.dietdiary.domain.MealType
+import pl.kpob.dietdiary.firebase.FbMealIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver
 import pl.kpob.dietdiary.repo.*
-import pl.kpob.dietdiary.server.FbMeal
-import pl.kpob.dietdiary.server.FbMealIngredient
+import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.views.AddMealView
 
 /**

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import android.widget.TextView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -23,7 +22,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
-import pl.kpob.dietdiary.MealIngredient
+import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.screens.PieChartScreen
 

@@ -3,13 +3,10 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
-import pl.kpob.dietdiary.MealDetails
-import pl.kpob.dietdiary.MealIngredient
-import pl.kpob.dietdiary.mapper.MealDetailsMapper
+import pl.kpob.dietdiary.domain.MealDetails
+import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.repo.MealDetailsRepository
-import pl.kpob.dietdiary.repo.MealRepository
 import pl.kpob.dietdiary.repo.MealsByIdsSpecification
-import pl.kpob.dietdiary.repo.RealmRepository
 import pl.kpob.dietdiary.usingRealm
 import pl.kpob.dietdiary.views.PieChartView
 

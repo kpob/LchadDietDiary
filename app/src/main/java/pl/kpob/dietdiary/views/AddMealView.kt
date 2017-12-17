@@ -11,10 +11,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import com.santalu.respinner.ReSpinner
 import com.wealthfront.magellan.BaseScreenView
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.find
+import org.jetbrains.anko.forEachChild
+import org.jetbrains.anko.info
 import pl.kpob.dietdiary.*
-import pl.kpob.dietdiary.db.IngredientDTO
-import pl.kpob.dietdiary.db.MealIngredientDTO
+import pl.kpob.dietdiary.domain.Ingredient
+import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.screens.AddMealScreen
 
 /**

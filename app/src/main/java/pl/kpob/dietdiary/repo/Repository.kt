@@ -2,15 +2,12 @@ package pl.kpob.dietdiary.repo
 
 import io.realm.Realm
 import io.realm.RealmObject
-import pl.kpob.dietdiary.Ingredient
-import pl.kpob.dietdiary.Meal
-import pl.kpob.dietdiary.MealDetails
-import pl.kpob.dietdiary.db.IngredientDTO
+import pl.kpob.dietdiary.*
 import pl.kpob.dietdiary.db.MealDTO
-import pl.kpob.dietdiary.mapper.IngredientMapper
+import pl.kpob.dietdiary.domain.Meal
+import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.mapper.MealDetailsMapper
 import pl.kpob.dietdiary.mapper.MealMapper
-import pl.kpob.dietdiary.usingRealm
 
 /**
  * Created by kpob on 22.10.2017.
@@ -42,5 +39,3 @@ abstract class RealmRepository<T: RealmObject, V>(override val mapper: Mapper<T,
 
 class MealRepository: RealmRepository<MealDTO, Meal>(MealMapper)
 class MealDetailsRepository: RealmRepository<MealDTO, MealDetails>(MealDetailsMapper())
-class IngredientRepository: RealmRepository<IngredientDTO, Ingredient>(IngredientMapper())
-

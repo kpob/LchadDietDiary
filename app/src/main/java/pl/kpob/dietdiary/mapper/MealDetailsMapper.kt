@@ -1,8 +1,8 @@
 package pl.kpob.dietdiary.mapper
 
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.MealDetails
-import pl.kpob.dietdiary.MealIngredient
+import pl.kpob.dietdiary.domain.MealDetails
+import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.db.MealDTO
 import pl.kpob.dietdiary.repo.Mapper
 

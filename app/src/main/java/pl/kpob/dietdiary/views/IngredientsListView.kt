@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
-import pl.kpob.dietdiary.Ingredient
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
-import pl.kpob.dietdiary.db.IngredientDTO
+import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.screens.IngredientsListScreen
 
 /**

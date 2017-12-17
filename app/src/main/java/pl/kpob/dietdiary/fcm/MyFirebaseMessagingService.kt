@@ -31,8 +31,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService(), AnkoLogger {
         info {  "From: " + remoteMessage!!.from }
 
         // Check if message contains a data payload.
-        if (remoteMessage?.data?.isNotEmpty() ?: false) {
-            info { "Message data payload: ${remoteMessage?.data}" }
+        if (remoteMessage?.data?.isNotEmpty() == true) {
+            info { "Message data payload: ${remoteMessage.data}" }
 
                 scheduleJob()
         }

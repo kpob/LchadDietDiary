@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.screen_add_ingredient.view.*
 import org.jetbrains.anko.find
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.R
+import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.screens.AddIngredientScreen
-import pl.kpob.dietdiary.server.FbIngredient
 
 /**
  * Created by kpob on 22.10.2017.

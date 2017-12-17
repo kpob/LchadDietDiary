@@ -6,11 +6,10 @@ import com.wealthfront.magellan.rx.RxScreen
 import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
-import pl.kpob.dietdiary.Ingredient
+import pl.kpob.dietdiary.domain.Ingredient
+import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebaseDb
 import pl.kpob.dietdiary.ingredientsRef
-import pl.kpob.dietdiary.mapper.IngredientMapper
-import pl.kpob.dietdiary.mapper.MealMapper
 import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.usingRealm
 import pl.kpob.dietdiary.views.IngredientsListView
@@ -60,4 +59,8 @@ class IngredientsListScreen: RxScreen<IngredientsListView>(), AnkoLogger {
     fun onEditClick(item: Ingredient) {
         navigator.goTo(AddIngredientScreen(item.toFirebase()))
     }
+
+    fun Ingredient.toFirebase(deleted: Boolean = false): FbIngredient = FbIngredient(
+        id, name, mtc, lct, carbohydrates, protein, salt, roughage, calories, category, useCount, deleted
+    )
 }

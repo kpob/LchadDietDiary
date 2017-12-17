@@ -2,7 +2,7 @@ package pl.kpob.dietdiary.mapper
 
 import io.realm.Realm
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.MealType
+import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.db.IngredientDTO
 import pl.kpob.dietdiary.db.MealDTO
 

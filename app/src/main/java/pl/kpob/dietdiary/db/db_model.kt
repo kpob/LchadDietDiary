@@ -3,11 +3,14 @@ package pl.kpob.dietdiary.db
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import pl.kpob.dietdiary.server.FbIngredient
+import pl.kpob.mapper_annotation.Ignore
+import pl.kpob.mapper_annotation.MapAs
+import pl.kpob.mapper_annotation.AutoMapping
 
 /**
  * Created by kpob on 20.10.2017.
  */
+@AutoMapping
 open class IngredientDTO(
         @PrimaryKey open var id: String = "",
         open var name: String = "",
@@ -22,21 +25,7 @@ open class IngredientDTO(
         open var useCount: Int = 0
 ): RealmObject()
 
-object IngredientContract {
-    val ID = "id"
-    val NAME = "name"
-    val MCT = "mtc"
-    val LCT = "lct"
-    val CARBOHYDRATE = "carbohydrates"
-    val PROTEIN = "protein"
-    val SALT = "salt"
-    val ROUGHAGE = "roughage"
-    val CALORIES = "calories"
-    val CATEGORY = "category"
-    val USE_COUNT= "useCount"
-}
-
-
+@AutoMapping(generateDomainModel = false, generateFirebaseModel = false, generateRepository = false, generateContract = true)
 open class MealDTO(
         @PrimaryKey open var id: String = "",
         open var time: Long = 0L,
@@ -44,22 +33,25 @@ open class MealDTO(
         open var ingredients: RealmList<MealIngredientDTO> = RealmList()
 ): RealmObject()
 
-object MealContract {
-        val ID = "id"
-        val TIME = "time"
-        val NAME = "name"
-        val INGREDIENTS = "ingredients"
-}
-
+@AutoMapping(generateDomainModel = false, generateRepository = false)
 open class MealIngredientDTO(
         open var ingredientId: String = "",
         open var weight: Float = .0f
 ): RealmObject()
 
-object MealIngredientContract {
-    val INGREDIENT_ID = "ingredientId"
-    val WEIGHT = "weight"
-}
+@AutoMapping
+open class TagDTO(
+        @PrimaryKey open var id: String = "",
+        @Ignore
+        open var creationTime: Long = 0L,
+        @MapAs(mapAs = "tagName")
+        open var name: String = "",
+        open var color: Int = 0,
+        open var activeColor: Int = 0,
+        open var textColor: Int = 0,
+        open var activeTextColor: Int = 0
+
+): RealmObject()
 
 enum class IngredientCategory(val value: Int, val label: String) {
     PORRIDGE(1, "Kaszka"),
@@ -76,10 +68,4 @@ enum class IngredientCategory(val value: Int, val label: String) {
 
         fun stringValues() = values().map { it.label }
     }
-
-}
-
-object MealIngredient {
-    val ID = "ingredientId"
-    val WEIGHT = "weight"
 }

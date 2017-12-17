@@ -16,7 +16,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
 import org.jetbrains.anko.findOptional
 import org.jetbrains.anko.sdk25.listeners.onClick
-import pl.kpob.dietdiary.Meal
+import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.screens.MainScreen
 

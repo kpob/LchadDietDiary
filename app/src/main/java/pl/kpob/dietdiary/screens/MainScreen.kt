@@ -5,8 +5,8 @@ import android.support.v7.app.AlertDialog
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.Meal
-import pl.kpob.dietdiary.MealType
+import pl.kpob.dietdiary.domain.Meal
+import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.firebase.FirebaseSaver
 import pl.kpob.dietdiary.repo.AllMealsSortedSpecification
@@ -36,6 +36,7 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
                 when (it) {
                     R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
                     R.id.action_all_ingredients -> view.post { navigator.goTo(IngredientsListScreen()) }
+                    R.id.action_tags -> view.post { navigator.goTo(TagCloudScreen()) }
                 }
             }
             it.showMeals(meals)
