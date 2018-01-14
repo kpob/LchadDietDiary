@@ -44,8 +44,8 @@ class AddIngredientScreen(private val ingredient: FbIngredient? = null) : RxScre
         fbSaver.saveIngredient(i, update)
 
         realmAsyncTransaction(
-                f = { repo.insert(i.toRealm(), RealmAddTransaction(it)) },
-                cb = { navigator.goBack() }
+                transaction = { repo.insert(i.toRealm(), RealmAddTransaction(it)) },
+                callback = { navigator.goBack() }
         )
     }
 }

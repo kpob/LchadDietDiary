@@ -2,6 +2,7 @@ package pl.kpob.dietdiary
 
 import android.support.multidex.MultiDexApplication
 import com.google.firebase.database.FirebaseDatabase
+import io.realm.FieldAttribute
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import net.danlew.android.joda.JodaTimeAndroid
@@ -36,8 +37,8 @@ class App: MultiDexApplication() {
                     if(ver == 1L) {
                         realm.schema
                                 .create(TagContract.TABLE_NAME)
-                                ?.addField(TagContract.ID, String::class.java)
-                                ?.addField(TagContract.NAME, String::class.java)
+                                ?.addField(TagContract.ID, String::class.java, FieldAttribute.REQUIRED, FieldAttribute.PRIMARY_KEY)
+                                ?.addField(TagContract.NAME, String::class.java, FieldAttribute.REQUIRED)
                                 ?.addField(TagContract.ACTIVE_COLOR, Int::class.java)
                                 ?.addField(TagContract.ACTIVE_TEXT_COLOR, Int::class.java)
                                 ?.addField(TagContract.CREATION_TIME, Long::class.java)

@@ -28,5 +28,4 @@ class FirebaseValueEventListener : ValueEventListener, AnkoLogger {
     }
 }
 
-fun valueEventListener(init: FirebaseValueEventListener.() -> Unit) =
-        FirebaseValueEventListener().apply { init() }
+fun valueEventListener(init: FirebaseValueEventListener.() -> Unit) = FirebaseValueEventListener().apply { init() }

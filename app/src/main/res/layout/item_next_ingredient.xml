@@ -5,14 +5,23 @@
     android:orientation="horizontal">
 
 
-    <com.santalu.respinner.ReSpinner
+    <!--<com.santalu.respinner.ReSpinner-->
+        <!--android:id="@+id/spinner"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_height="wrap_content"/>-->
+    <AutoCompleteTextView
         android:id="@+id/spinner"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:ellipsize="end"
+        android:dropDownWidth="match_parent"
+        android:nextFocusRight="@+id/weight"/>
 
     <EditText
-        android:id="@+id/weight"
+        android:id="@id/weight"
         android:layout_width="64dp"
         android:layout_height="match_parent"
         android:hint="gramy"
