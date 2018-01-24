@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
 
@@ -15,17 +15,16 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:lines="1"
-        android:ellipsize="end"
         android:dropDownWidth="match_parent"
         android:nextFocusRight="@+id/weight"/>
 
     <EditText
         android:id="@id/weight"
         android:layout_width="64dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:hint="gramy"
         android:inputType="numberDecimal"
+        android:layout_gravity="bottom"
         android:layout_marginLeft="8dp"/>
 
     <ImageView

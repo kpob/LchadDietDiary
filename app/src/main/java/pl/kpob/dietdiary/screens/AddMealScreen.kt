@@ -32,8 +32,6 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         ingredientRepo.withRealmQuery { IngredientsByMealTypeSpecification(it, type) }
     }
 
-    fun getIngredient(pos: Int) = possibleIngredients[pos]
-
     private val ingredients by lazy {
         mealRepo.withRealmSingleQuery { MealByIdSpecification(it, meal!!.id) }?.ingredients ?: listOf()
     }

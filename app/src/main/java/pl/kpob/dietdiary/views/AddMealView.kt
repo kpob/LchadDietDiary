@@ -3,22 +3,22 @@ package pl.kpob.dietdiary.views
 import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.Toolbar
-import android.text.InputFilter
-import android.text.Spanned
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import com.santalu.respinner.ReSpinner
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.internals.AnkoInternals
 import org.jetbrains.anko.sdk25.listeners.onClick
-import pl.kpob.dietdiary.*
+import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.MealIngredient
+import pl.kpob.dietdiary.forEachTypedIndexedChild
+import pl.kpob.dietdiary.lastChild
+import pl.kpob.dietdiary.mapTypedChild
 import pl.kpob.dietdiary.screens.AddMealScreen
+import kotlin.properties.Delegates
 
 /**
  * Created by kpob on 20.10.2017.
@@ -40,14 +40,13 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     init {
         View.inflate(ctx, R.layout.screen_add_meal, this)
 
-        nextBtn.onClick {
-            addRow()
-        }
+        nextBtn.onClick { addRow() }
 
         initMenu(R.menu.add_meal) {
             if (it == R.id.action_done) {
                 val data = obtainData()
                 hideKeyboard()
+                info { "data: ${data.map { it.first.name to it.second }}" }
                 screen.onAddClick(data)
             }
         }
@@ -57,8 +56,28 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         }
     }
 
-    fun addInitialRow() {
-        addRow()
+    fun addInitialRow() = addRow()
+
+    fun setExistingData(ingredients: List<MealIngredient>, data: List<Ingredient>) {
+        (0 until ingredients.size).forEach { addRow() }
+
+        container.forEachTypedIndexedChild<ViewGroup> { idx, vg ->
+            setRowData(vg, data, ingredients, idx)
+        }
+    }
+
+    private fun setRowData(vg: ViewGroup, data: List<Ingredient>, ingredients: List<MealIngredient>, idx: Int) {
+        vg.forEachChild {
+            when (it) {
+                is AutoCompleteTextView -> {
+                    val i = data.first { it.id == ingredients[idx].id }
+                    val iidx = data.indexOfFirst { it.id == ingredients[idx].id }
+                    it.setText(i.name)
+                    (it.adapter as IngredientAdapter).selected = iidx
+                }
+                is EditText -> it.setText(ingredients[idx].weight.toString())
+            }
+        }
     }
 
     private fun addRow() {
@@ -71,65 +90,47 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             .forEachChild { v ->
                 when (v) {
                     is AutoCompleteTextView -> {
-//                        it.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, screen.possibleIngredients).apply {
-//                            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                        }
-                        v.setOnItemClickListener { parent, view, position, id ->
-                            attempt {
-                                v.post {
-                                    (v.parent as ViewGroup).firstChild { it !is AutoCompleteTextView && it is EditText }.requestFocus()
-                                }
-
-                                (parent?.adapter as IngredientAdapter).selected = position
-
-                            }
-                        }
-                        v.setAdapter(IngredientAdapter(context, screen.possibleIngredients))
-                        v.threshold = 1
-                        v.requestFocus()
+                        setupAutocompleteView(v)
                     }
                     is ImageView -> {
                         v.setOnClickListener { container.removeView(it.parent as View) }
                     }
-                    is EditText -> {
-
-                    }
+                    is EditText -> { }
                 }
             }
 
-    private fun obtainData(): List<Pair<Ingredient, Float>> =
-            container.mapTypedChild<ViewGroup, Pair<Ingredient, Float>> {
-                rowToData(it)
-            }
+    private fun setupAutocompleteView(v: AutoCompleteTextView) = with(v) {
+        setOnItemClickListener { parent, view, position, id ->
+            (parent?.adapter as IngredientAdapter).selected = position
 
-    private fun rowToData(v: ViewGroup): Pair<Ingredient, Float> {
+            attempt {
+                info { "selected: ${(parent.adapter as IngredientAdapter).selectedItem}" }
+                v.post {
+                    (v.parent as ViewGroup).firstChild { it !is AutoCompleteTextView && it is EditText }.requestFocus()
+                }
+
+            }
+        }
+        setAdapter(IngredientAdapter(context, screen.possibleIngredients))
+        threshold = 1
+        requestFocus()
+    }
+
+    private fun obtainData(): List<Pair<Ingredient, Float>> = container
+            .mapTypedChild<ViewGroup, Pair<Ingredient?, Float>> { rowToData(it) }
+            .filter { it.first != null }
+            .map { it.first!! to it.second }
+
+    private fun rowToData(v: ViewGroup): Pair<Ingredient?, Float> {
         var i: Ingredient? = null
         var w = .0f
         v.forEachChild {
             when (it) {
                 is AutoCompleteTextView -> i = (it.adapter as IngredientAdapter).selectedItem
-                is EditText -> w = try {
-                    it.text.toString().toFloat()
-                } catch (e: Exception) {
-                    .0f
-                }
+                is EditText -> w = try { it.text.toString().toFloat() } catch (e: Exception) { .0f }
             }
         }
-        return i!! to w
-    }
-
-    fun setExistingData(ingredients: List<MealIngredient>, data: List<Ingredient>) {
-        (0 until ingredients.size).forEach { addRow() }
-
-        container.forEachTypedIndexedChild<ViewGroup> { idx, vg ->
-
-            vg.forEachChild {
-                when (it) {
-                    is AutoCompleteTextView -> it.setSelection(data.indexOfFirst { it.id == ingredients[idx].id })
-                    is EditText -> it.setText(ingredients[idx].weight.toString())
-                }
-            }
-        }
+        return i to w
     }
 
     private fun hideKeyboard() {
@@ -140,14 +141,16 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
 
     class IngredientAdapter(ctx: Context, val data: List<Ingredient>) : ArrayAdapter<String>(ctx, R.layout.ingredient_drop_down), AnkoLogger {
 
-        var selected: Int = 0
-
-        val selectedItem: Ingredient get() = data[selected]
-
         private var tmpItems: List<Ingredient> = arrayListOf<Ingredient>().apply { addAll(data) }
         private var suggestions: MutableList<Ingredient> = mutableListOf()
+        private var _selectedItem: Ingredient? = null
 
+        var selected: Int by Delegates.observable(0) { prop, old, new ->
+            _selectedItem = if(suggestions.size > new) suggestions[new] else data[new]
+        }
 
+        val selectedItem: Ingredient? get() = _selectedItem
+        
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
                 viewFromResource(position, convertView, parent, R.layout.ingredient_drop_down)
 
@@ -158,8 +161,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             }
         }
 
-        override fun getItem(position: Int): String =
-                try { suggestions[position].name } catch (e: Exception) { "" }
+        override fun getItem(position: Int): String = try { suggestions[position].name } catch (e: Exception) { "" }
 
         override fun getFilter(): Filter = nameFilter
 
