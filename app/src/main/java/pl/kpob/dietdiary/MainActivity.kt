@@ -1,5 +1,10 @@
 package pl.kpob.dietdiary
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.media.AudioAttributes
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
@@ -8,12 +13,13 @@ import com.wealthfront.magellan.support.SingleActivity
 import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.notificationManager
 import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.firebase.FbIngredient
+import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.valueEventListener
 import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.screens.MainScreen
-import pl.kpob.dietdiary.firebase.FbMeal
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -90,6 +96,19 @@ class MainActivity : SingleActivity(), AnkoLogger {
                 updateView()
             }
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val CHANNEL_ID = "Default"
+            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
+                val sound = Uri.parse("android.resource://$packageName/${R.raw.mniam}")
+                val channel = NotificationChannel(CHANNEL_ID, "Posiłki", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Powiadomienia o posiłkach"
+                    setSound(sound, AudioAttributes.Builder().setFlags(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+        }
+
     }
 
     override fun onDestroy() {
