@@ -2,6 +2,7 @@
 
 package pl.kpob.dietdiary
 
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.DatabaseReference
@@ -39,6 +40,19 @@ inline fun<T: View, V> ViewGroup.mapTypedChild(action: (T) -> V): List<V> =
 fun View.show() { visibility = View.VISIBLE }
 fun View.hide() { visibility = View.GONE }
 fun View.makeInvisible() { visibility = View.INVISIBLE }
+
+inline fun supportsOreo(action: () -> Unit) {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        action.invoke()
+    }
+}
+
+inline fun supportsNougat(action: () -> Unit) {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+        action.invoke()
+    }
+}
+
 
 /**
  * MISC

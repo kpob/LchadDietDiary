@@ -43,11 +43,13 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         nextBtn.onClick { addRow() }
 
         initMenu(R.menu.add_meal) {
-            if (it == R.id.action_done) {
-                val data = obtainData()
-                hideKeyboard()
-                info { "data: ${data.map { it.first.name to it.second }}" }
-                screen.onAddClick(data)
+            when (it) {
+                R.id.action_done -> {
+                    val data = obtainData()
+                    hideKeyboard()
+                    info { "data: ${data.map { it.first.name to it.second }}" }
+                    screen.onAddClick(data)
+                }
             }
         }
 
@@ -95,7 +97,8 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                     is ImageView -> {
                         v.setOnClickListener { container.removeView(it.parent as View) }
                     }
-                    is EditText -> { }
+                    is EditText -> {
+                    }
                 }
             }
 
@@ -127,7 +130,11 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         v.forEachChild {
             when (it) {
                 is AutoCompleteTextView -> i = (it.adapter as IngredientAdapter).selectedItem
-                is EditText -> w = try { it.text.toString().toFloat() } catch (e: Exception) { .0f }
+                is EditText -> w = try {
+                    it.text.toString().toFloat()
+                } catch (e: Exception) {
+                    .0f
+                }
             }
         }
         return i to w
@@ -146,11 +153,11 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         private var _selectedItem: Ingredient? = null
 
         var selected: Int by Delegates.observable(0) { prop, old, new ->
-            _selectedItem = if(suggestions.size > new) suggestions[new] else data[new]
+            _selectedItem = if (suggestions.size > new) suggestions[new] else data[new]
         }
 
         val selectedItem: Ingredient? get() = _selectedItem
-        
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
                 viewFromResource(position, convertView, parent, R.layout.ingredient_drop_down)
 
@@ -161,7 +168,11 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             }
         }
 
-        override fun getItem(position: Int): String = try { suggestions[position].name } catch (e: Exception) { "" }
+        override fun getItem(position: Int): String = try {
+            suggestions[position].name
+        } catch (e: Exception) {
+            ""
+        }
 
         override fun getFilter(): Filter = nameFilter
 

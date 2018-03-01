@@ -47,6 +47,6 @@ enum class MealType(val string: String, val icon: Int, val filters: List<Ingredi
     OTHER("Przekąska", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS));
 
     companion object {
-        fun fromString(s: String) = values().firstOrNull { it.name == s } ?: OTHER
+        fun fromString(s: String) = values().firstOrNull { it.string == s } ?: OTHER
     }
 }

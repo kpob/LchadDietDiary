@@ -1,7 +1,9 @@
 package pl.kpob.dietdiary
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
@@ -15,16 +17,22 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.notificationManager
 import org.jetbrains.anko.toast
+import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.valueEventListener
 import pl.kpob.dietdiary.repo.*
+import pl.kpob.dietdiary.screens.AddMealScreen
 import pl.kpob.dietdiary.screens.MainScreen
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 
 class MainActivity : SingleActivity(), AnkoLogger {
+
+    companion object {
+        val EXTRA_MEAL = "EXTRA_MEAL"
+    }
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val mealRepo = MealRepository()
@@ -69,8 +77,9 @@ class MainActivity : SingleActivity(), AnkoLogger {
 
     }
 
-    override fun createNavigator() = Navigator.withRoot(MainScreen()).build()!!
+    override fun createNavigator(): Navigator = Navigator.withRoot(MainScreen()).build()
 
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -97,11 +106,11 @@ class MainActivity : SingleActivity(), AnkoLogger {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val CHANNEL_ID = "Default"
-            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
+        supportsOreo {
+            val channelId = "Default"
+            if (notificationManager.getNotificationChannel(channelId) == null) {
                 val sound = Uri.parse("android.resource://$packageName/${R.raw.mniam}")
-                val channel = NotificationChannel(CHANNEL_ID, "Posiłki", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                val channel = NotificationChannel(channelId, "Posiłki", NotificationManager.IMPORTANCE_DEFAULT).apply {
                     description = "Powiadomienia o posiłkach"
                     setSound(sound, AudioAttributes.Builder().setFlags(AudioAttributes.CONTENT_TYPE_MUSIC).build())
                 }
@@ -109,6 +118,11 @@ class MainActivity : SingleActivity(), AnkoLogger {
             }
         }
 
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent ?: return)
     }
 
     override fun onDestroy() {
@@ -125,6 +139,15 @@ class MainActivity : SingleActivity(), AnkoLogger {
     private fun updateView() {
         val screen = getNavigator().currentScreen()
         (screen as? MainScreen)?.updateData()
+    }
+
+    private fun handleIntent(intent: Intent) {
+        if(intent.hasExtra(EXTRA_MEAL)) {
+            val mealType = MealType.fromString(intent.getStringExtra(EXTRA_MEAL))
+            info { "EXTRA ${intent.getStringExtra(EXTRA_MEAL)}"  }
+            info { "TYPE $mealType"  }
+            getNavigator().goTo(AddMealScreen(mealType))
+        }
     }
 
     private fun initToken() {

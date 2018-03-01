@@ -1,20 +1,30 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
+import android.view.ViewGroup
+import com.wealthfront.magellan.Direction
+import com.wealthfront.magellan.HistoryRewriter
+import com.wealthfront.magellan.NavigationType
+import com.wealthfront.magellan.Screen
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.*
+import pl.kpob.dietdiary.asReadableString
+import pl.kpob.dietdiary.currentTime
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
+import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.FbMealIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver
+import pl.kpob.dietdiary.nextId
+import pl.kpob.dietdiary.realmAsyncTransaction
 import pl.kpob.dietdiary.repo.*
-import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.views.AddMealView
 import pl.kpob.dietdiary.views.utils.TimePicker
+import java.util.*
+
 
 /**
  * Created by kpob on 20.10.2017.
@@ -43,15 +53,15 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
         view?.let {
-            it.enableHomeAsUp { navigator.goBack() }
+            it.enableHomeAsUp { navigator.handleBack() }
             it.time = mealTime.asReadableString
 
             if(meal != null) {
                 it.setExistingData(ingredients, possibleIngredients)
-                it.toolbarTitle = "Edytuj posiłek"
+                it.toolbarTitle = "Edytuj posiłek - ${type.string}"
             } else {
                 it.addInitialRow()
-                it.toolbarTitle = "Nowy posiłek"
+                it.toolbarTitle = "Nowy posiłek - ${type.string}"
             }
         }
     }
@@ -75,7 +85,7 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
 
         realmAsyncTransaction(
             transaction = { mealRepo.insert(meal.toRealm(), RealmAddTransaction(it)) },
-            callback = { navigator.goBack() }
+            callback = { navigator.handleBack() }
         )
     }
 

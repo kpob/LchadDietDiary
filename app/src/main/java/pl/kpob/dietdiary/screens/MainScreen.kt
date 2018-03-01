@@ -4,7 +4,9 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.joda.time.DateTime
+import pl.kpob.dietdiary.MainActivity
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.R
@@ -18,7 +20,7 @@ import pl.kpob.dietdiary.views.utils.TimePicker
 /**
  * Created by kpob on 20.10.2017.
  */
-class MainScreen : RxScreen<MainView>(), AnkoLogger {
+class MainScreen() : RxScreen<MainView>(), AnkoLogger {
 
     private val repo by lazy { MealRepository() }
 
@@ -30,6 +32,14 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
+        val intent = activity.intent
+        if(intent.hasExtra(MainActivity.EXTRA_MEAL)) {
+            val screen = AddMealScreen(MealType.fromString(intent.getStringExtra(MainActivity.EXTRA_MEAL)))
+            intent.removeExtra(MainActivity.EXTRA_MEAL)
+            navigator.goTo(screen)
+            return
+        }
+
         view?.let {
             it.toolbarTitle = context?.getString(R.string.app_name) ?: ""
             it.initMenu(R.menu.menu_main) {
