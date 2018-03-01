@@ -44,9 +44,9 @@ enum class MealType(val string: String, val icon: Int, val filters: List<Ingredi
     MILK("Mleczko", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS)),
     DESSERT("Deserek", R.drawable.ic_porridge, listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
     DINNER("Obiadek", R.drawable.ic_dinner, listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DINNERS, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
-    OTHER("Przekąska", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS));
+    OTHER("Przekąska", R.drawable.ic_dinner, listOf(IngredientCategory.OTHERS));
 
     companion object {
-        fun fromString(s: String) = values().firstOrNull { it.string == s } ?: OTHER
+        fun fromString(s: String) = values().firstOrNull { it.string == s || it.name == s} ?: OTHER
     }
 }
