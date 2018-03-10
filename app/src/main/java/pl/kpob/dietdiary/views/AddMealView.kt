@@ -2,6 +2,7 @@ package pl.kpob.dietdiary.views
 
 import android.app.Activity
 import android.content.Context
+import android.support.v7.widget.AppCompatSeekBar
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.internals.AnkoInternals
 import org.jetbrains.anko.sdk25.listeners.onClick
+import org.jetbrains.anko.sdk25.listeners.onSeekBarChangeListener
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.MealIngredient
@@ -31,11 +33,16 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     private val timeContainer by lazy { find<View>(R.id.time_container) }
     private val timeView by lazy { find<TextView>(R.id.time) }
 
+    private val seekBar by lazy { find<AppCompatSeekBar>(R.id.progress_bar) }
+    private val progressValue by lazy { find<TextView>(R.id.progress_value) }
+
     var time: String
         get() = AnkoInternals.noGetter()
-        set(value) {
-            timeView.text = value
-        }
+        set(value) { timeView.text = value }
+
+    var progress: String
+        get() = AnkoInternals.noGetter()
+        set(value) { progressValue.text = value }
 
     init {
         View.inflate(ctx, R.layout.screen_add_meal, this)
@@ -55,6 +62,10 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
 
         timeContainer.onClick {
             screen.onTimeEditClick()
+        }
+
+        seekBar.onSeekBarChangeListener {
+            onProgressChanged { _, progress, _ -> screen.onProgressChanged(progress) }
         }
     }
 

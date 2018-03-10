@@ -1,11 +1,6 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
-import android.view.ViewGroup
-import com.wealthfront.magellan.Direction
-import com.wealthfront.magellan.HistoryRewriter
-import com.wealthfront.magellan.NavigationType
-import com.wealthfront.magellan.Screen
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
@@ -23,7 +18,6 @@ import pl.kpob.dietdiary.realmAsyncTransaction
 import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.views.AddMealView
 import pl.kpob.dietdiary.views.utils.TimePicker
-import java.util.*
 
 
 /**
@@ -37,6 +31,7 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
     private val mealRepo by lazy { MealDetailsRepository() }
 
     private var mealTime: Long = meal?.timestamp ?: currentTime()
+    private var factor: Float = 1f
 
     val possibleIngredients: List<Ingredient> by lazy {
         ingredientRepo.withRealmQuery { IngredientsByMealTypeSpecification(it, type) }
@@ -46,15 +41,14 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         mealRepo.withRealmSingleQuery { MealByIdSpecification(it, meal!!.id) }?.ingredients ?: listOf()
     }
 
-    override fun createView(context: Context?): AddMealView {
-        return AddMealView(context!!)
-    }
+    override fun createView(context: Context?) = AddMealView(context!!)
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
         view?.let {
             it.enableHomeAsUp { navigator.handleBack() }
             it.time = mealTime.asReadableString
+            it.progress = "100%"
 
             if(meal != null) {
                 it.setExistingData(ingredients, possibleIngredients)
@@ -73,8 +67,8 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         }
 
         val meal = when {
-            this.meal != null -> FbMeal(meal.id, mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second) })
-            else -> FbMeal(nextId(), mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second) })
+            this.meal != null -> FbMeal(meal.id, mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
+            else -> FbMeal(nextId(), mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
         }
 
         fbSaver.saveMeal(meal, this.meal != null)
@@ -107,6 +101,11 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         fun Ingredient.toString(): String {
             return name
         }
+    }
+
+    fun onProgressChanged(progress: Int) {
+        factor = progress.toFloat() / 100f
+        view?.progress = "$progress%"
     }
 
 }
