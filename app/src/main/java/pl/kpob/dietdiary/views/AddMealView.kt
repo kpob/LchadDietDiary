@@ -25,7 +25,7 @@ import kotlin.properties.Delegates
 /**
  * Created by kpob on 20.10.2017.
  */
-class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger, ToolbarManager {
+class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), ToolbarManager {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val nextBtn by lazy { find<View>(R.id.add_next_btn) }
@@ -54,7 +54,6 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                 R.id.action_done -> {
                     val data = obtainData()
                     hideKeyboard()
-                    info { "data: ${data.map { it.first.name to it.second }}" }
                     screen.onAddClick(data)
                 }
             }
@@ -118,7 +117,6 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             (parent?.adapter as IngredientAdapter).selected = position
 
             attempt {
-                info { "selected: ${(parent.adapter as IngredientAdapter).selectedItem}" }
                 v.post {
                     (v.parent as ViewGroup).firstChild { it !is AutoCompleteTextView && it is EditText }.requestFocus()
                 }

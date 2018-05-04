@@ -77,7 +77,7 @@ class TimePicker {
             holder?.itemView?.find<TextView>(R.id.time)?.let {
                 it.text = when(position) {
                     in 0..1 -> ""
-                    in itemCount-2..itemCount-1 -> ""
+                    in itemCount-2 until itemCount -> ""
                     else -> {
                         val value = position - 2
                         if(value < 10) "0$value" else value.toString()

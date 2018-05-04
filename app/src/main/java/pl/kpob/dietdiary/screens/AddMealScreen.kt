@@ -3,8 +3,8 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
-import org.joda.time.DateTime
 import pl.kpob.dietdiary.asReadableString
 import pl.kpob.dietdiary.currentTime
 import pl.kpob.dietdiary.domain.Ingredient
@@ -12,94 +12,54 @@ import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.FbMealIngredient
-import pl.kpob.dietdiary.firebase.FirebaseSaver
 import pl.kpob.dietdiary.nextId
-import pl.kpob.dietdiary.realmAsyncTransaction
-import pl.kpob.dietdiary.repo.*
+import pl.kpob.dietdiary.screens.utils.MealDataInteractor
+import pl.kpob.dietdiary.screens.utils.TimePickerCreator
+import pl.kpob.dietdiary.screens.utils.Traits
 import pl.kpob.dietdiary.views.AddMealView
-import pl.kpob.dietdiary.views.utils.TimePicker
 
 
 /**
  * Created by kpob on 20.10.2017.
  */
-class AddMealScreen(private val type: MealType, private val meal: Meal? = null) : RxScreen<AddMealView>(), AnkoLogger {
-
-    private val fbSaver by lazy { FirebaseSaver() }
-
-    private val ingredientRepo by lazy { IngredientRepository() }
-    private val mealRepo by lazy { MealDetailsRepository() }
+class AddMealScreen(private val type: MealType, private val meal: Meal? = null) :
+        RxScreen<AddMealView>(),
+        MealDataInteractor by Traits.mealInteractor(type, meal),
+        TimePickerCreator by Traits.timePickerCreator(),
+        AnkoLogger {
 
     private var mealTime: Long = meal?.timestamp ?: currentTime()
     private var factor: Float = 1f
-
-    val possibleIngredients: List<Ingredient> by lazy {
-        ingredientRepo.withRealmQuery { IngredientsByMealTypeSpecification(it, type) }
-    }
-
-    private val ingredients by lazy {
-        mealRepo.withRealmSingleQuery { MealByIdSpecification(it, meal!!.id) }?.ingredients ?: listOf()
-    }
 
     override fun createView(context: Context?) = AddMealView(context!!)
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
-        view?.let {
-            it.enableHomeAsUp { navigator.handleBack() }
-            it.time = mealTime.asReadableString
-            it.progress = "100%"
-
-            if(meal != null) {
-                it.setExistingData(ingredients, possibleIngredients)
-                it.toolbarTitle = "Edytuj posiłek - ${type.string}"
-            } else {
-                it.addInitialRow()
-                it.toolbarTitle = "Nowy posiłek - ${type.string}"
-            }
-        }
+        setupView()
     }
 
     fun onAddClick(data: List<Pair<Ingredient, Float>>) {
-        if (data.all { it.second == .0f }) {
+        info { "data: ${data.map { it.first.name to it.second }}" }
+        if (data.isEmpty() || data.all { it.second == .0f }) {
             view?.context?.toast("Nie można zapisać pustego posiłku")
             return
         }
 
         val meal = when {
-            this.meal != null -> FbMeal(meal.id, mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
-            else -> FbMeal(nextId(), mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
+            this.meal != null -> FbMeal(meal.id, mealTime, type.name, data.asFbMealIngredients())
+            else -> FbMeal(nextId(), mealTime, type.name, data.asFbMealIngredients())
         }
+        val useCounters = data.map { it.first }.map { Pair(it.id, it.useCount + 1) }
 
-        fbSaver.saveMeal(meal, this.meal != null)
-        data.map { it.first }.map { Pair(it.id, it.useCount + 1) }.forEach {
-            fbSaver.updateUsageCounter(it.first, it.second)
+        saveMeal(meal, useCounters) {
+            navigator.handleBack()
         }
-
-
-        realmAsyncTransaction(
-            transaction = { mealRepo.insert(meal.toRealm(), RealmAddTransaction(it)) },
-            callback = { navigator.handleBack() }
-        )
     }
 
     fun onTimeEditClick() = showDialog {
-        TimePicker().dialog(activity) { m, h ->
-            val newTimestamp = DateTime(currentTime())
-                    .withMinuteOfHour(m)
-                    .withHourOfDay(h)
-                    .millis
-
-            mealTime = newTimestamp
+        createTimePicker(activity) {
+            mealTime = it
             view.time = mealTime.asReadableString
-        }
-
-    }
-
-    @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-    companion object {
-        fun Ingredient.toString(): String {
-            return name
         }
     }
 
@@ -108,4 +68,29 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         view?.progress = "$progress%"
     }
 
+    private fun setupView() = view?.let {
+        it.enableHomeAsUp { navigator.handleBack() }
+        it.time = mealTime.asReadableString
+        it.progress = "100%"
+
+        when (meal) {
+            null -> {
+                it.addInitialRow()
+                it.toolbarTitle = "Nowy posiłek - ${type.string}"
+            }
+            else -> {
+                it.setExistingData(ingredients, possibleIngredients)
+                it.toolbarTitle = "Edytuj posiłek - ${type.string}"
+            }
+        }
+    }
+
+    private fun List<Pair<Ingredient, Float>>.asFbMealIngredients() = map {
+        FbMealIngredient(it.first.id, it.second * factor)
+    }
+
+    @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+    companion object {
+        fun Ingredient.toString(): String = name
+    }
 }
