@@ -3,6 +3,7 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
+import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.repo.MealDetailsRepository
@@ -34,7 +35,7 @@ class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
         }
     }
 
-    val nutrients: Map<String, Float> by lazy {
+    private val nutrients: Map<String, Float> by lazy {
         mapOf(
                 "Węglowodany" to meals.nutrientSum { it.carbohydrates },
                 "Mct" to meals.nutrientSum { it.mtc },
@@ -56,22 +57,43 @@ class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
                 .sortedByDescending { it.weight }
     }
 
-    override fun createView(context: Context?) = PieChartView(context!!)
+    override fun createView(context: Context?): PieChartView {
+        val data = when(meals.size) {
+            1 -> meals[0].ingredients
+            else ->flattenIngredients
+        }
+        return PieChartView(context!!, nutrients, data)
+    }
 
     override fun onSubscribe(context: Context?) {
         super.onSubscribe(context)
         view?.let {
             it.enableHomeAsUp { navigator.goBack() }
-
-            val (title, data) = when(meals.size) {
-                1 -> "${meals[0].time} ${meals[0].type.string}" to meals[0].ingredients
-                else -> meals[0].date to flattenIngredients
+            it.toolbarTitle = when(meals.size) {
+                1 -> "${meals[0].time} ${meals[0].type.string}"
+                else -> meals[0].date
             }
-            it.toolbarTitle = title
-            it.initList(data)
-            it.initChart()
+            it.initMenu(R.menu.chart_menu) { itemId ->
+                when(itemId) {
+                    R.id.action_bar_chart -> {
+                        it.mode = ChartMode.BAR
+                        it.toolbarMenu.findItem(itemId).isVisible = false
+                        it.toolbarMenu.findItem(R.id.action_pie_chart).isVisible = true
+                    }
+                    R.id.action_pie_chart -> {
+                        it.mode = ChartMode.PIE
+                        it.toolbarMenu.findItem(itemId).isVisible = false
+                        it.toolbarMenu.findItem(R.id.action_bar_chart).isVisible = true
+
+                    }
+                }
+            }
         }
     }
 
     private inline fun List<MealDetails>.nutrientSum(f: (MealDetails) -> Float): Float = map { f(it) }.sum()
+
+    enum class ChartMode {
+        BAR, PIE
+    }
 }

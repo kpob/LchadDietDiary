@@ -16,6 +16,9 @@ import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.repo.IngredientContract
 import pl.kpob.dietdiary.repo.TagContract
 import android.support.v4.content.ContextCompat
+import android.os.StrictMode
+
+
 
 
 /**
@@ -30,6 +33,19 @@ class App: MultiDexApplication() {
         AppPrefs.init(this)
         JodaTimeAndroid.init(this)
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()   // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build())
 
         val config = RealmConfiguration.Builder()
                 .schemaVersion(2)

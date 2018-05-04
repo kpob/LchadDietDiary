@@ -3,6 +3,7 @@ package pl.kpob.dietdiary.views
 import android.graphics.Color
 import android.support.v7.graphics.drawable.DrawerArrowDrawable
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 
 /**
  * Created by kpob on 21.10.2017.
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar
 interface ToolbarManager {
 
     val toolbar: Toolbar
+    val toolbarMenu: Menu get() = toolbar.menu
 
     var toolbarTitle: String
         get() = toolbar.title.toString()
