@@ -13,6 +13,10 @@ export class Period {
     this.year = d1.getFullYear();
     this.month = d1.getMonth();
     this.day = d1.getDate();
+
+console.log(d1)
+console.log(d2)
+    console.log(this)
   }
 
 	mealsPromise() {
@@ -34,12 +38,12 @@ export class Period {
 
   stats() {
     return admin.database()
-  		.ref('stats/daily/' + this.year + "/" + (this.month + 1) + "/" + this.day)
+  		.ref('stats/daily/' + this.year + "/" + this.month + "/" + this.day)
   		.once('value')
   };
 
   daysDiff() {
-    var timeDiff = Math.abs(this.end - this.start);
+    const timeDiff = Math.abs(this.end - this.start);
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
   }
 }
@@ -61,17 +65,13 @@ class TodayPeroid extends Period {
 
 class DayPeriod extends Period {
 	constructor(y: number, m: number, d: number) {
-    const d1 = new Date();
-		d1.setFullYear(y);
-		d1.setMonth(m);
-		d1.setDate(d);
+    console.log('day')
+    console.log(m)
+    const d1 = new Date(y, m, d);
   	d1.setHours(0);
   	d1.setMinutes(0);
 
-  	const d2 = new Date();
-		d2.setFullYear(y);
-		d2.setMonth(m);
-		d2.setDate(d);
+  	const d2 = new Date(y, m, d);
   	d2.setHours(23);
   	d2.setMinutes(59);
 

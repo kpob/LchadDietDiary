@@ -2,8 +2,14 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 import * as Period from './../period';
+import * as Stats from './../stats';
+import { PdfGenerator } from './../views/pdf_generator';
+import { DbMonthlyStats } from './../model/db';
+import * as Utils from './../utils';
 
 const nodemailer = require('nodemailer');
+const base64 = require('base64-stream');
+
 const gmailEmail = functions.config().gmail.email;
 const gmailPassword = functions.config().gmail.password;
 const mailTransport = nodemailer.createTransport({
@@ -27,9 +33,7 @@ export const newMealNotification = functions.database.ref('meals/{mealId}').onCr
 	    if (!result.hasChildren()) {
 	      return console.log('There are no notification tokens to send to.');
 	    }
-	    // Notification details.
 	    const payload = getNotificationPayload(mealType);
-    	// Listing all tokens.
     	const tokens = Object.keys(result.val());
 			//remove senderToken
     	const senderTokenIdx = tokens.indexOf(senderToken);
@@ -47,31 +51,50 @@ export const newMealNotification = functions.database.ref('meals/{mealId}').onCr
   });
 });
 
-export const montlyStatsEmail = functions.https.onRequest((req, res) => {
-		let mailOptions = {
-	    from: `${APP_NAME} <noreply@firebase.com>`,
-	    to: "krzysztof.pobiarzyn@gmail.com",
-			subject: 'Podsumowanie miesiąca',
-			text: 'Hej Mania! Teraz jeszcze wysyłam głupotki, ale kiedyś wyślę super rzeczy!',
-			html:
-            '<p><b>Hej</b> za nami kolejny trudny miesiąc, ale znowu daliśmy radę!</p>' +
-            '<p>W tym miesiącu Staś zjadł 1000 kcal, co daje średnio 100 kcal na dobę!</p>' +
-						'<p>Największy apetyt miał 21.08 kiedy to zjadł aż 2000 kcal</p>' +
-						'<p>Pobierz szczegółowy raport</p>',
+export const montlyStatsEmail = functions.https.onRequest(async (req, res) => {
+    const period: Period.Period = Period.lastMonth();
+    let statsSnapshot = await Utils.montlyStatsPromise(period);
+    const stats: DbMonthlyStats = statsSnapshot.val();
 
-	  };
+    const pdfGenerator = new PdfGenerator(
+      period,
+      'Stas Pobiarzyn - Raport miesieczny'
+    );
+    pdfGenerator.generateMonthlyReport(stats);
 
+    let finalString = ''; // contains the base64 string
+    let stream = pdfGenerator.doc.pipe(base64.encode());
+    pdfGenerator.end();
 
+    stream.on('data', function(chunk: String) {
+        finalString += chunk;
+    });
 
-	  mailTransport.sendMail(mailOptions).then(() => {
-			let lastMonth = Period.lastMonth();
-			let stats = lastMonth.stats().then(result => {
-				res.setHeader('Content-Type', 'application/json');
-		    res.send(JSON.stringify({
-					result: result
-				}));
-			});
-	  });
+    stream.on('end', function() {
+      // the stream is at its end, so push the resulting base64 string to the response
+  		const mailOptions = {
+  	    from: `${APP_NAME} <noreply@firebase.com>`,
+  	    to: "Krzysztof Pobiarżyn <krzysztof.pobiarzyn@gmail.com>, Mania Bzdęga <mania.bzdega@gmail.com>,",
+  			subject: 'Podsumowanie miesiąca',
+  			html:
+              '<p>Hej!</p>' +
+              '<p>Za nami kolejny trudny miesiąc, dużo nowych wrażeń, emocji, ale znowu daliśmy radę!</p>' +
+              '<p>W tym miesiącu Staś zjadł aż <b>' + Stats.formattedValue(stats.kcal, "kcal") + '</b>' +
+              ', co daje średnio <b>' + Stats.formattedValue(stats.kcalAvg, "kcal") + '</b> na dobę!</p>' +
+  						'<p>Szczegółowy raport w załączniku</p>',
+        attachments: [
+          {   // stream as an attachment
+            filename: 'raport.pdf',
+            content: finalString,
+            encoding: 'base64'
+          }
+        ]
+  	  };
+
+  	  mailTransport.sendMail(mailOptions).then(() => {
+  			res.json(finalString);
+  	  });
+  });
 });
 
 function getNotificationPayload(mealType: string): any {

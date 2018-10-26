@@ -7,3 +7,15 @@
 /build
 /captures
 .externalNativeBuild
+firebase/functions/stats
+firebase/functions/views
+firebase/functions/utils
+firebase/functions/notifications
+firebase/functions/period
+firebase/functions/model
+firebase/dietdiary-6764b-b1498aacec51.json
+firebase/functions/.runtimeconfig.json
+firebase/functions/firebase-debug.log
+index.js
+firebase/myblog
+firebase/public
