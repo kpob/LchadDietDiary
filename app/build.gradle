@@ -15,7 +15,7 @@ android {
         applicationId "pl.kpob.dietdiary"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 4
+        versionCode 6
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -78,4 +78,9 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
 

@@ -30,28 +30,35 @@
             android:background="@drawable/accent_circle"
             android:src="@drawable/ic_add_ingredient" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+
+            <!--<android.support.v7.widget.AppCompatSeekBar-->
+                <!--android:id="@+id/progress_bar"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:progress="100"-->
+                <!--android:max="100"-->
+                <!--tools:progress="53"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/progress_value"-->
+                <!--android:layout_width="48dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--tools:text="99.3%"/>-->
+        <!--</LinearLayout>-->
+
+        <EditText
+            android:id="@+id/left"
+            android:layout_width="156dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <android.support.v7.widget.AppCompatSeekBar
-                android:id="@+id/progress_bar"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:progress="100"
-                android:max="100"
-                tools:progress="53"/>
-
-            <TextView
-                android:id="@+id/progress_value"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                tools:text="99.3%"/>
-        </LinearLayout>
+            android:inputType="number"
+            android:hint="Zostało" />
 
         <LinearLayout
             android:id="@+id/time_container"
@@ -74,10 +81,6 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Dodatkowe uwagi" />
 
     </LinearLayout>
 

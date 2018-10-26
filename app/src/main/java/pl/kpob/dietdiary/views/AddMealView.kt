@@ -13,12 +13,10 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.internals.AnkoInternals
 import org.jetbrains.anko.sdk25.listeners.onClick
 import org.jetbrains.anko.sdk25.listeners.onSeekBarChangeListener
-import pl.kpob.dietdiary.R
+import pl.kpob.dietdiary.*
+import pl.kpob.dietdiary.delegates.TextViewDelegate
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.MealIngredient
-import pl.kpob.dietdiary.forEachTypedIndexedChild
-import pl.kpob.dietdiary.lastChild
-import pl.kpob.dietdiary.mapTypedChild
 import pl.kpob.dietdiary.screens.AddMealScreen
 import kotlin.properties.Delegates
 
@@ -31,21 +29,12 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     private val nextBtn by lazy { find<View>(R.id.add_next_btn) }
     private val container by lazy { find<ViewGroup>(R.id.container) }
     private val timeContainer by lazy { find<View>(R.id.time_container) }
-    private val timeView by lazy { find<TextView>(R.id.time) }
+    private val leftView by lazy { find<EditText>(R.id.left) }
 
-    private val seekBar by lazy { find<AppCompatSeekBar>(R.id.progress_bar) }
-    private val progressValue by lazy { find<TextView>(R.id.progress_value) }
-
-    var time: String
-        get() = AnkoInternals.noGetter()
-        set(value) { timeView.text = value }
-
-    var progress: String
-        get() = AnkoInternals.noGetter()
-        set(value) { progressValue.text = value }
+    var time: CharSequence by TextViewDelegate(R.id.time)
 
     init {
-        View.inflate(ctx, R.layout.screen_add_meal, this)
+        inflate(ctx, R.layout.screen_add_meal, this)
 
         nextBtn.onClick { addRow() }
 
@@ -54,18 +43,15 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                 R.id.action_done -> {
                     val data = obtainData()
                     hideKeyboard()
-                    info { "data: ${data.map { it.first.name to it.second }}" }
-                    screen.onAddClick(data)
+                    screen.onAddClick(data, leftView.floatValue)
                 }
+                R.id.action_add_template -> screen.addTemplate(obtainIngredients())
+                R.id.action_load_template -> screen.loadTemplate()
             }
         }
 
         timeContainer.onClick {
             screen.onTimeEditClick()
-        }
-
-        seekBar.onSeekBarChangeListener {
-            onProgressChanged { _, progress, _ -> screen.onProgressChanged(progress) }
         }
     }
 
@@ -94,7 +80,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     }
 
     private fun addRow() {
-        View.inflate(context, R.layout.item_next_ingredient, container)
+        inflate(context, R.layout.item_next_ingredient, container)
         setupRow()
     }
 
@@ -134,6 +120,12 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             .mapTypedChild<ViewGroup, Pair<Ingredient?, Float>> { rowToData(it) }
             .filter { it.first != null }
             .map { it.first!! to it.second }
+
+
+    private fun obtainIngredients(): List<Ingredient> = container
+            .mapTypedChild<ViewGroup, Pair<Ingredient?, Float>> { rowToData(it) }
+            .filter { it.first != null }
+            .map { it.first!! }
 
     private fun rowToData(v: ViewGroup): Pair<Ingredient?, Float> {
         var i: Ingredient? = null
@@ -218,6 +210,27 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                     notifyDataSetChanged()
                 }
             }
+        }
+    }
+
+    fun addRows(ingredients: List<Ingredient>, possibleIngredients: List<Ingredient>) {
+        ingredients.forEach {
+            container
+                    .lastChild<ViewGroup>()
+                    .forEachChild { v ->
+                        when (v) {
+                            is AutoCompleteTextView -> {
+                                setupAutocompleteView(v)
+                                val iidx = possibleIngredients.indexOf(it)
+                                v.setText(it.name)
+                                (v.adapter as IngredientAdapter).selected = iidx
+                            }
+                            is ImageView -> {
+                                v.setOnClickListener { container.removeView(it.parent as View) }
+                            }
+                        }
+                    }
+            addRow()
         }
     }
 }

@@ -6,4 +6,14 @@
         android:icon="@drawable/ic_done_white_24dp"
         android:title="Zapisz"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_add_template"
+        android:title="Zapisz szablon"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_load_template"
+        android:title="Wczytaj szablon"
+        app:showAsAction="never" />
 </menu>

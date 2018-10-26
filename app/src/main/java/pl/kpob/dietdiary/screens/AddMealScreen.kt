@@ -1,21 +1,24 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
+import android.support.v7.app.AlertDialog
+import android.widget.EditText
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.asReadableString
-import pl.kpob.dietdiary.currentTime
+import pl.kpob.dietdiary.*
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.FbMealIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver
-import pl.kpob.dietdiary.nextId
-import pl.kpob.dietdiary.realmAsyncTransaction
 import pl.kpob.dietdiary.repo.*
+import pl.kpob.dietdiary.template.DefaultTemplateManager
+import pl.kpob.dietdiary.template.TemplateManager
+import pl.kpob.dietdiary.utils.MealProcessor
 import pl.kpob.dietdiary.views.AddMealView
 import pl.kpob.dietdiary.views.utils.TimePicker
 
@@ -31,7 +34,6 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
     private val mealRepo by lazy { MealDetailsRepository() }
 
     private var mealTime: Long = meal?.timestamp ?: currentTime()
-    private var factor: Float = 1f
 
     val possibleIngredients: List<Ingredient> by lazy {
         ingredientRepo.withRealmQuery { IngredientsByMealTypeSpecification(it, type) }
@@ -41,6 +43,10 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         mealRepo.withRealmSingleQuery { MealByIdSpecification(it, meal!!.id) }?.ingredients ?: listOf()
     }
 
+    private val templateManager: TemplateManager by lazy {
+        DefaultTemplateManager(MealTemplateRepository(possibleIngredients), type)
+    }
+
     override fun createView(context: Context?) = AddMealView(context!!)
 
     override fun onSubscribe(context: Context?) {
@@ -48,7 +54,6 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         view?.let {
             it.enableHomeAsUp { navigator.handleBack() }
             it.time = mealTime.asReadableString
-            it.progress = "100%"
 
             if(meal != null) {
                 it.setExistingData(ingredients, possibleIngredients)
@@ -60,22 +65,23 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         }
     }
 
-    fun onAddClick(data: List<Pair<Ingredient, Float>>) {
+    fun onAddClick(data: List<Pair<Ingredient, Float>>, left: Float) {
         if (data.all { it.second == .0f }) {
             view?.context?.toast("Nie można zapisać pustego posiłku")
             return
         }
 
+        val processedData = MealProcessor.process(data, left)
+
         val meal = when {
-            this.meal != null -> FbMeal(meal.id, mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
-            else -> FbMeal(nextId(), mealTime, type.name, data.map { FbMealIngredient(it.first.id, it.second * factor) })
+            this.meal != null -> FbMeal(meal.id, mealTime, type.name, processedData.map { FbMealIngredient(it.ingredient.id, it.weight) })
+            else -> FbMeal(nextId(), mealTime, type.name, processedData.map { FbMealIngredient(it.ingredient.id, it.weight) })
         }
 
         fbSaver.saveMeal(meal, this.meal != null)
-        data.map { it.first }.map { Pair(it.id, it.useCount + 1) }.forEach {
-            fbSaver.updateUsageCounter(it.first, it.second)
+        MealProcessor.calculateUsage(data).forEach {
+            fbSaver.updateUsageCounter(it.itemId, it.counter)
         }
-
 
         realmAsyncTransaction(
             transaction = { mealRepo.insert(meal.toRealm(), RealmAddTransaction(it)) },
@@ -96,16 +102,46 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
 
     }
 
-    @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-    companion object {
-        fun Ingredient.toString(): String {
-            return name
-        }
+    fun addTemplate(ingredients: List<Ingredient>) = showDialog {
+        AlertDialog.Builder(it).apply {
+            setTitle("Dodaj szablon posiłku")
+
+            var nameField: EditText? = null
+            setView(it.layoutInflater.inflate(R.layout.view_save_template, null).apply {
+                nameField = find(R.id.template_name)
+            })
+
+            setNegativeButton("Anuluj") { _, _ ->  }
+            setPositiveButton("Zapisz") { _, _ ->
+                val name = nameField?.text?.toString() ?: ""
+                saveTemplate(name, ingredients)
+            }
+        }.create()
     }
 
-    fun onProgressChanged(progress: Int) {
-        factor = progress.toFloat() / 100f
-        view?.progress = "$progress%"
+    fun loadTemplate() = showDialog {
+        AlertDialog.Builder(it).apply {
+            setTitle("Wczytaj szablon posiłku")
+            val templates = templateManager.loadTemplates()
+            val items = templates.map { it.name }.toTypedArray()
+            setSingleChoiceItems(items, 0) { dialog, which ->
+                view?.addRows(templates[which].ingredients, possibleIngredients)
+                dialog.dismiss()
+            }
+        }.create()
+    }
+
+    private fun saveTemplate(name: String, ingredients: List<Ingredient>) {
+        if(templateManager.exists(name)) {
+            view?.context?.toast("Szablon o nazwie $name już istnieje")
+            return
+        }
+        templateManager.addTemplate(name, ingredients)
+    }
+
+    @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+    companion object {
+        fun Ingredient.toString(): String = name
     }
 
 }

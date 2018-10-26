@@ -33,7 +33,9 @@ class MealByIdSpecification(private val realm: Realm, private val id: String) : 
 class AllMealsSortedSpecification(private val realm: Realm): Specification<MealDTO> {
 
     override val collection: List<MealDTO>
-        get() = realm.where(MealDTO::class.java).findAllSorted(MealContract.TIME, Sort.DESCENDING)
+        get() = realm.where(MealDTO::class.java)
+                .findAllSorted(MealContract.TIME, Sort.DESCENDING)
+                .take(300)
 }
 
 class MealsWithIngredientSpecification(private val realm: Realm, private val ingredientId: String) : Specification<MealDTO> {
@@ -82,5 +84,12 @@ class AllTagsSpecification(private val realm: Realm, private val ids: Array<Stri
 
     override val collection: List<TagDTO>
         get() = realm.where(TagDTO::class.java).findAll()
+
+}
+
+class TemplatesByMealType(private val realm: Realm, private val type: MealType): Specification<MealTemplateDTO> {
+    override val collection: List<MealTemplateDTO>
+        get() = realm.where(MealTemplateDTO::class.java).equalTo(MealTemplateContract.TYPE, type.string).findAll()
+
 
 }

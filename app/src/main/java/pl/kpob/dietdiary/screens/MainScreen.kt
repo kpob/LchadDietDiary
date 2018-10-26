@@ -2,9 +2,12 @@ package pl.kpob.dietdiary.screens
 
 import android.content.Context
 import android.support.v7.app.AlertDialog
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import com.wealthfront.magellan.rx.RxScreen
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import pl.kpob.dietdiary.MainActivity
 import pl.kpob.dietdiary.domain.Meal
@@ -20,7 +23,7 @@ import pl.kpob.dietdiary.views.utils.TimePicker
 /**
  * Created by kpob on 20.10.2017.
  */
-class MainScreen() : RxScreen<MainView>(), AnkoLogger {
+class MainScreen : RxScreen<MainView>(), AnkoLogger {
 
     private val repo by lazy { MealRepository() }
 
@@ -46,7 +49,7 @@ class MainScreen() : RxScreen<MainView>(), AnkoLogger {
                 when (it) {
                     R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
                     R.id.action_all_ingredients -> view.post { navigator.goTo(IngredientsListScreen()) }
-                    R.id.action_tags -> view.post { navigator.goTo(TagCloudScreen()) }
+//                    R.id.action_tags -> view.post { navigator.goTo(TagCloudScreen()) }
                 }
             }
             it.showMeals(meals)

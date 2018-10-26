@@ -10,6 +10,10 @@ import pl.kpob.mapper_annotation.AutoMapping
 /**
  * Created by kpob on 20.10.2017.
  */
+open class RealmString(
+    open var string: String = ""
+): RealmObject()
+
 @AutoMapping
 open class IngredientDTO(
         @PrimaryKey open var id: String = "",
@@ -50,7 +54,14 @@ open class TagDTO(
         open var activeColor: Int = 0,
         open var textColor: Int = 0,
         open var activeTextColor: Int = 0
+): RealmObject()
 
+@AutoMapping(generateDomainModel = false, generateFirebaseModel = false, generateRepository = false)
+open class MealTemplateDTO(
+        @PrimaryKey open var id: String = "",
+        open var name: String = "",
+        open var type: String = "",
+        open var ingredientIds: RealmList<RealmString> = RealmList()
 ): RealmObject()
 
 enum class IngredientCategory(val value: Int, val label: String) {

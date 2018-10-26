@@ -37,8 +37,18 @@ data class MealIngredient(
         val id: String,
         val name: String,
         val calories: Float,
-        val weight: Float
+        val weight: Float = 0f
 )
+
+data class MealTemplate(
+        val id: String,
+        val name: String,
+        val type: MealType,
+        val ingredients: List<Ingredient>
+)
+
+data class IngredientUsage(val itemId: String, val counter: Int)
+data class MealPart(val ingredient: Ingredient, val weight: Float)
 
 enum class MealType(val string: String, val icon: Int, val filters: List<IngredientCategory>) {
     MILK("Mleczko", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS)),

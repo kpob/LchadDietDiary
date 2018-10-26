@@ -5,6 +5,7 @@ package pl.kpob.dietdiary
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wealthfront.magellan.Screen
@@ -40,6 +41,8 @@ inline fun<T: View, V> ViewGroup.mapTypedChild(action: (T) -> V): List<V> =
 fun View.show() { visibility = View.VISIBLE }
 fun View.hide() { visibility = View.GONE }
 fun View.makeInvisible() { visibility = View.INVISIBLE }
+
+val EditText.floatValue: Float get() = this.text.toString().toFloat()
 
 inline fun supportsOreo(action: () -> Unit) {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

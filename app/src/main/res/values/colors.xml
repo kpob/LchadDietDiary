@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#673AB7</color>
-    <color name="colorPrimaryDark">#512DA8</color>
-    <color name="primary_light">#D1C4E9</color>
-    <color name="primary_light_transparent">#ddD1C4E9</color>
-    <color name="colorAccent">#FF5722</color>
-    <color name="colorAccentTransparent">#80FF5722</color>
+    <!--<color name="colorPrimary">#673AB7</color>-->
+    <!--<color name="colorPrimaryDark">#512DA8</color>-->
+    <!--<color name="primary_light">#D1C4E9</color>-->
+    <!--<color name="primary_light_transparent">#ddD1C4E9</color>-->
+
+    <color name="colorPrimary">@color/blue_500</color>
+    <color name="colorPrimaryDark">@color/blue_900</color>
+    <color name="primary_light">@color/blue_100</color>
+    <color name="primary_light_transparent">@color/blue_t100</color>
+    <!--<color name="colorAccent">#FF5722</color>-->
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccentTransparent">#ddc62828</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+
+    <color name="blue_50">#e2eaf2</color>
+    <color name="blue_100">#b6cbdf</color>
+    <color name="blue_t100">#ddb6cbdf</color>
+    <color name="blue_200">#85a9ca</color>
+    <color name="blue_300">#5487b4</color>
+    <color name="blue_400">#306da4</color>
+    <color name="blue_500">#0b5394</color>
+    <color name="blue_600">#0a4c8c</color>
+    <color name="blue_700">#084281</color>
+    <color name="blue_800">#063977</color>
+    <color name="blue_900">#032965</color>
+    <color name="blue_A100">#95b6ff</color>
+    <color name="blue_A200">#6294ff</color>
+    <color name="blue_A400">#2f71ff</color>
+    <color name="blue_A700">#155fff</color>
 </resources>

@@ -16,6 +16,7 @@ import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.repo.IngredientContract
 import pl.kpob.dietdiary.repo.TagContract
 import android.support.v4.content.ContextCompat
+import pl.kpob.dietdiary.repo.MealTemplateContract
 
 
 /**
@@ -32,7 +33,7 @@ class App: MultiDexApplication() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         val config = RealmConfiguration.Builder()
-                .schemaVersion(2)
+                .schemaVersion(3)
                 .migration { realm, oldVersion, _ ->
                     var ver = oldVersion
 
@@ -53,6 +54,20 @@ class App: MultiDexApplication() {
                                 ?.addField(TagContract.CREATION_TIME, Long::class.java)
                                 ?.addField(TagContract.TEXT_COLOR, Int::class.java)
                                 ?.addField(TagContract.COLOR, Int::class.java)
+                        ver++
+                    }
+
+                    if(ver == 2L) {
+                        val realmString = realm.schema
+                                .create("RealmString")
+                                .addField("string", String::class.java, FieldAttribute.REQUIRED)
+
+                        realm.schema
+                                .create(MealTemplateContract.TABLE_NAME)
+                                ?.addField(MealTemplateContract.ID, String::class.java, FieldAttribute.REQUIRED, FieldAttribute.PRIMARY_KEY)
+                                ?.addField(MealTemplateContract.NAME, String::class.java, FieldAttribute.REQUIRED)
+                                ?.addField(MealTemplateContract.TYPE, String::class.java, FieldAttribute.REQUIRED)
+                                ?.addRealmListField(MealTemplateContract.INGREDIENT_IDS, realmString)
                     }
                 }
                 .build()

@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.media.AudioAttributes
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
@@ -31,7 +30,7 @@ import java.io.InputStreamReader
 class MainActivity : SingleActivity(), AnkoLogger {
 
     companion object {
-        val EXTRA_MEAL = "EXTRA_MEAL"
+        const val EXTRA_MEAL = "EXTRA_MEAL"
     }
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
@@ -55,7 +54,6 @@ class MainActivity : SingleActivity(), AnkoLogger {
                     ingredientRepo.delete(spec, RealmRemoveTransaction())
                 }
             }
-
         }
     }
 
@@ -70,7 +68,9 @@ class MainActivity : SingleActivity(), AnkoLogger {
             usingRealm {
                 it.executeTransactionAsync {
                     mealRepo.insert(mealsToSave, RealmAddTransaction(it))
-                    mealRepo.delete(MealsByIdsSpecification(it, idsToDelete), RealmRemoveTransaction())
+                    if(idsToDelete.isNotEmpty()) {
+                        mealRepo.delete(MealsByIdsSpecification(it, idsToDelete), RealmRemoveTransaction())
+                    }
                 }
             }
         }
@@ -92,7 +92,7 @@ class MainActivity : SingleActivity(), AnkoLogger {
                     if(it.isSuccessful) {
                         info { it.result }
                         firebaseDb.ingredientsRef.addValueEventListener(ingredientsListener)
-                        firebaseDb.mealsRef.addValueEventListener(mealsListener)
+                        firebaseDb.mealsRef.orderByChild("time").limitToLast(200).addValueEventListener(mealsListener)
                     } else {
                         info { "ex ${it.exception}" }
                         toast("Nie można się zalogować")
@@ -101,11 +101,12 @@ class MainActivity : SingleActivity(), AnkoLogger {
 
         realm = Realm.getDefaultInstance().apply {
             addChangeListener {
-                info { "db changed" }
                 updateView()
             }
         }
-
+        firebaseDb.ingredientsRef.addValueEventListener(ingredientsListener)
+        firebaseDb.mealsRef.orderByChild("time").limitToLast(200).addValueEventListener(mealsListener)
+        
         supportsOreo {
             val channelId = "Default"
             if (notificationManager.getNotificationChannel(channelId) == null) {

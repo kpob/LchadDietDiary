@@ -12,10 +12,10 @@
         android:title="Lista składników"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_tags"
-        android:title="Tagi"
-        app:showAsAction="never"/>
+    <!--<item-->
+        <!--android:id="@+id/action_tags"-->
+        <!--android:title="Tagi"-->
+        <!--app:showAsAction="never"/>-->
 
     <!--<item-->
         <!--android:id="@+id/action_ocr"-->
