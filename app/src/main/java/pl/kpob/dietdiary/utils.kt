@@ -3,6 +3,7 @@
 package pl.kpob.dietdiary
 
 import android.os.Build
+import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -10,6 +11,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wealthfront.magellan.Screen
 import io.realm.Realm
+import org.jetbrains.anko.attempt
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
 import pl.kpob.dietdiary.firebase.FbIngredient
@@ -42,7 +44,11 @@ fun View.show() { visibility = View.VISIBLE }
 fun View.hide() { visibility = View.GONE }
 fun View.makeInvisible() { visibility = View.INVISIBLE }
 
-val EditText.floatValue: Float get() = this.text.toString().toFloat()
+val EditText.floatValue: Float get() = attempt { this.text.toString().toFloat() }.value ?: .0f
+
+val Editable?.asFloatValue: Float get() = attempt { (this ?: "").toString().toFloat() }.let {
+    it.value ?: 0f
+}
 
 inline fun supportsOreo(action: () -> Unit) {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

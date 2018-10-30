@@ -48,7 +48,9 @@ data class MealTemplate(
 )
 
 data class IngredientUsage(val itemId: String, val counter: Int)
-data class MealPart(val ingredient: Ingredient, val weight: Float)
+data class MealPart(val ingredient: Ingredient, val weight: Float) {
+    val kcal: Float = ingredient.calories * weight/100f
+}
 
 enum class MealType(val string: String, val icon: Int, val filters: List<IngredientCategory>) {
     MILK("Mleczko", R.drawable.ic_milk_bottle, listOf(IngredientCategory.OTHERS)),

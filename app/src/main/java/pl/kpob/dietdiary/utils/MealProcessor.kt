@@ -10,7 +10,10 @@ object MealProcessor {
         val totalWeight = data.map { it.second }.sum()
         val percentage = (totalWeight-left)/totalWeight
 
-        return data.map { MealPart(it.first, it.second * percentage) }
+
+        return data.map {
+            MealPart(it.first, it.second * percentage)
+        }
     }
 
     fun calculateUsage(data: List<Pair<Ingredient, Float>>): List<IngredientUsage> =

@@ -49,7 +49,6 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
                 when (it) {
                     R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
                     R.id.action_all_ingredients -> view.post { navigator.goTo(IngredientsListScreen()) }
-//                    R.id.action_tags -> view.post { navigator.goTo(TagCloudScreen()) }
                 }
             }
             it.showMeals(meals)
@@ -74,7 +73,10 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
         }
     }
 
-    fun updateData() = view.postDelayed({ view?.showMeals(meals) }, 1000)
+    fun updateData() {
+        view.hideSyncBar()
+        view.postDelayed({ view?.showMeals(meals) }, 1000)
+    }
 
     fun onDeleteClick(item: Meal) = showDialog {
         AlertDialog.Builder(activity)

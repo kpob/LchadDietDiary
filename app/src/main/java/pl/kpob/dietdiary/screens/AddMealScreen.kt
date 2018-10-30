@@ -34,6 +34,7 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
     private val mealRepo by lazy { MealDetailsRepository() }
 
     private var mealTime: Long = meal?.timestamp ?: currentTime()
+    private var totalWeight: Float = .0f
 
     val possibleIngredients: List<Ingredient> by lazy {
         ingredientRepo.withRealmQuery { IngredientsByMealTypeSpecification(it, type) }
@@ -72,10 +73,12 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         }
 
         val processedData = MealProcessor.process(data, left)
+        val mealIngredients = processedData.map { FbMealIngredient(it.ingredient.id, it.weight) }
+        val kcal = processedData.map { it.kcal }.sum()
 
         val meal = when {
-            this.meal != null -> FbMeal(meal.id, mealTime, type.name, processedData.map { FbMealIngredient(it.ingredient.id, it.weight) })
-            else -> FbMeal(nextId(), mealTime, type.name, processedData.map { FbMealIngredient(it.ingredient.id, it.weight) })
+            this.meal != null -> FbMeal(meal.id, mealTime, type.name, mealIngredients, kcal = kcal)
+            else -> FbMeal(nextId(), mealTime, type.name, mealIngredients, kcal = kcal)
         }
 
         fbSaver.saveMeal(meal, this.meal != null)
@@ -137,6 +140,10 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
             return
         }
         templateManager.addTemplate(name, ingredients)
+    }
+
+    fun updateTotalWeight(value: Float) {
+        view?.totalWeight = value
     }
 
     @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

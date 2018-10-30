@@ -15,7 +15,14 @@ data class FbMeal(
         val name: String = "",
         val ingredients: List<FbMealIngredient> = listOf(),
         override val deleted: Boolean = false,
-        val senderToken: String = AppPrefs.token
+        val senderToken: String = AppPrefs.token,
+        val kcal: Float = 0.0f
 ) : FirebaseModel<MealDTO> {
-    override fun toRealm() = MealDTO(id, time, name, RealmList<MealIngredientDTO>().apply { addAll(ingredients.map { it.toRealm() }) })
+
+    override fun toRealm() = MealDTO(
+            id,
+            time,
+            name,
+            RealmList<MealIngredientDTO>().apply { addAll(ingredients.map { it.toRealm() }) }
+    )
 }

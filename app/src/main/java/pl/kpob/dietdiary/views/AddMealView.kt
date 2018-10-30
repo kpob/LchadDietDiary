@@ -13,8 +13,10 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.internals.AnkoInternals
 import org.jetbrains.anko.sdk25.listeners.onClick
 import org.jetbrains.anko.sdk25.listeners.onSeekBarChangeListener
+import org.jetbrains.anko.sdk25.listeners.textChangedListener
 import pl.kpob.dietdiary.*
 import pl.kpob.dietdiary.delegates.TextViewDelegate
+import pl.kpob.dietdiary.delegates.TextViewFloatValueDelegate
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.screens.AddMealScreen
@@ -32,6 +34,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     private val leftView by lazy { find<EditText>(R.id.left) }
 
     var time: CharSequence by TextViewDelegate(R.id.time)
+    var totalWeight: Float by TextViewFloatValueDelegate(R.id.total_weight, "Razem:")
 
     init {
         inflate(ctx, R.layout.screen_add_meal, this)
@@ -95,6 +98,9 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                         v.setOnClickListener { container.removeView(it.parent as View) }
                     }
                     is EditText -> {
+                        v.textChangedListener {
+                            afterTextChanged { screen.updateTotalWeight(rowsAsWeight()) }
+                        }
                     }
                 }
             }
@@ -104,7 +110,6 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             (parent?.adapter as IngredientAdapter).selected = position
 
             attempt {
-                info { "selected: ${(parent.adapter as IngredientAdapter).selectedItem}" }
                 v.post {
                     (v.parent as ViewGroup).firstChild { it !is AutoCompleteTextView && it is EditText }.requestFocus()
                 }
@@ -233,4 +238,17 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             addRow()
         }
     }
+
+    fun rowsAsWeight(): Float =
+        container.mapTypedChild<ViewGroup, Float> {
+            it.childrenSequence()
+                    .filter { it is EditText && it !is AutoCompleteTextView }
+                    .map { it as EditText }
+                    .map { it.floatValue }
+                    .sum()
+        }.sum()
+
+
+
+
 }

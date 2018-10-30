@@ -16,6 +16,4 @@ class TextViewDelegate(private val viewId: Int): ReadWriteProperty<BaseScreenVie
     override fun setValue(thisRef: BaseScreenView<*>, property: KProperty<*>, value: CharSequence) {
         thisRef.find<TextView>(viewId).text = value
     }
-
-
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ViewAnimator
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.dekoservidoni.omfm.OneMoreFabMenu
@@ -19,6 +20,11 @@ import org.jetbrains.anko.sdk25.listeners.onClick
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.screens.MainScreen
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.support.v4.view.ViewCompat.animate
+import android.R.attr.translationY
+import pl.kpob.dietdiary.hide
 
 
 /**
@@ -29,6 +35,7 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val meals by lazy { find<RecyclerView>(R.id.meals) }
     private val fab by lazy { find<OneMoreFabMenu>(R.id.fab) }
+    private val syncBar by lazy { find<View>(R.id.sync_bar) }
 
     init {
         inflate(ctx, R.layout.screen_home, this)
@@ -50,6 +57,18 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
 
         meals.layoutManager = LinearLayoutManager(context)
         meals.adapter = Adapter(data.groupBy { it.dayOfYear }.toList())
+    }
+
+    fun hideSyncBar() {
+        syncBar.animate()
+                .also { it.duration = 1000L }
+                .translationY(0f)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        super.onAnimationEnd(animation)
+                        syncBar.hide()
+                    }
+                })
     }
 
 
