@@ -6,6 +6,7 @@ import android.widget.EditText
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
+import org.jetbrains.anko.startService
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
 import pl.kpob.dietdiary.*
@@ -21,6 +22,7 @@ import pl.kpob.dietdiary.template.TemplateManager
 import pl.kpob.dietdiary.utils.MealProcessor
 import pl.kpob.dietdiary.views.AddMealView
 import pl.kpob.dietdiary.views.utils.TimePicker
+import pl.kpob.dietdiary.worker.RefreshMealsService
 
 
 /**
@@ -77,8 +79,8 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         val kcal = processedData.map { it.kcal }.sum()
 
         val meal = when {
-            this.meal != null -> FbMeal(meal.id, mealTime, type.name, mealIngredients, kcal = kcal)
-            else -> FbMeal(nextId(), mealTime, type.name, mealIngredients, kcal = kcal)
+            this.meal != null -> FbMeal(meal.id, mealTime, type.toString(), mealIngredients, kcal = kcal)
+            else -> FbMeal(nextId(), mealTime, type.toString(), mealIngredients, kcal = kcal)
         }
 
         fbSaver.saveMeal(meal, this.meal != null)
@@ -88,7 +90,10 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
 
         realmAsyncTransaction(
             transaction = { mealRepo.insert(meal.toRealm(), RealmAddTransaction(it)) },
-            callback = { navigator.handleBack() }
+            callback = {
+                activity.startService<RefreshMealsService>()
+                navigator.handleBack()
+            }
         )
     }
 

@@ -22,8 +22,7 @@ import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.screens.MainScreen
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.support.v4.view.ViewCompat.animate
-import android.R.attr.translationY
+import pl.kpob.dietdiary.App
 import pl.kpob.dietdiary.hide
 
 
@@ -35,7 +34,7 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val meals by lazy { find<RecyclerView>(R.id.meals) }
     private val fab by lazy { find<OneMoreFabMenu>(R.id.fab) }
-    private val syncBar by lazy { find<View>(R.id.sync_bar) }
+    val syncBar by lazy { find<View>(R.id.sync_bar) }
 
     init {
         inflate(ctx, R.layout.screen_home, this)
@@ -50,6 +49,8 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
                 }
             }
         })
+
+        if(!App.isSyncing) syncBar.hide()
     }
 
     fun showMeals(data: List<Meal>) {
@@ -61,7 +62,6 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
 
     fun hideSyncBar() {
         syncBar.animate()
-                .also { it.duration = 1000L }
                 .translationY(0f)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
@@ -85,12 +85,12 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             (1 + it + data.take(it).map { it.second }.flatten().count())..(data.take(it + 1).map { it.second }.flatten().count() + it)
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val range = ranges.firstOrNull { it.contains(position) }
             if (range != null) {
                 val rangeIdx = ranges.indexOfFirst { it.contains(position) }
 
-                holder?.itemView?.let {
+                holder.itemView?.let {
                     val item = data.map { it.second }.flatten()[position - rangeIdx - 1]
                     it.find<ImageView>(R.id.meal_type).setImageResource(item.type.icon)
                     it.find<TextView>(R.id.meal_time).text = item.time
@@ -121,7 +121,7 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             return (if (ranges.any { it.contains(position) }) 1 else 2).apply {}
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return object : RecyclerView.ViewHolder(View.inflate(context, if (viewType == 1) R.layout.item_meal else R.layout.item_meal_header, null)) {}
         }
 

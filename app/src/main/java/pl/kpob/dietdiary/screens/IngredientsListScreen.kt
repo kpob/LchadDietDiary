@@ -5,6 +5,7 @@ import android.os.Handler
 import com.wealthfront.magellan.rx.RxScreen
 import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startService
 import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.firebase.FbIngredient
@@ -13,6 +14,7 @@ import pl.kpob.dietdiary.ingredientsRef
 import pl.kpob.dietdiary.repo.*
 import pl.kpob.dietdiary.usingRealm
 import pl.kpob.dietdiary.views.IngredientsListView
+import pl.kpob.dietdiary.worker.RefreshIngredientsService
 
 /**
  * Created by kpob on 22.10.2017.
@@ -54,6 +56,8 @@ class IngredientsListScreen: RxScreen<IngredientsListView>(), AnkoLogger {
             ingredientRepository.delete(spec, RealmRemoveTransaction())
         }
         handler.post { view.updateList(data) }
+        activity.startService<RefreshIngredientsService>()
+
     }
 
     fun onEditClick(item: Ingredient) {

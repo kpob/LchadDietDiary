@@ -2,7 +2,6 @@ package pl.kpob.dietdiary.views
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.widget.AppCompatSeekBar
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.*
-import org.jetbrains.anko.internals.AnkoInternals
 import org.jetbrains.anko.sdk25.listeners.onClick
-import org.jetbrains.anko.sdk25.listeners.onSeekBarChangeListener
 import org.jetbrains.anko.sdk25.listeners.textChangedListener
 import pl.kpob.dietdiary.*
 import pl.kpob.dietdiary.delegates.TextViewDelegate

@@ -13,8 +13,12 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 
+//@SupportedSourceVersion(SourceVersion.RELEASE_8)
+//@SupportedOptions(MappedProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
+@SupportedAnnotationTypes("*")
 class MappedProcessor : AbstractProcessor() {
 
     private val outputDir get() = File("${System.getProperty("user.dir")}/app/build/generated/source/kapt/debug")
@@ -36,11 +40,13 @@ class MappedProcessor : AbstractProcessor() {
         elements = processingEnvironment.elementUtils
         fields = mutableListOf()
 
-        domainFileBuilder = FileSpec.builder(packageName + ".domain", "domain_model")
-        repoFileBuilder = FileSpec.builder(packageName + ".repo", "repositories")
-        fbFileBuilder = FileSpec.builder(packageName + ".firebase", "firebase_model")
-        mapperFileBuilder = FileSpec.builder(packageName + ".mapper", "mappers")
+        domainFileBuilder = FileSpec.builder("$packageName.domain", "domain_model")
+        repoFileBuilder = FileSpec.builder("$packageName.repo", "repositories")
+        fbFileBuilder = FileSpec.builder("$packageName.firebase", "firebase_model")
+        mapperFileBuilder = FileSpec.builder("$packageName.mapper", "mappers")
         fbFileBuilder.addType(buildFirebaseInterface())
+
+        println("dsmdoasmkofdsmaomasomdosa")
     }
 
     override fun process(set: Set<TypeElement>, roundEnvironment: RoundEnvironment): Boolean {
@@ -143,7 +149,7 @@ class MappedProcessor : AbstractProcessor() {
         return TypeSpec
                 .classBuilder(fbClassName)
                 .addModifiers(KModifier.DATA)
-                .addSuperinterface(ParameterizedTypeName.get(FIREBASE_INTERFACE, inputClass))
+                .addSuperinterface(FIREBASE_INTERFACE.parameterizedBy(inputClass))
                 .primaryConstructor(FunSpec.constructorBuilder()
                         .addParameters(params)
                         .addParameter(
@@ -191,8 +197,7 @@ class MappedProcessor : AbstractProcessor() {
                     .build()
 
     private fun buildRepoClass(domainClassName: String, inputClassName: String): TypeSpec {
-        val superclass = ParameterizedTypeName.get(
-                REPO_INTERFACE,
+        val superclass = REPO_INTERFACE.parameterizedBy(
                 ClassName(PACKAGE_DB, inputClassName),
                 ClassName(PACKAGE_DOMAIN, domainClassName)
         )
@@ -206,24 +211,21 @@ class MappedProcessor : AbstractProcessor() {
         val inputClass = ClassName(PACKAGE_DB, inputClassName)
         val outputClass = ClassName(PACKAGE_DOMAIN, domainClassName)
 
-        val superclass = ParameterizedTypeName.get(MAPPER_INTERFACE, inputClass, outputClass)
+        val superclass = MAPPER_INTERFACE.parameterizedBy(inputClass, outputClass)
 
-        val inputList = ParameterizedTypeName.get(List::class.asClassName(), WildcardTypeName.subtypeOf(inputClass))
-        val outputList = ParameterizedTypeName.get(List::class.asClassName(), WildcardTypeName.subtypeOf(outputClass))
+        val inputList = ClassName("kotlin.collections", "List").parameterizedBy(inputClass)
+        val outputList = ClassName("kotlin.collections", "List").parameterizedBy(outputClass)
 
         return TypeSpec.classBuilder("${domainClassName}Mapper")
                 .addSuperinterface(superclass)
                 .addFunction(
                         FunSpec.builder("map")
                                 .addModifiers(KModifier.OVERRIDE)
-                                .addParameter("input", inputClass.asNullable())
-                                .returns(outputClass.asNullable())
+                                .addParameter("input", inputClass.copy(nullable = true))
+                                .returns(outputClass.copy(nullable = true))
                                 .addStatement("if(input == null) return null")
-                                .addStatement(
-                                        "return $domainClassName(%L)",
-                                        elements.map {
-                                            "${it.mapName}=input.${it.name}"
-                                        }.reduce { acc, e -> "$acc,$e" })
+                                .addStatement("val item = $domainClassName(%L)", elements.map { "${it.mapName}=input.${it.name}" }.reduce { acc, e -> "$acc,$e" })
+                                .addStatement("return item")
                                 .build()
                 )
                 .addFunction(
@@ -269,5 +271,7 @@ class MappedProcessor : AbstractProcessor() {
         private val FIREBASE_INTERFACE = ClassName(PACKAGE_FB, "FirebaseModel")
         private val REPO_INTERFACE = ClassName(PACKAGE_REPO, "RealmRepository")
         private val MAPPER_INTERFACE = ClassName(PACKAGE_REPO, "Mapper")
+
+        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
     }
 }

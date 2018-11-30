@@ -26,6 +26,7 @@ export const newMealNotification = functions.database.ref('meals/{mealId}').onCr
 
 	const senderToken = data.senderToken;
 	const mealType = data.name;
+  let kcal = data.kcal;
 
   // Get the list of device notification tokens.
 	return admin.database().ref('users').once('value').then(result => {
@@ -33,7 +34,10 @@ export const newMealNotification = functions.database.ref('meals/{mealId}').onCr
 	    if (!result.hasChildren()) {
 	      return console.log('There are no notification tokens to send to.');
 	    }
-	    const payload = getNotificationPayload(mealType);
+      if (kcal === 'undefined') {
+        kcal = 0;
+      }
+	    const payload = getNotificationPayload(mealType, kcal);
     	const tokens = Object.keys(result.val());
 			//remove senderToken
     	const senderTokenIdx = tokens.indexOf(senderToken);
@@ -97,14 +101,25 @@ export const montlyStatsEmail = functions.https.onRequest(async (req, res) => {
   });
 });
 
-function getNotificationPayload(mealType: string): any {
+function getNotificationPayload(mealType: string, kcal: number): any {
 	let body: string = "";
-	switch (mealType) {
-	    case "DESSERT": body = "Pyszna kaszka!";
-	    case "DINNER": body = "Smakowity obiadek!";
-	    case "MILK": body = "Dobre mleczko!";
-	    default: body = "Mniam! Mniam!";
-	}
+
+  if (kcal > 0) {
+    switch (mealType) {
+        console.log("save " + mealType);
+  	    case "DESSERT": body = "Deserek " + kcal.toFixed(1) + "kcal";
+  	    case "DINNER": body = "Obiadek " + kcal.toFixed(1) + "kcal";
+  	    case "MILK": body = "Mleczko! " + kcal.toFixed(1) + "kcal";
+  	    default: body = "Mniam! Mniam! " + kcal.toFixed(1) + "kcal";
+  	}
+  } else {
+  	switch (mealType) {
+  	    case "DESSERT": body = "Pyszna kaszka!";
+  	    case "DINNER": body = "Smakowity obiadek!";
+  	    case "MILK": body = "Dobre mleczko!";
+  	    default: body = "Mniam! Mniam!";
+  	}
+  }
 
 	return {
 		notification: {

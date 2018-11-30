@@ -3,6 +3,7 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startService
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver
@@ -11,6 +12,8 @@ import pl.kpob.dietdiary.realmAsyncTransaction
 import pl.kpob.dietdiary.repo.IngredientRepository
 import pl.kpob.dietdiary.repo.RealmAddTransaction
 import pl.kpob.dietdiary.views.AddIngredientView
+import pl.kpob.dietdiary.worker.RefreshIngredientsService
+import pl.kpob.dietdiary.worker.RefreshMealsService
 
 /**
  * Created by kpob on 22.10.2017.
@@ -45,7 +48,10 @@ class AddIngredientScreen(private val ingredient: FbIngredient? = null) : RxScre
 
         realmAsyncTransaction(
                 transaction = { repo.insert(i.toRealm(), RealmAddTransaction(it)) },
-                callback = { navigator.goBack() }
+                callback = {
+                    activity.startService<RefreshIngredientsService>()
+                    navigator.goBack()
+                }
         )
     }
 }

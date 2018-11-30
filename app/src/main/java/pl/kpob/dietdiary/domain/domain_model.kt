@@ -6,6 +6,8 @@ import pl.kpob.dietdiary.db.IngredientCategory
 /**
  * Created by kpob on 21.10.2017.
  */
+data class Credentials(val login: String, val password: String)
+
 data class Meal(
         val id: String,
         val time: String,

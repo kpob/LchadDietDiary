@@ -87,13 +87,13 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
     fun initList(ingredients: List<MealIngredient>) {
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
                 return object : RecyclerView.ViewHolder(View.inflate(context, R.layout.item_ingredient_2, null)) {}
             }
 
             override fun getItemCount(): Int= ingredients.size
 
-            override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 holder?.itemView?.let {
                     it.find<TextView>(R.id.name).text = ingredients[position].name
                     it.find<TextView>(R.id.weight).text = String.format("%.2f g", ingredients[position].weight)

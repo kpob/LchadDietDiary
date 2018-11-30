@@ -24,6 +24,13 @@ import pl.kpob.dietdiary.repo.MealTemplateContract
  */
 class App: MultiDexApplication() {
 
+    companion object {
+        val isSyncing get() = mealsSyncing || ingredientsSyncing
+
+        var mealsSyncing = true
+        var ingredientsSyncing = true
+    }
+
     @SuppressLint("NewApi")
     override fun onCreate() {
         super.onCreate()

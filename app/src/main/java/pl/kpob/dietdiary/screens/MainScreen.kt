@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import com.wealthfront.magellan.rx.RxScreen
+import kotlinx.android.synthetic.main.screen_home.view.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import pl.kpob.dietdiary.App
 import pl.kpob.dietdiary.MainActivity
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
@@ -16,8 +18,10 @@ import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.firebase.FirebaseSaver
 import pl.kpob.dietdiary.repo.AllMealsSortedSpecification
 import pl.kpob.dietdiary.repo.MealRepository
+import pl.kpob.dietdiary.show
 import pl.kpob.dietdiary.views.MainView
 import pl.kpob.dietdiary.views.utils.TimePicker
+import pl.kpob.dietdiary.worker.RefreshMealsService
 
 
 /**
@@ -55,6 +59,11 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
         }
     }
 
+    override fun onResume(context: Context?) {
+        super.onResume(context)
+        if (App.isSyncing) view?.syncBar?.show()
+    }
+
     fun onDessertClick() = goToNewMealScreen(MealType.DESSERT)
 
     fun onDinnerClick() = goToNewMealScreen(MealType.DINNER)
@@ -74,7 +83,9 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
     }
 
     fun updateData() {
-        view.hideSyncBar()
+        if(!App.isSyncing) {
+            view.hideSyncBar()
+        }
         view.postDelayed({ view?.showMeals(meals) }, 1000)
     }
 
@@ -82,7 +93,11 @@ class MainScreen : RxScreen<MainView>(), AnkoLogger {
         AlertDialog.Builder(activity)
                 .setMessage("Czy na pewno chcesz usunąć posiłek?")
                 .setNegativeButton("Anuluj") { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton("Usuń") { _, _ -> fbSaver.removeMeal(item) }
+                .setPositiveButton("Usuń") { _, _ ->
+                    fbSaver.removeMeal(item)
+                    activity.startService<RefreshMealsService>()
+                    view?.syncBar?.show()
+                }
                 .create()
     }
 

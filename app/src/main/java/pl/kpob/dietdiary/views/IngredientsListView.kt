@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
+import org.jetbrains.anko.startService
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.screens.IngredientsListScreen
+import pl.kpob.dietdiary.worker.RefreshIngredientsService
 
 /**
  * Created by kpob on 22.10.2017.
@@ -50,12 +52,12 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
         }
 
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val range = ranges.firstOrNull { it.contains(position) }
             if (range != null) {
                 val rangeIdx = ranges.indexOfFirst { it.contains(position) }
 
-                holder?.let {
+                holder.let {
                     val item = groups.map { it.second }.flatten()[position - rangeIdx - 1]
                     it.itemView.find<TextView>(R.id.name).text = item.name
                     it.itemView.find<View>(R.id.edit).setOnClickListener {
@@ -66,7 +68,7 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
                     }
                 }
             } else {
-                holder?.itemView?.let {
+                holder.itemView?.let {
                     val category = IngredientCategory.fromInt(groups[ranges.indexOfFirst { it.first > position }].first)
                     it.find<TextView>(R.id.category).text = category.label
                 }
@@ -81,7 +83,7 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
         }
 
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return object : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(if (viewType == 1) R.layout.item_ingredient else R.layout.item_ingredient_category, parent, false)) {}
         }
     }

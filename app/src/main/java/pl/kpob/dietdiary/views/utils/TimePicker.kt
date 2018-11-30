@@ -69,15 +69,15 @@ class TimePicker {
     }
 
     private fun numberAdapter(activity: Activity, items: Int) = object: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
                 object : RecyclerView.ViewHolder(activity.layoutInflater.inflate(R.layout.item_clock, parent, false)) {}
 
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-            holder?.itemView?.find<TextView>(R.id.time)?.let {
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            holder.itemView?.find<TextView>(R.id.time)?.let {
                 it.text = when(position) {
                     in 0..1 -> ""
-                    in itemCount-2..itemCount-1 -> ""
+                    in itemCount-2 until itemCount -> ""
                     else -> {
                         val value = position - 2
                         if(value < 10) "0$value" else value.toString()
@@ -93,8 +93,8 @@ class TimePicker {
 
 
     companion object {
-        private val MINUTES = 1
-        private val HOURS = 2
+        private const val MINUTES = 1
+        private const val HOURS = 2
     }
 
 }
