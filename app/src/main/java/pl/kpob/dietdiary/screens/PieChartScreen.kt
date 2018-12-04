@@ -1,8 +1,11 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
-import com.wealthfront.magellan.rx.RxScreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.AnkoLogger
+import pl.kpob.dietdiary.ScopedScreen
 import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.repo.MealDetailsRepository
@@ -13,7 +16,7 @@ import pl.kpob.dietdiary.views.PieChartView
 /**
  * Created by kpob on 21.10.2017.
  */
-class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
+class PieChartScreen() : ScopedScreen<PieChartView>(), AnkoLogger {
 
     private lateinit var ids: List<String>
 
@@ -29,7 +32,6 @@ class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
         usingRealm {
             val repo = MealDetailsRepository()
             val spec = MealsByIdsSpecification(it, ids.toTypedArray())
-
             repo.query(spec)
         }
     }
@@ -58,19 +60,26 @@ class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
 
     override fun createView(context: Context?) = PieChartView(context!!)
 
-    override fun onSubscribe(context: Context?) {
-        super.onSubscribe(context)
-        view?.let {
-            it.enableHomeAsUp { navigator.goBack() }
-
+    override fun onShow(context: Context?) {
+        super.onShow(context)
+        launch {
             val (title, data) = when(meals.size) {
                 1 -> "${meals[0].time} ${meals[0].type.string}" to meals[0].ingredients
                 else -> meals[0].date to flattenIngredients
             }
-            it.toolbarTitle = title
-            it.initList(data)
-            it.initChart()
+
+            withContext(uiContext) {
+                initView(title, data)
+            }
         }
+    }
+
+    private suspend fun initView(title: String, data: List<MealIngredient>) = with(view) {
+        enableHomeAsUp { navigator.goBack() }
+        toolbarTitle = title
+        initChart()
+        delay(300)
+        initList(data)
     }
 
     private inline fun List<MealDetails>.nutrientSum(f: (MealDetails) -> Float): Float = map { f(it) }.sum()

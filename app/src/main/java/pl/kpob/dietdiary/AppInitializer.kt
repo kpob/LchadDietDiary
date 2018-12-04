@@ -2,7 +2,6 @@ package pl.kpob.dietdiary
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
@@ -11,8 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import org.jetbrains.anko.*
 import pl.kpob.dietdiary.domain.Credentials
-import pl.kpob.dietdiary.worker.RefreshIngredientsService
-import pl.kpob.dietdiary.worker.RefreshMealsService
+import pl.kpob.dietdiary.worker.RefreshMealsDataService
+import pl.kpob.dietdiary.worker.RefreshIngredientsDataService
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
@@ -23,7 +22,7 @@ class AppInitializer(activity: MainActivity) : AnkoLogger {
     private val ref: WeakReference<MainActivity> = WeakReference(activity)
     private val activity: MainActivity? get() = ref.get()
 
-    private val firebaseAuth by lazy {  FirebaseAuth.getInstance() }
+    private val firebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun init() {
@@ -31,18 +30,21 @@ class AppInitializer(activity: MainActivity) : AnkoLogger {
         App.mealsSyncing = true
         initToken()
 
-        with(credentials) {
-            firebaseAuth
-                    .signInWithEmailAndPassword(login, password)
-                    .addOnCompleteListener {
-                        when (it.isSuccessful) {
-                            true -> refreshData()
-                            false -> handleError(it.exception)
-                        }
+        firebaseAuth
+                .signInWithEmailAndPassword(credentials.login, credentials.password)
+                .addOnCompleteListener {
+                    when (it.isSuccessful) {
+                        true -> refreshData()
+                        false -> handleError(it.exception)
                     }
-        }
+                }
 
         createNotificationChannelIfNeeded()
+    }
+
+
+    fun destroy() {
+        firebaseAuth.signOut()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -59,10 +61,6 @@ class AppInitializer(activity: MainActivity) : AnkoLogger {
                 activity.notificationManager.createNotificationChannel(channel)
             }
         }
-    }
-
-    fun destroy() {
-        firebaseAuth.signOut()
     }
 
     private val credentials: Credentials get() {
@@ -82,13 +80,15 @@ class AppInitializer(activity: MainActivity) : AnkoLogger {
     }
 
     private fun refreshData() {
-        activity?.startService<RefreshMealsService>()
-        activity?.startService<RefreshIngredientsService>()
+        activity?.startService<RefreshIngredientsDataService>()
+        activity?.startService<RefreshMealsDataService>()
     }
 
     private fun handleError(exception: Exception?) {
         info { "ex $exception" }
-        activity?.toast("Nie można się zalogować")
+        activity?.runOnUiThread {
+            activity?.toast("Nie można się zalogować")
+        }
     }
 
 

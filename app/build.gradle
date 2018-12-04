@@ -11,7 +11,7 @@ android {
         applicationId "pl.kpob.dietdiary"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 10
+        versionCode 11
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -72,6 +72,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-design:$anko_version"
     implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true

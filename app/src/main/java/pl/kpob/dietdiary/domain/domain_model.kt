@@ -64,3 +64,31 @@ enum class MealType(val string: String, val icon: Int, val filters: List<Ingredi
         fun fromString(s: String) = values().firstOrNull { it.string == s || it.name == s} ?: OTHER
     }
 }
+
+data class MealsGroup(
+        val day: Int,
+        val meals: List<Meal>
+)
+
+data class MealsViewModel(
+        val mealsData: List<MealsGroup>,
+        val groups: Int,
+        val ranges: List<IntRange>
+): List<MealsGroup> by mealsData {
+
+    val viewsCount: Int = mealsData.size + mealsData.map { it.meals }.flatten().size
+}
+
+data class IngredientsGroups(
+        val category: IngredientCategory,
+        val ingredients: List<Ingredient>
+)
+
+data class IngredientsViewModel(
+        val ingredients: List<IngredientsGroups>,
+        val groups: Int,
+        val ranges: List<IntRange>
+): List<IngredientsGroups> by ingredients {
+
+    val viewsCount: Int = ingredients.size + ingredients.map { it.ingredients }.flatten().size
+}

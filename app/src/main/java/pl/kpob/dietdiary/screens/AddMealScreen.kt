@@ -22,7 +22,7 @@ import pl.kpob.dietdiary.template.TemplateManager
 import pl.kpob.dietdiary.utils.MealProcessor
 import pl.kpob.dietdiary.views.AddMealView
 import pl.kpob.dietdiary.views.utils.TimePicker
-import pl.kpob.dietdiary.worker.RefreshMealsService
+import pl.kpob.dietdiary.worker.RefreshIngredientsDataService
 
 
 /**
@@ -91,7 +91,7 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
         realmAsyncTransaction(
             transaction = { mealRepo.insert(meal.toRealm(), RealmAddTransaction(it)) },
             callback = {
-                activity.startService<RefreshMealsService>()
+                activity.startService<RefreshIngredientsDataService>()
                 navigator.handleBack()
             }
         )

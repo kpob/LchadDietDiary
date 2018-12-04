@@ -6,6 +6,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -62,9 +63,6 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
         chart.isRotationEnabled = true
         chart.isHighlightPerTapEnabled = true
 
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
-
         chart.setOnChartValueSelectedListener(this)
 
         setData()
@@ -88,20 +86,19 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-                return object : RecyclerView.ViewHolder(View.inflate(context, R.layout.item_ingredient_2, null)) {}
+                val rootView = LayoutInflater.from(context).inflate(R.layout.item_ingredient_2, parent, false);
+                return object : RecyclerView.ViewHolder(rootView) {}
             }
 
-            override fun getItemCount(): Int= ingredients.size
+            override fun getItemCount(): Int = ingredients.size
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                holder?.itemView?.let {
+                holder.itemView?.let {
                     it.find<TextView>(R.id.name).text = ingredients[position].name
                     it.find<TextView>(R.id.weight).text = String.format("%.2f g", ingredients[position].weight)
                 }
             }
-
         }
-        postDelayed( { container.scrollTo(0, 0) }, 500L)
     }
 
     override fun onNothingSelected() {
@@ -111,7 +108,6 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
     }
 
     private fun setData() {
-
         val nutrients = screen.nutrients
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -125,7 +121,6 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
             sliceSpace = 3f
             iconsOffset = MPPointF(0f, 40f)
             selectionShift = 12f
-
         }
 
         val colors = ArrayList<Int>()
@@ -159,6 +154,5 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
         chart.highlightValues(null)
         chart.invalidate()
     }
-
 
 }

@@ -1,14 +1,6 @@
 package pl.kpob.dietdiary.fcm
 
 import com.google.firebase.messaging.FirebaseMessagingService
-import android.content.Context.NOTIFICATION_SERVICE
-import android.app.NotificationManager
-import android.media.RingtoneManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import pl.kpob.dietdiary.MainActivity
-import android.support.design.widget.CoordinatorLayout.Behavior.setTag
 import com.google.firebase.messaging.RemoteMessage
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -33,8 +25,6 @@ class MyFirebaseMessagingService: FirebaseMessagingService(), AnkoLogger {
         // Check if message contains a data payload.
         if (remoteMessage?.data?.isNotEmpty() == true) {
             info { "Message data payload: ${remoteMessage.data}" }
-
-                scheduleJob()
         }
 
         // Check if message contains a notification payload.
@@ -46,19 +36,5 @@ class MyFirebaseMessagingService: FirebaseMessagingService(), AnkoLogger {
         // message, here is where that should be initiated. See sendNotification method below.
     }
     // [END receive_message]
-
-    /**
-     * Schedule a job using FirebaseJobDispatcher.
-     */
-    private fun scheduleJob() {
-        // [START dispatch_job]
-//        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this))
-//        val myJob = dispatcher.newJobBuilder()
-//                .setService(MyJobService::class.java)
-//                .setTag("my-job-tag")
-//                .build()
-//        dispatcher.schedule(myJob)
-        // [END dispatch_job]
-    }
 
 }

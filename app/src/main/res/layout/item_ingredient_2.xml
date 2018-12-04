@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="#faa">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="12dp"
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        tools:text="Kaszka ryżowa"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_marginRight="100dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="Makaron z tuńczykiem w delikatnym sosie pomidorowym" />
 
     <TextView
         android:id="@+id/weight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        tools:text="20 g"/>
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/black"
+        android:layout_gravity="right"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical|right"
+        tools:text="3120 g" />
 
-</LinearLayout>
+</FrameLayout>

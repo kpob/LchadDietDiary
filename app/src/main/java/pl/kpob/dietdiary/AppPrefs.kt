@@ -12,4 +12,8 @@ object AppPrefs: Preferences() {
     var token: String
         set(value) { putPreference("token", value) }
         get() = findPreference("token", "")
+
+    var mealsLastUpdate: Long
+        set(value) { putPreference("mealsLastUpdate", value) }
+        get() = findPreference("mealsLastUpdate", 0L)
 }

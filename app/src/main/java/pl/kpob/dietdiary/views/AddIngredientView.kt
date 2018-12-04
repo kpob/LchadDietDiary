@@ -49,7 +49,7 @@ class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx),
         }
     }
 
-    fun preFill(ingredient: FbIngredient) {
+    fun preFill(ingredient: FbIngredient, category: Int) {
         name.setText(ingredient.name)
         kcal.setText(ingredient.calories.toString())
         lct.setText(ingredient.lct.toString())
@@ -58,7 +58,6 @@ class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx),
         salt.setText(ingredient.salt.toString())
         roughage.setText(ingredient.roughage.toString())
         protein.setText(ingredient.protein.toString())
-        val category = IngredientCategory.stringValues().indexOfFirst { it == IngredientCategory.fromInt(ingredient.category).label  }
         categorySpinner.setSelection(category)
     }
 

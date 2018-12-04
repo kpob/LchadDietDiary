@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
-import org.jetbrains.anko.startService
+import org.jetbrains.anko.sdk25.listeners.onClick
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.domain.Ingredient
+import pl.kpob.dietdiary.domain.IngredientsViewModel
 import pl.kpob.dietdiary.screens.IngredientsListScreen
-import pl.kpob.dietdiary.worker.RefreshIngredientsService
 
 /**
  * Created by kpob on 22.10.2017.
@@ -29,59 +29,46 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
         View.inflate(ctx, R.layout.screen_ingredients_list, this)
     }
 
-    fun initList(data: List<Ingredient>) {
+    fun initList(data: IngredientsViewModel) {
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = Adapter(data)
     }
 
-    fun updateList(data: List<Ingredient>) {
+    fun updateList(data: IngredientsViewModel) {
         (list.adapter as Adapter).let {
-            it.data = data
+            it.viewModel = data
             it.notifyDataSetChanged()
         }
     }
 
-    inner class Adapter(var data: List<Ingredient>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class Adapter(var viewModel: IngredientsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
-        var groups = data.groupBy { it.category }.toList()
-
-        private val groupsCount = groups.size
-        private val ranges = (0 until groupsCount).map {
-            (1 + it + groups.take(it).map { it.second }.flatten().count())..(groups.take(it + 1).map { it.second }.flatten().count() + it)
-        }
-
+        private var groups = viewModel.ingredients
+        private val ranges = viewModel.ranges
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
             val range = ranges.firstOrNull { it.contains(position) }
             if (range != null) {
                 val rangeIdx = ranges.indexOfFirst { it.contains(position) }
 
-                holder.let {
-                    val item = groups.map { it.second }.flatten()[position - rangeIdx - 1]
-                    it.itemView.find<TextView>(R.id.name).text = item.name
-                    it.itemView.find<View>(R.id.edit).setOnClickListener {
-                        screen.onEditClick(item)
-                    }
-                    it.itemView.find<View>(R.id.delete).setOnClickListener {
-                        screen.onDeleteClick(item)
-                    }
+                holder.itemView.let {
+                    val item = groups.map { it.ingredients }.flatten()[position - rangeIdx - 1]
+                    it.find<TextView>(R.id.name).text = item.name
+                    it.find<View>(R.id.edit).onClick { screen.onEditClick(item) }
+                    it.find<View>(R.id.delete).onClick { screen.onDeleteClick(item) }
                 }
             } else {
                 holder.itemView?.let {
-                    val category = IngredientCategory.fromInt(groups[ranges.indexOfFirst { it.first > position }].first)
+                    val category = groups[ranges.indexOfFirst { it.first > position }].category
                     it.find<TextView>(R.id.category).text = category.label
                 }
             }
         }
 
+        override fun getItemCount(): Int = viewModel.viewsCount
 
-        override fun getItemCount(): Int = groupsCount + data.size
-
-        override fun getItemViewType(position: Int): Int {
-            return (if (ranges.any { it.contains(position) }) 1 else 2).apply {}
-        }
-
+        override fun getItemViewType(position: Int): Int = if (ranges.any { it.contains(position) }) 1 else 2
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return object : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(if (viewType == 1) R.layout.item_ingredient else R.layout.item_ingredient_category, parent, false)) {}

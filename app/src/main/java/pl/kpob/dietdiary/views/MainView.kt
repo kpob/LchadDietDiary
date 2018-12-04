@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.ViewAnimator
-import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.dekoservidoni.omfm.OneMoreFabMenu
 import com.wealthfront.magellan.BaseScreenView
@@ -17,14 +15,12 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
 import org.jetbrains.anko.findOptional
 import org.jetbrains.anko.sdk25.listeners.onClick
-import pl.kpob.dietdiary.domain.Meal
-import pl.kpob.dietdiary.R
-import pl.kpob.dietdiary.screens.MainScreen
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import pl.kpob.dietdiary.App
+import pl.kpob.dietdiary.R
+import pl.kpob.dietdiary.domain.MealsViewModel
 import pl.kpob.dietdiary.hide
-
+import pl.kpob.dietdiary.screens.MainScreen
+import pl.kpob.dietdiary.show
 
 /**
  * Created by kpob on 20.10.2017.
@@ -32,9 +28,10 @@ import pl.kpob.dietdiary.hide
 class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, AnkoLogger {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
-    private val meals by lazy { find<RecyclerView>(R.id.meals) }
-    private val fab by lazy { find<OneMoreFabMenu>(R.id.fab) }
-    val syncBar by lazy { find<View>(R.id.sync_bar) }
+    val meals by lazy { find<RecyclerView>(R.id.meals) }
+    val fab by lazy { find<OneMoreFabMenu>(R.id.fab) }
+    private val syncBar by lazy { find<View>(R.id.sync_bar) }
+    private val loader by lazy { find<View>(R.id.loader) }
 
     init {
         inflate(ctx, R.layout.screen_home, this)
@@ -50,29 +47,34 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             }
         })
 
-        if(!App.isSyncing) syncBar.hide()
+        if(App.isSyncing) {
+            syncBar.show()
+        }
     }
 
-    fun showMeals(data: List<Meal>) {
-        if (meals.adapter != null && meals.adapter.itemCount == data.size) return
+    fun showMeals(viewModel: MealsViewModel) {
+        if (meals.adapter != null && meals.adapter.itemCount == viewModel.size) {
+            (meals.adapter as Adapter).let {
+                it.data = viewModel
+                it.notifyDataSetChanged()
+            }
+            return
+        }
 
         meals.layoutManager = LinearLayoutManager(context)
-        meals.adapter = Adapter(data.groupBy { it.dayOfYear }.toList())
+        meals.adapter = Adapter(viewModel)
+        loader.hide()
     }
 
     fun hideSyncBar() {
-        syncBar.animate()
-                .translationY(0f)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        super.onAnimationEnd(animation)
-                        syncBar.hide()
-                    }
-                })
+        syncBar.hide()
     }
 
+    fun showSyncBar() {
+        syncBar.show()
+    }
 
-    inner class Adapter(val data: List<Pair<Int, List<Meal>>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class Adapter(var data: MealsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private val viewBinderHelper = ViewBinderHelper()
 
@@ -80,10 +82,7 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             viewBinderHelper.setOpenOnlyOne(true)
         }
 
-        private val groups = data.size
-        private val ranges = (0 until groups).map {
-            (1 + it + data.take(it).map { it.second }.flatten().count())..(data.take(it + 1).map { it.second }.flatten().count() + it)
-        }
+        private val ranges = data.ranges
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val range = ranges.firstOrNull { it.contains(position) }
@@ -91,7 +90,7 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
                 val rangeIdx = ranges.indexOfFirst { it.contains(position) }
 
                 holder.itemView?.let {
-                    val item = data.map { it.second }.flatten()[position - rangeIdx - 1]
+                    val item = data.mealsData.map { it.meals }.flatten()[position - rangeIdx - 1]
                     it.find<ImageView>(R.id.meal_type).setImageResource(item.type.icon)
                     it.find<TextView>(R.id.meal_time).text = item.time
                     it.findOptional<TextView>(R.id.meal_calories)?.text = String.format("%.2f kcal", item.calories)
@@ -100,11 +99,11 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
                     it.find<View>(R.id.edit).onClick { screen.onEditClick(item) }
                     it.find<View>(R.id.meal_row).onClick { screen.onItemClick(item) }
                     it.find<View>(R.id.meal_time).onClick { screen.onTimeClick(item) }
-                    viewBinderHelper.bind(it.find<SwipeRevealLayout>(R.id.swipe_layout), item.id)
+                    viewBinderHelper.bind(it.find(R.id.swipe_layout), item.id)
                 }
             } else {
-                holder?.itemView?.let {
-                    val meals = data[ranges.indexOfFirst { it.first > position }].second
+                holder.itemView?.let {
+                    val meals = data[ranges.indexOfFirst { it.first > position }].meals
                     it.find<TextView>(R.id.time).text = if(meals[0].isToday) "Dzisiaj" else meals[0].date
                     val totalLtc = meals.map { it.lct }.sum()
                     it.find<TextView>(R.id.meal_lct).text =  String.format("%.2f g", totalLtc)
@@ -115,11 +114,9 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             }
         }
 
-        override fun getItemCount(): Int = data.size + data.map { it.second }.flatten().size
+        override fun getItemCount(): Int = data.viewsCount
 
-        override fun getItemViewType(position: Int): Int {
-            return (if (ranges.any { it.contains(position) }) 1 else 2).apply {}
-        }
+        override fun getItemViewType(position: Int): Int = if (ranges.any { it.contains(position) }) 1 else 2
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return object : RecyclerView.ViewHolder(View.inflate(context, if (viewType == 1) R.layout.item_meal else R.layout.item_meal_header, null)) {}

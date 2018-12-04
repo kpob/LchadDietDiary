@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,7 +20,9 @@
             android:layout_height="42dp"
             android:padding="8dp"
             android:background="#43a047"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="0dp"
@@ -50,6 +53,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/primary_light_transparent" />
+
+            <ProgressBar
+                android:id="@+id/loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
 
 
             <com.dekoservidoni.omfm.OneMoreFabMenu
