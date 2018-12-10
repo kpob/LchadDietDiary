@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="56dp"
     app:dragEdge="left"
     app:mode="same_level">
 
     <!-- Your secondary layout here -->
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp" >
+        android:layout_height="56dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,23 +45,23 @@
     <FrameLayout
         android:id="@+id/meal_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="56dp"
         android:background="?attr/selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:padding="8dp"
-            tools:background="#afa">
+            tools:background="@color/primary_light_transparent">
 
             <TextView
                 android:id="@+id/meal_time"
+                android:paddingLeft="8dp"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:textStyle="bold"
-                tools:text="08.01.2017 12:12" />
+                android:textColor="@android:color/black"
+                tools:text="12:12" />
 
             <ImageView
                 android:id="@+id/meal_type"
@@ -80,9 +80,9 @@
                 android:id="@+id/meal_lct"
                 android:layout_width="64dp"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|right"
+                android:gravity="center"
                 android:textSize="16sp"
-                android:textStyle="bold"
+                android:textColor="@android:color/black"
                 tools:text="3.4 g" />
 
             <TextView
@@ -93,7 +93,10 @@
                 android:gravity="center_vertical|right"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="324 kcal" />
+                android:paddingRight="8dp"
+                android:background="@color/primary_darker_transparent"
+                android:textColor="@android:color/black"
+                tools:text="324.42 kcal" />
         </LinearLayout>
 
 

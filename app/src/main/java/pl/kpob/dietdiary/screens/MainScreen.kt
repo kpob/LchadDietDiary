@@ -43,7 +43,15 @@ class MainScreen : ScopedScreen<MainView>(), AnkoLogger {
         return MealsViewModel(groups, groups.size, ranges)
     }
 
-    override fun createView(context: Context?) = MainView(context!!)
+    override fun createView(context: Context?) = MainView(context!!).also {
+        it.toolbarTitle = context.getString(R.string.app_name) ?: ""
+        it.initMenu(R.menu.menu_main) {
+            when (it) {
+                R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
+                R.id.action_all_ingredients -> view.post { navigator.goTo(IngredientsListScreen()) }
+            }
+        }
+    }
 
     override fun onShow(context: Context?) {
         super.onShow(context)
@@ -56,9 +64,11 @@ class MainScreen : ScopedScreen<MainView>(), AnkoLogger {
                 withContext(uiContext) { navigator.goTo(AddMealScreen(mealType)) }
                 return@launch
             }
-            withContext(uiContext) { initView(context) }
             val meals = queryMeals()
-            withContext(uiContext) { view?.showMeals(meals) }
+            withContext(uiContext) {
+                delay(300)
+                view?.showMeals(meals)
+            }
         }
     }
 
@@ -132,18 +142,6 @@ class MainScreen : ScopedScreen<MainView>(), AnkoLogger {
 
     private fun Meal.updateTimestamp(newValue: Long) {
         fbSaver.updateMealTime(id, newValue)
-    }
-
-    private suspend fun initView(ctx: Context?) = coroutineScope {
-        view?.let {
-            it.toolbarTitle = ctx?.getString(R.string.app_name) ?: ""
-            it.initMenu(R.menu.menu_main) {
-                when (it) {
-                    R.id.action_new_ingredient -> view.post { navigator.goTo(AddIngredientScreen()) }
-                    R.id.action_all_ingredients -> view.post { navigator.goTo(IngredientsListScreen()) }
-                }
-            }
-        }
     }
 
 }

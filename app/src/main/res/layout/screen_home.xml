@@ -48,11 +48,17 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/stas" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/meals"
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/primary_light_transparent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/meals"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
 
             <ProgressBar
                 android:id="@+id/loader"

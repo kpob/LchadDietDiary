@@ -2,7 +2,10 @@ package pl.kpob.dietdiary.views
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v4.widget.NestedScrollView
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -34,15 +37,47 @@ import pl.kpob.dietdiary.screens.PieChartScreen
 class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarManager, OnChartValueSelectedListener {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
-    private val chart by lazy { find<PieChart>(R.id.pie_chart) }
-    private val list by lazy { find<RecyclerView>(R.id.ingredients) }
     private val container by lazy { find<NestedScrollView>(R.id.container) }
+
+    private val pager by lazy { find<ViewPager>(R.id.pager) }
 
     init {
         View.inflate(ctx, R.layout.screen_pie_chart, this)
     }
 
-    fun initChart() {
+    fun setupView(ingredients: List<MealIngredient>) {
+        pager.adapter = object: PagerAdapter() {
+            override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
+
+            override fun getCount(): Int = 2
+
+            override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+                container.removeView(`object` as View)
+            }
+
+            override fun getPageTitle(position: Int): CharSequence? = when(position) {
+                0 -> "Składniki"
+                1 -> "Wykres"
+                else -> ""
+            }
+
+            override fun instantiateItem(container: ViewGroup, position: Int): Any {
+                val viewResId = if(position  == 0) R.layout.page_list else R.layout.page_chart
+                val view = View.inflate(context, viewResId, null)
+                if (view is PieChart) {
+                    initChart(view)
+                } else if (view is RecyclerView) {
+                    initList(view, ingredients)
+                }
+
+                container.addView(view)
+                return view
+            }
+
+        }
+    }
+
+    private fun initChart(chart: PieChart) {
         chart.setUsePercentValues(true)
         chart.description.isEnabled = false
         chart.setExtraOffsets(5f, 10f, 5f, 5f)
@@ -65,7 +100,7 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
 
         chart.setOnChartValueSelectedListener(this)
 
-        setData()
+        setData(chart)
 
         with(chart.legend) {
             verticalAlignment = Legend.LegendVerticalAlignment.TOP
@@ -82,8 +117,9 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
         chart.setEntryLabelTextSize(12f)
     }
 
-    fun initList(ingredients: List<MealIngredient>) {
+    private fun initList(list: RecyclerView, ingredients: List<MealIngredient>) {
         list.layoutManager = LinearLayoutManager(context)
+        list.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         list.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
                 val rootView = LayoutInflater.from(context).inflate(R.layout.item_ingredient_2, parent, false);
@@ -101,13 +137,11 @@ class PieChartView(ctx: Context) : BaseScreenView<PieChartScreen>(ctx), ToolbarM
         }
     }
 
-    override fun onNothingSelected() {
-    }
+    override fun onNothingSelected() {}
 
-    override fun onValueSelected(e: Entry?, h: Highlight?) {
-    }
+    override fun onValueSelected(e: Entry?, h: Highlight?) {}
 
-    private fun setData() {
+    private fun setData(chart: PieChart) {
         val nutrients = screen.nutrients
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of

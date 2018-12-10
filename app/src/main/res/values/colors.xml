@@ -9,7 +9,8 @@
     <color name="colorPrimary">@color/blue_500</color>
     <color name="colorPrimaryDark">@color/blue_900</color>
     <color name="primary_light">@color/blue_100</color>
-    <color name="primary_light_transparent">@color/blue_t100</color>
+    <color name="primary_light_transparent">@color/blue_t200</color>
+    <color name="primary_darker_transparent">@color/blue_t300</color>
     <!--<color name="colorAccent">#FF5722</color>-->
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentTransparent">#ddc62828</color>
@@ -21,6 +22,8 @@
     <color name="blue_50">#e2eaf2</color>
     <color name="blue_100">#b6cbdf</color>
     <color name="blue_t100">#ddb6cbdf</color>
+    <color name="blue_t200">#dd85a9ca</color>
+    <color name="blue_t300">#dd5487b4</color>
     <color name="blue_200">#85a9ca</color>
     <color name="blue_300">#5487b4</color>
     <color name="blue_400">#306da4</color>
@@ -33,4 +36,5 @@
     <color name="blue_A200">#6294ff</color>
     <color name="blue_A400">#2f71ff</color>
     <color name="blue_A700">#155fff</color>
+    <color name="TransparentGrey">#7F000000</color>
 </resources>

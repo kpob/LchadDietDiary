@@ -74,12 +74,10 @@ class PieChartScreen() : ScopedScreen<PieChartView>(), AnkoLogger {
         }
     }
 
-    private suspend fun initView(title: String, data: List<MealIngredient>) = with(view) {
+    private fun initView(title: String, data: List<MealIngredient>) = with(view) {
         enableHomeAsUp { navigator.goBack() }
         toolbarTitle = title
-        initChart()
-        delay(300)
-        initList(data)
+        setupView(data)
     }
 
     private inline fun List<MealDetails>.nutrientSum(f: (MealDetails) -> Float): Float = map { f(it) }.sum()

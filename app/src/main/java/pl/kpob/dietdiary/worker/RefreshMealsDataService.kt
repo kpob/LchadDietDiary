@@ -39,8 +39,8 @@ class RefreshMealsDataService: IntentService("RefreshMealsDataService"), AnkoLog
         App.mealsSyncing = true
         info { "AppPrefs.mealsLastUpdate ${AppPrefs.mealsLastUpdate}" }
         firebaseDb.mealsRef
-                .startAt(AppPrefs.mealsLastUpdate.toDouble() - ONE_DAY, "time")
                 .orderByChild("time")
+                .apply { if(AppPrefs.mealsLastUpdate != 0L) limitToLast(200) }
                 .addValueEventListener(mealsListener)
     }
 

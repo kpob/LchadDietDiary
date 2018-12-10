@@ -1,6 +1,7 @@
 package pl.kpob.dietdiary.views
 
 import android.content.Context
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -14,6 +15,7 @@ import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
 import org.jetbrains.anko.findOptional
+import org.jetbrains.anko.info
 import org.jetbrains.anko.sdk25.listeners.onClick
 import pl.kpob.dietdiary.App
 import pl.kpob.dietdiary.R
@@ -53,15 +55,18 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
     }
 
     fun showMeals(viewModel: MealsViewModel) {
-        if (meals.adapter != null && meals.adapter.itemCount == viewModel.size) {
+        if (meals.adapter != null) {
+            if (meals.adapter.itemCount == viewModel.size) return
             (meals.adapter as Adapter).let {
                 it.data = viewModel
                 it.notifyDataSetChanged()
             }
+            info { "MainView showMeals()" }
             return
         }
-
+        info { "MainView addItemDecoration()" }
         meals.layoutManager = LinearLayoutManager(context)
+        meals.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         meals.adapter = Adapter(viewModel)
         loader.hide()
     }
