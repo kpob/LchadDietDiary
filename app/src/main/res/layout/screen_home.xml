@@ -1,83 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+>
 
-    <include layout="@layout/toolbar" />
-
-    <LinearLayout
+    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/toolbar" />
+
         <LinearLayout
-            android:id="@+id/sync_bar"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:padding="8dp"
-            android:background="#43a047"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?android:attr/actionBarSize"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="16sp"
-                android:gravity="right|center_vertical"
-                android:textColor="@color/white"
-                android:text="Synchronizacja"/>
+            <LinearLayout
+                android:id="@+id/sync_bar"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:padding="8dp"
+                android:background="#43a047"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:gravity="right|center_vertical"
+                    android:textColor="@color/white"
+                    android:text="Synchronizacja"/>
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/stas" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/primary_light_transparent" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/meals"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+
+                <ProgressBar
+                    android:id="@+id/loader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+
+                <com.dekoservidoni.omfm.OneMoreFabMenu
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="4dp"
+                    app:color_main_button="@color/colorPrimaryDark"
+                    app:color_secondary_buttons="@color/colorPrimary"
+                    app:content_options="@menu/content_options" />
+            </FrameLayout>
+
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </FrameLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/stas" />
+    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/nav_header" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/primary_light_transparent" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/meals"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-
-            <ProgressBar
-                android:id="@+id/loader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-
-            <com.dekoservidoni.omfm.OneMoreFabMenu
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="4dp"
-                app:color_main_button="@color/colorPrimaryDark"
-                app:color_secondary_buttons="@color/colorPrimary"
-                app:content_options="@menu/content_options" />
-        </FrameLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+</android.support.v4.widget.DrawerLayout>

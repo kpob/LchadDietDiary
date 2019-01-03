@@ -1,5 +1,6 @@
 package pl.kpob.dietdiary
 
+
 /**
  * Created by kpob on 20.10.2017.
  */
@@ -16,4 +17,5 @@ object AppPrefs: Preferences() {
     var mealsLastUpdate: Long
         set(value) { putPreference("mealsLastUpdate", value) }
         get() = findPreference("mealsLastUpdate", 0L)
+
 }

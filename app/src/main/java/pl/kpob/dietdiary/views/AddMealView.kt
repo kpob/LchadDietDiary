@@ -14,15 +14,16 @@ import org.jetbrains.anko.sdk25.listeners.textChangedListener
 import pl.kpob.dietdiary.*
 import pl.kpob.dietdiary.delegates.TextViewDelegate
 import pl.kpob.dietdiary.delegates.TextViewFloatValueDelegate
-import pl.kpob.dietdiary.domain.Ingredient
-import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.screens.AddMealScreen
+import pl.kpob.dietdiary.sharedcode.model.Ingredient
+import pl.kpob.dietdiary.sharedcode.model.MealIngredient
+import pl.kpob.dietdiary.sharedcode.view.AddMealView
 import kotlin.properties.Delegates
 
 /**
  * Created by kpob on 20.10.2017.
  */
-class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger, ToolbarManager {
+class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger, ToolbarManager, AddMealView {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val nextBtn by lazy { find<View>(R.id.add_next_btn) }
@@ -30,13 +31,17 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
     private val timeContainer by lazy { find<View>(R.id.time_container) }
     private val leftView by lazy { find<EditText>(R.id.left) }
 
-    var time: CharSequence by TextViewDelegate(R.id.time)
-    var totalWeight: Float by TextViewFloatValueDelegate(R.id.total_weight, "Razem:")
+    override var time: String by TextViewDelegate(R.id.time)
+    override var totalWeight: Float by TextViewFloatValueDelegate(R.id.total_weight, "Razem:")
+
+    override var viewTitle: String
+        get() = toolbarTitle
+        set(value) { toolbarTitle = value }
 
     init {
         inflate(ctx, R.layout.screen_add_meal, this)
 
-        nextBtn.onClick { addRow() }
+        nextBtn.onClick { screen.onAddRowClick() }
 
         initMenu(R.menu.add_meal) {
             when (it) {
@@ -55,14 +60,18 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         }
     }
 
-    fun addInitialRow() = addRow()
+    override fun addInitialRow(possibleIngredients: List<Ingredient>) = addRow(possibleIngredients)
 
-    fun setExistingData(ingredients: List<MealIngredient>, data: List<Ingredient>) {
-        (0 until ingredients.size).forEach { addRow() }
+    override fun setExistingData(ingredients: List<MealIngredient>, possibleIngredients: List<Ingredient>) {
+        (0 until ingredients.size).forEach { addRow(possibleIngredients) }
 
         container.forEachTypedIndexedChild<ViewGroup> { idx, vg ->
-            setRowData(vg, data, ingredients, idx)
+            setRowData(vg, possibleIngredients, ingredients, idx)
         }
+    }
+
+    override fun displayError(message: String) {
+        context.toast(message)
     }
 
     private fun setRowData(vg: ViewGroup, data: List<Ingredient>, ingredients: List<MealIngredient>, idx: Int) {
@@ -79,17 +88,49 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         }
     }
 
-    private fun addRow() {
+    override fun addRow(possibleIngredients: List<Ingredient>) {
         inflate(context, R.layout.item_next_ingredient, container)
-        setupRow()
+        setupRow(possibleIngredients)
     }
 
-    private fun setupRow() = container
+    override fun addRows(ingredients: List<Ingredient>, possibleIngredients: List<Ingredient>) {
+        ingredients.forEach {
+            container
+                    .lastChild<ViewGroup>()
+                    .forEachChild { v ->
+                        when (v) {
+                            is AutoCompleteTextView -> {
+                                setupAutocompleteView(v, possibleIngredients)
+                                val iidx = possibleIngredients.indexOf(it)
+                                v.setText(it.name)
+                                (v.adapter as IngredientAdapter).selected = iidx
+                            }
+                            is ImageView -> {
+                                v.setOnClickListener { container.removeView(it.parent as View) }
+                            }
+                        }
+                    }
+            addRow(possibleIngredients)
+        }
+    }
+
+
+
+    fun rowsAsWeight(): Float =
+            container.mapTypedChild<ViewGroup, Float> {
+                it.childrenSequence()
+                        .filter { it is EditText && it !is AutoCompleteTextView }
+                        .map { it as EditText }
+                        .map { it.floatValue }
+                        .sum()
+            }.sum()
+
+    private fun setupRow(possibleIngredients: List<Ingredient>) = container
             .lastChild<ViewGroup>()
             .forEachChild { v ->
                 when (v) {
                     is AutoCompleteTextView -> {
-                        setupAutocompleteView(v)
+                        setupAutocompleteView(v, possibleIngredients)
                     }
                     is ImageView -> {
                         v.setOnClickListener { container.removeView(it.parent as View) }
@@ -102,7 +143,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                 }
             }
 
-    private fun setupAutocompleteView(v: AutoCompleteTextView) = with(v) {
+    private fun setupAutocompleteView(v: AutoCompleteTextView, possibleIngredients: List<Ingredient>) = with(v) {
         setOnItemClickListener { parent, view, position, id ->
             (parent?.adapter as IngredientAdapter).selected = position
 
@@ -113,7 +154,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
 
             }
         }
-        setAdapter(IngredientAdapter(context, screen.possibleIngredients))
+        setAdapter(IngredientAdapter(context, possibleIngredients))
         threshold = 1
         requestFocus()
     }
@@ -185,14 +226,12 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
 
             override fun performFiltering(constraint: CharSequence?): FilterResults =
                     if (constraint != null) {
-                        info { "constraint $constraint" }
                         suggestions.clear()
                         val filtered = tmpItems.filter {
                             it.name.toLowerCase().contains(constraint.toString().toLowerCase())
                         }
                         suggestions.addAll(filtered)
 
-                        info { suggestions }
                         FilterResults().apply {
                             values = suggestions
                             count = suggestions.size
@@ -214,38 +253,5 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
             }
         }
     }
-
-    fun addRows(ingredients: List<Ingredient>, possibleIngredients: List<Ingredient>) {
-        ingredients.forEach {
-            container
-                    .lastChild<ViewGroup>()
-                    .forEachChild { v ->
-                        when (v) {
-                            is AutoCompleteTextView -> {
-                                setupAutocompleteView(v)
-                                val iidx = possibleIngredients.indexOf(it)
-                                v.setText(it.name)
-                                (v.adapter as IngredientAdapter).selected = iidx
-                            }
-                            is ImageView -> {
-                                v.setOnClickListener { container.removeView(it.parent as View) }
-                            }
-                        }
-                    }
-            addRow()
-        }
-    }
-
-    fun rowsAsWeight(): Float =
-        container.mapTypedChild<ViewGroup, Float> {
-            it.childrenSequence()
-                    .filter { it is EditText && it !is AutoCompleteTextView }
-                    .map { it as EditText }
-                    .map { it.floatValue }
-                    .sum()
-        }.sum()
-
-
-
 
 }

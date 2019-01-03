@@ -10,15 +10,16 @@ import com.santalu.respinner.ReSpinner
 import com.wealthfront.magellan.BaseScreenView
 import kotlinx.android.synthetic.main.screen_add_ingredient.view.*
 import org.jetbrains.anko.find
-import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.R
-import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.screens.AddIngredientScreen
+import pl.kpob.dietdiary.sharedcode.model.FbIngredient
+import pl.kpob.dietdiary.sharedcode.model.IngredientCategory
+import pl.kpob.dietdiary.sharedcode.view.AddIngredientView
 
 /**
  * Created by kpob on 22.10.2017.
  */
-class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx), ToolbarManager {
+class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx), ToolbarManager, AddIngredientView {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val name by lazy { find<EditText>(R.id.name) }
@@ -49,7 +50,11 @@ class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx),
         }
     }
 
-    fun preFill(ingredient: FbIngredient, category: Int) {
+    override var viewTitle: String
+        get() = toolbarTitle
+        set(value) { toolbarTitle = value }
+
+    override fun preFill(ingredient: FbIngredient, category: Int) {
         name.setText(ingredient.name)
         kcal.setText(ingredient.calories.toString())
         lct.setText(ingredient.lct.toString())

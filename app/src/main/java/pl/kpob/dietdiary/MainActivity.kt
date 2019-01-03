@@ -5,12 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
+import io.realm.Realm
 import kotlinx.coroutines.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import pl.kpob.dietdiary.domain.MealType
+import pl.kpob.dietdiary.di.components.DaggerActivityComponent
+import pl.kpob.dietdiary.di.modules.ActivityModule
 import pl.kpob.dietdiary.screens.AddMealScreen
 import pl.kpob.dietdiary.screens.MainScreen
+import pl.kpob.dietdiary.sharedcode.AppInitializer
+import pl.kpob.dietdiary.sharedcode.model.MealType
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : SingleActivity(), CoroutineScope, AnkoLogger {
@@ -19,7 +23,8 @@ class MainActivity : SingleActivity(), CoroutineScope, AnkoLogger {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + parentJob
 
-    private lateinit var initializer: AppInitializer
+    @Inject lateinit var initializer: AppInitializer
+    lateinit var realm: Realm
 
     override fun createNavigator(): Navigator = Navigator.withRoot(MainScreen()).build()
 
@@ -28,9 +33,18 @@ class MainActivity : SingleActivity(), CoroutineScope, AnkoLogger {
         super.onCreate(savedInstanceState)
         parentJob = Job()
         setContentView(R.layout.activity_main)
+
+        DaggerActivityComponent.builder()
+                .appComponent(App.appComponent)
+                .activityModule(ActivityModule(this))
+                .build().inject(this)
+
         launch {
-            initializer = AppInitializer(this@MainActivity)
             initializer.init()
+        }
+
+        realm = Realm.getDefaultInstance().also {
+            it.addChangeListener { updateView() }
         }
     }
 
@@ -51,6 +65,10 @@ class MainActivity : SingleActivity(), CoroutineScope, AnkoLogger {
         }
     }
 
+    private fun updateView() {
+        val screen = getNavigator().currentScreen()
+        (screen as? MainScreen)?.updateData()
+    }
     companion object {
         const val EXTRA_MEAL = "EXTRA_MEAL"
     }

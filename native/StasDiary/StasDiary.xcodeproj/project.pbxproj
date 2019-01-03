@@ -1,0 +1,469 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		538AEEB621D2877700C6E177 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEEB521D2877700C6E177 /* AppDelegate.swift */; };
+		538AEEBD21D2877800C6E177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEBC21D2877800C6E177 /* Assets.xcassets */; };
+		538AEEC021D2877800C6E177 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEBE21D2877800C6E177 /* LaunchScreen.storyboard */; };
+		538AEEC821D2C48100C6E177 /* sharedcode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 538AEEC721D2C48100C6E177 /* sharedcode.framework */; };
+		538AEEC921D2C48100C6E177 /* sharedcode.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 538AEEC721D2C48100C6E177 /* sharedcode.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		538AEECF21D3890F00C6E177 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEECD21D3890F00C6E177 /* HomeViewController.swift */; };
+		538AEED021D3890F00C6E177 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEECE21D3890F00C6E177 /* HomeViewController.xib */; };
+		538AEED321D38A6F00C6E177 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED121D38A6F00C6E177 /* MealCell.swift */; };
+		538AEED421D38A6F00C6E177 /* MealCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEED221D38A6F00C6E177 /* MealCell.xib */; };
+		538AEED721D38B4900C6E177 /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED521D38B4900C6E177 /* DayCell.swift */; };
+		538AEED821D38B4900C6E177 /* DayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEED621D38B4900C6E177 /* DayCell.xib */; };
+		538AEEDB21D3A92800C6E177 /* TmpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED921D3A92800C6E177 /* TmpViewController.swift */; };
+		538AEEDC21D3A92800C6E177 /* TmpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEDA21D3A92800C6E177 /* TmpViewController.xib */; };
+		53F2ADC721D78B16002B5718 /* AddSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADC621D78B16002B5718 /* AddSelectionViewModel.swift */; };
+		53F2ADCA21D78C11002B5718 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADC921D78C11002B5718 /* AppStateManager.swift */; };
+		53F2ADCC21D78C5C002B5718 /* FirebaseDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */; };
+		53F2ADCE21D78CA9002B5718 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADCD21D78CA9002B5718 /* Assembly.swift */; };
+		53F2ADD021D78D77002B5718 /* DiaryAppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */; };
+		53F2ADD321D78E6F002B5718 /* RealmDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */; };
+		53F2ADD521D7D3DA002B5718 /* AddOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD421D7D3DA002B5718 /* AddOption.swift */; };
+		53F2ADD821D82010002B5718 /* AddMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD621D82010002B5718 /* AddMealViewController.swift */; };
+		53F2ADD921D82010002B5718 /* AddMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53F2ADD721D82010002B5718 /* AddMealViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		538AEECA21D2C48100C6E177 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				538AEEC921D2C48100C6E177 /* sharedcode.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		538AEEB221D2877700C6E177 /* StasDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StasDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		538AEEB521D2877700C6E177 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		538AEEBC21D2877800C6E177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		538AEEBF21D2877800C6E177 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		538AEEC121D2877800C6E177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		538AEEC721D2C48100C6E177 /* sharedcode.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sharedcode.framework; path = "../../sharedcode/build/xcode-frameworks/sharedcode.framework"; sourceTree = "<group>"; };
+		538AEECD21D3890F00C6E177 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		538AEECE21D3890F00C6E177 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
+		538AEED121D38A6F00C6E177 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
+		538AEED221D38A6F00C6E177 /* MealCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MealCell.xib; sourceTree = "<group>"; };
+		538AEED521D38B4900C6E177 /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
+		538AEED621D38B4900C6E177 /* DayCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DayCell.xib; sourceTree = "<group>"; };
+		538AEED921D3A92800C6E177 /* TmpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmpViewController.swift; sourceTree = "<group>"; };
+		538AEEDA21D3A92800C6E177 /* TmpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TmpViewController.xib; sourceTree = "<group>"; };
+		53F2ADC621D78B16002B5718 /* AddSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSelectionViewModel.swift; sourceTree = "<group>"; };
+		53F2ADC921D78C11002B5718 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
+		53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDatabase.swift; sourceTree = "<group>"; };
+		53F2ADCD21D78CA9002B5718 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
+		53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryAppNavigator.swift; sourceTree = "<group>"; };
+		53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDatabase.swift; sourceTree = "<group>"; };
+		53F2ADD421D7D3DA002B5718 /* AddOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOption.swift; sourceTree = "<group>"; };
+		53F2ADD621D82010002B5718 /* AddMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewController.swift; sourceTree = "<group>"; };
+		53F2ADD721D82010002B5718 /* AddMealViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMealViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		538AEEAF21D2877700C6E177 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538AEEC821D2C48100C6E177 /* sharedcode.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		538AEEA921D2877700C6E177 = {
+			isa = PBXGroup;
+			children = (
+				538AEEC721D2C48100C6E177 /* sharedcode.framework */,
+				538AEEB421D2877700C6E177 /* StasDiary */,
+				538AEEB321D2877700C6E177 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		538AEEB321D2877700C6E177 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				538AEEB221D2877700C6E177 /* StasDiary.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		538AEEB421D2877700C6E177 /* StasDiary */ = {
+			isa = PBXGroup;
+			children = (
+				53F2ADD121D78DE7002B5718 /* Repository */,
+				53F2ADC821D78BFB002B5718 /* Utils */,
+				53F2ADC521D78AFB002B5718 /* Home */,
+				538AEECC21D388E200C6E177 /* Cell */,
+				538AEEB521D2877700C6E177 /* AppDelegate.swift */,
+				538AEEBC21D2877800C6E177 /* Assets.xcassets */,
+				538AEEBE21D2877800C6E177 /* LaunchScreen.storyboard */,
+				538AEEC121D2877800C6E177 /* Info.plist */,
+				538AEED921D3A92800C6E177 /* TmpViewController.swift */,
+				538AEEDA21D3A92800C6E177 /* TmpViewController.xib */,
+				53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */,
+				53F2ADD621D82010002B5718 /* AddMealViewController.swift */,
+				53F2ADD721D82010002B5718 /* AddMealViewController.xib */,
+			);
+			path = StasDiary;
+			sourceTree = "<group>";
+		};
+		538AEECC21D388E200C6E177 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				538AEED121D38A6F00C6E177 /* MealCell.swift */,
+				538AEED221D38A6F00C6E177 /* MealCell.xib */,
+				538AEED521D38B4900C6E177 /* DayCell.swift */,
+				538AEED621D38B4900C6E177 /* DayCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		53F2ADC521D78AFB002B5718 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				538AEECD21D3890F00C6E177 /* HomeViewController.swift */,
+				538AEECE21D3890F00C6E177 /* HomeViewController.xib */,
+				53F2ADC621D78B16002B5718 /* AddSelectionViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		53F2ADC821D78BFB002B5718 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				53F2ADC921D78C11002B5718 /* AppStateManager.swift */,
+				53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */,
+				53F2ADCD21D78CA9002B5718 /* Assembly.swift */,
+				53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */,
+				53F2ADD421D7D3DA002B5718 /* AddOption.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		53F2ADD121D78DE7002B5718 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		538AEEB121D2877700C6E177 /* StasDiary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 538AEEC421D2877800C6E177 /* Build configuration list for PBXNativeTarget "StasDiary" */;
+			buildPhases = (
+				538AEECB21D2C55200C6E177 /* Build Kotlin Module */,
+				538AEEAE21D2877700C6E177 /* Sources */,
+				538AEEAF21D2877700C6E177 /* Frameworks */,
+				538AEEB021D2877700C6E177 /* Resources */,
+				538AEECA21D2C48100C6E177 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StasDiary;
+			productName = StasDiary;
+			productReference = 538AEEB221D2877700C6E177 /* StasDiary.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		538AEEAA21D2877700C6E177 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Krzysztof Pobiarżyn";
+				TargetAttributes = {
+					538AEEB121D2877700C6E177 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 538AEEAD21D2877700C6E177 /* Build configuration list for PBXProject "StasDiary" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 538AEEA921D2877700C6E177;
+			productRefGroup = 538AEEB321D2877700C6E177 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				538AEEB121D2877700C6E177 /* StasDiary */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		538AEEB021D2877700C6E177 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538AEED421D38A6F00C6E177 /* MealCell.xib in Resources */,
+				538AEEC021D2877800C6E177 /* LaunchScreen.storyboard in Resources */,
+				538AEEBD21D2877800C6E177 /* Assets.xcassets in Resources */,
+				53F2ADD921D82010002B5718 /* AddMealViewController.xib in Resources */,
+				538AEED821D38B4900C6E177 /* DayCell.xib in Resources */,
+				538AEEDC21D3A92800C6E177 /* TmpViewController.xib in Resources */,
+				538AEED021D3890F00C6E177 /* HomeViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		538AEECB21D2C55200C6E177 /* Build Kotlin Module */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Kotlin Module";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd \"/Users/kpob/AndroidStudioProjects/DietDiary\"\n./gradlew :sharedcode:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		538AEEAE21D2877700C6E177 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538AEEDB21D3A92800C6E177 /* TmpViewController.swift in Sources */,
+				53F2ADD021D78D77002B5718 /* DiaryAppNavigator.swift in Sources */,
+				53F2ADCA21D78C11002B5718 /* AppStateManager.swift in Sources */,
+				53F2ADC721D78B16002B5718 /* AddSelectionViewModel.swift in Sources */,
+				538AEED321D38A6F00C6E177 /* MealCell.swift in Sources */,
+				53F2ADCE21D78CA9002B5718 /* Assembly.swift in Sources */,
+				538AEEB621D2877700C6E177 /* AppDelegate.swift in Sources */,
+				53F2ADD321D78E6F002B5718 /* RealmDatabase.swift in Sources */,
+				53F2ADD521D7D3DA002B5718 /* AddOption.swift in Sources */,
+				538AEED721D38B4900C6E177 /* DayCell.swift in Sources */,
+				53F2ADD821D82010002B5718 /* AddMealViewController.swift in Sources */,
+				538AEECF21D3890F00C6E177 /* HomeViewController.swift in Sources */,
+				53F2ADCC21D78C5C002B5718 /* FirebaseDatabase.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		538AEEBE21D2877800C6E177 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				538AEEBF21D2877800C6E177 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		538AEEC221D2877800C6E177 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		538AEEC321D2877800C6E177 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		538AEEC521D2877800C6E177 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../sharedcode/build/xcode-frameworks";
+				INFOPLIST_FILE = StasDiary/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = pl.kpob.dietdiary.StasDiary;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		538AEEC621D2877800C6E177 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../sharedcode/build/xcode-frameworks";
+				INFOPLIST_FILE = StasDiary/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = pl.kpob.dietdiary.StasDiary;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		538AEEAD21D2877700C6E177 /* Build configuration list for PBXProject "StasDiary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				538AEEC221D2877800C6E177 /* Debug */,
+				538AEEC321D2877800C6E177 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		538AEEC421D2877800C6E177 /* Build configuration list for PBXNativeTarget "StasDiary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				538AEEC521D2877800C6E177 /* Debug */,
+				538AEEC621D2877800C6E177 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 538AEEAA21D2877700C6E177 /* Project object */;
+}

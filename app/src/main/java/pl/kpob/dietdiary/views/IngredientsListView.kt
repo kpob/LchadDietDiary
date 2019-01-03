@@ -11,16 +11,16 @@ import android.widget.TextView
 import com.wealthfront.magellan.BaseScreenView
 import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk25.listeners.onClick
+import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.R
-import pl.kpob.dietdiary.db.IngredientCategory
-import pl.kpob.dietdiary.domain.Ingredient
-import pl.kpob.dietdiary.domain.IngredientsViewModel
 import pl.kpob.dietdiary.screens.IngredientsListScreen
+import pl.kpob.dietdiary.sharedcode.view.IngredientListView
+import pl.kpob.dietdiary.sharedcode.viewmodel.IngredientsViewModel
 
 /**
  * Created by kpob on 22.10.2017.
  */
-class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(ctx), ToolbarManager {
+class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(ctx), ToolbarManager, IngredientListView {
 
     override val toolbar: Toolbar by lazy { find<Toolbar>(R.id.toolbar) }
     private val list by lazy { find<RecyclerView>(R.id.ingredients) }
@@ -29,16 +29,24 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
         View.inflate(ctx, R.layout.screen_ingredients_list, this)
     }
 
-    fun initList(data: IngredientsViewModel) {
+    override var viewTitle: String
+        get() = toolbarTitle
+        set(value) { toolbarTitle = value }
+
+    override fun initList(data: IngredientsViewModel) {
         list.layoutManager = LinearLayoutManager(context)
         list.adapter = Adapter(data)
     }
 
-    fun updateList(data: IngredientsViewModel) {
+    override fun updateList(data: IngredientsViewModel) {
         (list.adapter as Adapter).let {
             it.viewModel = data
             it.notifyDataSetChanged()
         }
+    }
+
+    override fun displayMessage(message: String) {
+        context.toast(message)
     }
 
     inner class Adapter(var viewModel: IngredientsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -40,12 +40,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".worker.RefreshIngredientsDataService"
-            android:exported="false"/>
-        <service
-            android:name=".worker.RefreshMealsDataService"
-            android:exported="false"/>
     </application>
 
 </manifest>

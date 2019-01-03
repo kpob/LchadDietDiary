@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/darkLabel"
+            android:text="Kalorie (ogólnie)" />
+
+        <TextView
+            android:id="@+id/calories_total"
+            android:text="4012.4 kcal"
+            style="@style/regularContent" />
+
+
+        <TextView
+            style="@style/darkLabel"
+            android:text="Kalorie (średnia)" />
+
+        <TextView
+            android:id="@+id/calories_avg"
+            android:text="4012.4 kcal"
+            style="@style/regularContent"/>
+
+
+        <TextView
+            style="@style/darkLabel"
+            android:text="Kalorie (max/min)" />
+
+        <TextView
+            android:id="@+id/calories_min_max"
+            android:text="4012.4 kcal / 10312.2 kcal"
+            style="@style/regularContent"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

@@ -2,69 +2,62 @@ package pl.kpob.dietdiary.screens
 
 import android.content.Context
 import android.support.v7.app.AlertDialog
-import android.widget.EditText
-import com.wealthfront.magellan.rx.RxScreen
+import com.wealthfront.magellan.Screen
 import org.jetbrains.anko.*
-import pl.kpob.dietdiary.repo.TagRepository
+import pl.kpob.dietdiary.di.components.DaggerTagsComponent
+import pl.kpob.dietdiary.di.modules.TagsModule
+import pl.kpob.dietdiary.di.modules.common.PopupModule
+import pl.kpob.dietdiary.sharedcode.presenter.TagCloudPresenter
+import pl.kpob.dietdiary.sharedcode.view.popup.*
 import pl.kpob.dietdiary.views.TagCloudView
+import javax.inject.Inject
 
 /**
  * Created by kpob on 13.12.2017.
  */
-class TagCloudScreen : RxScreen<TagCloudView>(), AnkoLogger {
+class TagCloudScreen : ScopedScreen<TagCloudView>(), AnkoLogger, PopupDisplayer {
 
-    companion object {
-        private val colors = listOf(
-                0xf44336 to 0xc62828,
-                0xe91e63 to 0xad1457,
-                0x9c27b0 to 0x6a1b9a,
-                0x673ab7 to 0x4527a0,
-                0x3f51b5 to 0x283593,
-                0x2196f3 to 0x1565c0,
-                0x03a9f4 to 0x0277bd,
-                0x00bcd4 to 0x00838f,
-                0x009688 to 0x00695ca,
-                0x4caf50 to 0x2e7d32,
-                0x8bc34a to 0x558b2f,
-                0xcddc39 to 0x9e9d24,
-                0xffeb3b to 0xf9a825,
-                0xffc107 to 0xff8f00
-        ).map { it.first.opaque to it.second.opaque }
+    @Inject lateinit var presenter: TagCloudPresenter
+
+    override fun createView(context: Context?) = TagCloudView(context!!).also {
+        it.enableHomeAsUp { navigator.goBack() }
     }
 
-    private val tagRepo by lazy { TagRepository() }
+    override fun onShow(context: Context?) {
+        super.onShow(context)
+        DaggerTagsComponent.builder()
+                .appComponent(appComponent)
+                .popupModule(PopupModule(this))
+                .tagsModule(TagsModule())
+                .build().inject(this)
+        presenter.onShow(view)
+    }
 
-    override fun createView(context: Context?) = TagCloudView(context!!)
+    fun getTagColor(txt: String) = presenter.getTagColor(txt)
 
-    override fun onSubscribe(context: Context?) {
-        super.onSubscribe(context)
-        view?.let {
-            it.toolbarTitle = "Tagi"
-            it.enableHomeAsUp { navigator.goBack() }
-            it.initTags()
+    fun onNewTagClick() = presenter.onNewTagClick()
+
+    override fun display(viewModel: PopupViewModel) {
+        if (viewModel !is NewTagPopup) return
+
+        val callbacks = viewModel.callbacks
+        showDialog {
+            AlertDialog.Builder(activity).apply {
+                setView(
+                        context.verticalLayout {
+                            val et = editText {
+                                hint = viewModel.hint
+                            }
+
+                            setNegativeButton(callbacks.cancel?.title) { _, _ -> callbacks.cancel?.invoke() }
+                            setPositiveButton(callbacks.ok?.title) { _, _ ->
+                                val name = et.editableText.toString()
+                                callbacks.ok?.invoke(NewTagPayload(name))
+                            }
+                        }
+                )
+            }.create()
         }
-    }
-
-
-    fun getTagColor(txt: String) = colors[txt.map { it.toInt() }.sum().rem(colors.size)]
-
-    fun onNewTagClick() = showDialog {
-        AlertDialog.Builder(activity).apply {
-            setView(
-                    context.verticalLayout {
-                        val et = editText {
-                            hint = "Tag"
-                        }
-
-                        setPositiveButton("Ok") { dialog, which ->
-                            view.addTag(et.editableText.toString())
-                        }
-
-                        setNegativeButton("Anuluj") { dialog, which -> }
-                    }
-            )
-        }.create()
-
     }
 
 }

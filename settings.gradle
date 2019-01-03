@@ -1,1 +1,2 @@
-include ':app', ':mapper-annotation', ':mapper-proccesor'
+include ':app', ':mapper-annotation', ':mapper-proccesor', ':sharedcode'
+enableFeaturePreview('GRADLE_METADATA')

@@ -1,0 +1,4 @@
+package pl.kpob.dietdiary.sharedcode.eventbus
+
+object MealsUpdateEvent
+object IngredientsUpdateEvent

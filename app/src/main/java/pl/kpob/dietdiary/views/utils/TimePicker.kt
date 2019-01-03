@@ -1,6 +1,7 @@
 package pl.kpob.dietdiary.views.utils
 
 import android.app.Activity
+import android.app.Dialog
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,6 +10,8 @@ import android.widget.TextView
 import org.jetbrains.anko.find
 import org.joda.time.DateTime
 import pl.kpob.dietdiary.R
+import pl.kpob.dietdiary.sharedcode.view.popup.EditMealTimePayload
+import pl.kpob.dietdiary.sharedcode.view.popup.EditTimePopup
 
 /**
  * Created by kpob on 10.12.2017.
@@ -47,7 +50,9 @@ class TimePicker {
         }
     }
 
-    fun dialog(activity: Activity, accept: (Int, Int) -> Unit) = AlertDialog.Builder(activity)
+    fun dialog(activity: Activity, popup: EditTimePopup): Dialog {
+        val callbacks = popup.callbacks
+        return AlertDialog.Builder(activity)
                 .setView(activity.layoutInflater.inflate(R.layout.view_time_picker, null).apply {
 
                     find<RecyclerView>(R.id.hours).let {
@@ -57,9 +62,13 @@ class TimePicker {
                         initList(activity, it, MINUTES)
                     }
                 })
-                .setPositiveButton("Zmień") { dialog, which -> accept(minutes, hours) }
-                .setNegativeButton("Anuluj") { dialog, which -> }
+                .setPositiveButton(callbacks.ok?.title) { dialog, which ->
+                    val payload = EditMealTimePayload(hours, minutes)
+                    callbacks.ok?.invoke(payload)
+                }
+                .setNegativeButton(callbacks.cancel?.title) { dialog, which -> }
                 .create()
+    }
 
     private fun initList(activity: Activity, list: RecyclerView, mode: Int) {
         list.layoutManager = LinearLayoutManager(activity)
@@ -95,6 +104,8 @@ class TimePicker {
     companion object {
         private const val MINUTES = 1
         private const val HOURS = 2
+
+
     }
 
 }

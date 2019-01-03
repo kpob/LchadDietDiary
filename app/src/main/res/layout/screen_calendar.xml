@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimaryDark"
+                android:text="Na skróty"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:weightSum="3"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/this_week"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Ten tydzień"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/selector_primary_button"/>
+
+                <Button
+                    android:id="@+id/this_month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="4dp"
+                    android:text="Ten miesiąc"
+                    android:textSize="16sp"
+                    android:background="@drawable/selector_primary_button"/>
+
+                <Button
+                    android:id="@+id/last_month"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="14sp"
+                    android:text="Poprzedni miesiąc"
+                    android:background="@drawable/selector_primary_button"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimaryDark"
+                android:text="Kanlendarz"/>
+
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:mcv_selectionColor="@color/colorPrimaryDark"
+                app:mcv_showOtherDates="all" />
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="invisible">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>

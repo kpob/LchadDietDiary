@@ -3,57 +3,77 @@ package pl.kpob.dietdiary.repo
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
+import pl.kpob.dietdiary.db.RealmDatabase
+import pl.kpob.dietdiary.sharedcode.repository.*
 
 /**
  * Created by kpob on 11.12.2017.
  */
-interface Transaction<in T> {
 
-    fun execute(input: T)
-    fun execute(input: Collection<T>)
-}
+class RealmAddTransaction<T>: AddTransaction<T> where T: RealmObject {
 
-interface AddTransaction<in T>: Transaction<T>
-interface UpdateTransaction<in T>: Transaction<T>
-interface RemoveTransaction<in T>: Transaction<T>
+    override fun execute(input: T, db: Database<T>) {
+        (db as? RealmDatabase<T>)?.realm?.insertOrUpdate(input)
 
-
-class RealmAddTransaction<in T: RealmObject>(val realm: Realm): AddTransaction<T> {
-
-    override fun execute(input: T) {
-        realm.insertOrUpdate(input)
     }
 
-    override fun execute(input: Collection<T>) {
-        realm.insertOrUpdate(input)
+    override fun execute(input: Collection<T>, db: Database<T>) {
+        (db as? RealmDatabase<T>)?.realm?.insertOrUpdate(input)
     }
 
 }
 
+open class RealmUpdateTransaction<T: RealmObject> private constructor(private val update: (T) -> Unit): UpdateTransaction<T> {
 
-open class RealmUpdateTransaction<in T: RealmObject>
-private constructor(private val update: (T) -> Unit): UpdateTransaction<T> {
-    override fun execute(input: Collection<T>) {
+    override fun execute(input: Collection<T>, db: Database<T>) {
         input.forEach { update.invoke(it) }
     }
 
-    override fun execute(input: T) {
+    override fun execute(input: T, db: Database<T>) {
         update.invoke(input)
     }
 
 }
 
-open class RealmRemoveTransaction<in T: RealmObject>: RemoveTransaction<T> {
+open class RealmRemoveTransaction<T: RealmObject>: RemoveTransaction<T> {
 
-    override fun execute(input: Collection<T>) {
+    override fun execute(input: Collection<T>, db: Database<T>) {
         when(input) {
             is RealmResults<T> -> input.deleteAllFromRealm()
             else -> input.forEach { it.deleteFromRealm() }
         }
     }
 
-    override fun execute(input: T) {
+    override fun execute(input: T, db: Database<T>) {
         input.deleteFromRealm()
     }
+
+}
+
+class RealmChainTransaction<T: RealmObject>(override val data: List<ChainTransactionData<T>>): ChainTransaction<T> {
+
+    override fun execute(db: Database<T>) {
+        val realm: Realm = (db as? RealmDatabase<T>)?.realm ?: return
+        realm.executeTransaction {r ->
+            data.forEach {cdt ->
+                val itemDb = RealmDatabase(r, db.clazz)
+                if (cdt.data != null) {
+                    cdt.transaction.execute(cdt.data!!, itemDb)
+                }
+                if (cdt.item != null) {
+                    cdt.transaction.execute(cdt.item!!, itemDb)
+                }
+            }
+        }
+    }
+
+    companion object {
+        fun<T: RealmObject> of(vararg data: ChainTransactionData<T>): ChainTransaction<T> {
+            return RealmChainTransaction(data.toList())
+        }
+    }
+
+
+
 
 }

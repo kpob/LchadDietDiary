@@ -14,8 +14,8 @@ import io.realm.Realm
 import org.jetbrains.anko.attempt
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
-import pl.kpob.dietdiary.firebase.FbIngredient
-import pl.kpob.dietdiary.firebase.FbMeal
+import pl.kpob.dietdiary.sharedcode.model.FbIngredient
+import pl.kpob.dietdiary.sharedcode.model.FbMeal
 import java.util.*
 
 /**
@@ -61,19 +61,6 @@ inline fun supportsNougat(action: () -> Unit) {
         action.invoke()
     }
 }
-
-
-/**
- * MISC
- */
-fun nextId(): String = UUID.randomUUID().toString()
-fun currentTime(): Long = System.currentTimeMillis()
-val Long.asReadableString: String get() =
-    DateTime(this).let {
-        val h = it.hourOfDay
-        val m = it.minuteOfHour
-        "$h:${if(m < 10) "0$m" else m.toString()}"
-    }
 
 
 /**
