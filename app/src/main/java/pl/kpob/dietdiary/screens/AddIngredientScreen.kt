@@ -19,19 +19,17 @@ class AddIngredientScreen(private val ingredient: FbIngredient? = null) : Scoped
 
     @Inject lateinit var presenter: AddIngredientPresenter
 
-    override fun createView(context: Context?) = AddIngredientView(context!!).also {
-        it.enableHomeAsUp { navigator.goBack() }
-    }
-
-    override fun onShow(context: Context?) {
-        super.onShow(context)
+    override fun createView(context: Context?): AddIngredientView {
         DaggerAddIngredientComponent.builder()
                 .appComponent(appComponent)
                 .dataModule(DataModule(realm))
                 .navigatorModule(NavigatorModule(navigator))
                 .addIngredientModule(AddIngredientModule(ingredient))
                 .build().inject(this)
-        presenter.onShow(view)
+        return AddIngredientView(context!!).also {
+            it.enableHomeAsUp { navigator.goBack() }
+            presenter.onShow(it)
+        }
     }
 
     fun onSaveClick(name: String, kcal: Float, lct: Float, mct: Float, carbohydrates: Float, protein: Float, roughage: Float, salt: Float, type: IngredientCategory) {

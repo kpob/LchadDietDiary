@@ -1,6 +1,7 @@
 package pl.kpob.dietdiary.sharedcode.model
 
 import kotlinx.serialization.Serializable
+import pl.kpob.dietdiary.sharedcode.utils.asFormattedString
 
 data class Credentials(
         val login: String,
@@ -41,7 +42,9 @@ data class MealIngredient(
         val name: String,
         val calories: Float,
         val weight: Float = 0f
-)
+) {
+    val caloriesString get() = "${calories.asFormattedString()} kcal"
+}
 
 data class MealTemplate(
         val id: String,
@@ -72,11 +75,11 @@ data class MealPart(val ingredient: Ingredient, val weight: Float) {
 }
 
 
-enum class MealType(val string: String, val icon: ImageResource, val filters: List<IngredientCategory>) {
-    MILK("Mleczko", MilkBottleImageResource, listOf(IngredientCategory.OTHERS)),
-    DESSERT("Deserek", PorridgeImageResource, listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
-    DINNER("Obiadek", DinnerImageResource, listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DINNERS, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
-    OTHER("Przekąska", DinnerImageResource, listOf(IngredientCategory.OTHERS));
+enum class MealType(val string: String, val filters: List<IngredientCategory>) {
+    MILK("Mleczko", listOf(IngredientCategory.OTHERS)),
+    DESSERT("Deserek", listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
+    DINNER("Obiadek", listOf(IngredientCategory.OILS, IngredientCategory.PORRIDGE, IngredientCategory.DINNERS, IngredientCategory.DIARY, IngredientCategory.FRUITS, IngredientCategory.FRUITS_TUBE)),
+    OTHER("Przekąska", listOf(IngredientCategory.OTHERS));
 
     companion object {
         fun fromString(s: String) = values().firstOrNull { it.string == s || it.name == s} ?: OTHER

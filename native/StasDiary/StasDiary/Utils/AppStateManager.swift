@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import sharedcode
+import main
 
 class AppStateManager: NSObject, AppSyncState {
     

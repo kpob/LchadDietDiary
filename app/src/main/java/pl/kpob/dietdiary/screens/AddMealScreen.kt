@@ -15,6 +15,7 @@ import pl.kpob.dietdiary.di.modules.common.NavigatorModule
 import pl.kpob.dietdiary.di.modules.common.PopupModule
 import pl.kpob.dietdiary.sharedcode.model.Ingredient
 import pl.kpob.dietdiary.sharedcode.model.Meal
+import pl.kpob.dietdiary.sharedcode.model.MealPart
 import pl.kpob.dietdiary.sharedcode.model.MealType
 import pl.kpob.dietdiary.sharedcode.presenter.AddMealPresenter
 import pl.kpob.dietdiary.sharedcode.view.popup.*
@@ -47,7 +48,7 @@ class AddMealScreen(
         presenter.onShow(view)
     }
 
-    fun onAddClick(data: List<Pair<Ingredient, Float>>, left: Float) = presenter.onAddClick(data, left)
+    fun onAddClick(data: List<MealPart>, left: Float) = presenter.onAddClick(data, left)
 
     fun onTimeEditClick() = presenter.onTimeEditClick()
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import sharedcode
+import main
 
 
 class RealmDatabase: NSObject, Database {

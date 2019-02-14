@@ -1,6 +1,8 @@
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
 
+def ktor_version = '1.1.2'
+
 kotlin {
     targets {
         final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
@@ -15,8 +17,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib-common'
-            implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.9.1'
-            implementation "com.soywiz:klock:1.0.0"
+            implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.10.0'
+            implementation "com.soywiz:klock:1.1.1"
+            implementation "io.ktor:ktor-client-core:$ktor_version"
+            implementation "io.ktor:ktor-client-logging:$ktor_version"
+            implementation "io.ktor:ktor-client-json:$ktor_version"
         }
 
         androidMain {
@@ -25,14 +30,19 @@ kotlin {
                 api 'org.jetbrains.kotlin:kotlin-stdlib'
                 implementation 'net.danlew:android.joda:2.10.1'
                 implementation 'org.greenrobot:eventbus:3.1.1'
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0"
+                implementation "io.ktor:ktor-client-android:$ktor_version"
+                implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
             }
         }
 
         iOSMain {
             dependencies {
 //                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.0.1"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.9.1"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.10.0"
+                implementation "io.ktor:ktor-client-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-logging-iosx64:$ktor_version"
+                implementation "io.ktor:ktor-client-json-iosx64:$ktor_version"
             }
         }
         

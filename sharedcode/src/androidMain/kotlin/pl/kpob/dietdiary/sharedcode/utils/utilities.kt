@@ -7,3 +7,5 @@ actual fun Float.asFormattedString(decimal: Int): String {
 }
 
 actual fun nextId(): String = UUID.randomUUID().toString()
+
+actual typealias Position = Int

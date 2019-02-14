@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import sharedcode
+import main
 
 struct AddOption {
     

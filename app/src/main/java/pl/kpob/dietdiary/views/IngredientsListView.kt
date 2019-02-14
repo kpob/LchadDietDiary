@@ -51,35 +51,30 @@ class IngredientsListView(ctx: Context): BaseScreenView<IngredientsListScreen>(c
 
     inner class Adapter(var viewModel: IngredientsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        private var groups = viewModel.ingredients
-        private val ranges = viewModel.ranges
-
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            val type = viewModel.viewTypeByPosition(position)
 
-            val range = ranges.firstOrNull { it.contains(position) }
-            if (range != null) {
-                val rangeIdx = ranges.indexOfFirst { it.contains(position) }
-
+            if (type == IngredientsViewModel.ITEM_VIEW_TYPE) {
                 holder.itemView.let {
-                    val item = groups.map { it.ingredients }.flatten()[position - rangeIdx - 1]
+                    val item = viewModel.item(position)
                     it.find<TextView>(R.id.name).text = item.name
                     it.find<View>(R.id.edit).onClick { screen.onEditClick(item) }
                     it.find<View>(R.id.delete).onClick { screen.onDeleteClick(item) }
                 }
             } else {
                 holder.itemView?.let {
-                    val category = groups[ranges.indexOfFirst { it.first > position }].category
-                    it.find<TextView>(R.id.category).text = category.label
+                    it.find<TextView>(R.id.category).text = viewModel.categoryName(position)
                 }
             }
         }
 
         override fun getItemCount(): Int = viewModel.viewsCount
 
-        override fun getItemViewType(position: Int): Int = if (ranges.any { it.contains(position) }) 1 else 2
+        override fun getItemViewType(position: Int): Int = viewModel.viewTypeByPosition(position)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return object : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(if (viewType == 1) R.layout.item_ingredient else R.layout.item_ingredient_category, parent, false)) {}
+            val viewRes = if(viewType == IngredientsViewModel.ITEM_VIEW_TYPE) R.layout.item_ingredient else R.layout.item_ingredient_category
+            return object : RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(viewRes, parent, false)) {}
         }
     }
 }

@@ -53,3 +53,5 @@ val Long.asReadableString: String
         val m = it.minuteOfHour
         "$h:${if(m < 10) "0$m" else m.toString()}"
     }
+
+expect class Position

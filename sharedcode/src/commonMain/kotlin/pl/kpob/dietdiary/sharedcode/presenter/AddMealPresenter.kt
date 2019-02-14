@@ -11,6 +11,7 @@ import pl.kpob.dietdiary.sharedcode.view.AddMealView
 import pl.kpob.dietdiary.sharedcode.view.AppNavigator
 import pl.kpob.dietdiary.sharedcode.view.PopupData
 import pl.kpob.dietdiary.sharedcode.view.popup.*
+import pl.kpob.dietdiary.sharedcode.viewmodel.addmeal.AddMealViewModel
 
 class AddMealPresenter(
         private val mealType: MealType,
@@ -39,8 +40,10 @@ class AddMealPresenter(
         mealDetailsRepository.querySingle(spec)?.ingredients ?: listOf()
     }
 
+    val viewModel by lazy { AddMealViewModel(possibleIngredients) }
 
     fun onShow(view: AddMealView) {
+        this.view = view
         view.time = mealTime.asReadableString
 
         if(meal != null) {
@@ -52,10 +55,10 @@ class AddMealPresenter(
         }
     }
 
-    fun onAddClick(data: List<Pair<Ingredient, Float>>, left: Float) {
-        if (data.all { it.second == .0f }) {
+    fun onAddClick(data: List<MealPart>, left: Float): Boolean {
+        if (data.isEmpty() || data.all { it.weight == .0f }) {
             view?.displayError("Nie można zapisać pustego posiłku")
-            return
+            return false
         }
 
         val processedData = MealProcessor.process(data, left)
@@ -74,6 +77,7 @@ class AddMealPresenter(
 
         mealSaver.save(mealsRepository, meal)
         appNavigator.goBack()
+        return true
     }
 
     fun onAddRowClick() {
@@ -149,7 +153,6 @@ class AddMealPresenter(
     fun updateTotalWeight(value: Float) {
         view?.totalWeight = value
     }
-
 
     @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
     companion object {

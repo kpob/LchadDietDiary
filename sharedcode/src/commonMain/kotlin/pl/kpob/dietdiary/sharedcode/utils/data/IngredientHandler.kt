@@ -9,4 +9,5 @@ interface IngredientHandler {
 
     fun save(repo: Repository<IngredientDTO, Ingredient>, ingredientDTO: FbIngredient)
     fun delete(repo: Repository<IngredientDTO, Ingredient>, ingredient: Ingredient)
+    fun asFbModel(ingredient: Ingredient): FbIngredient
 }

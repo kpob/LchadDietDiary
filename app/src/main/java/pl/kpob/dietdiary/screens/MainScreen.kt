@@ -19,7 +19,6 @@ import pl.kpob.dietdiary.views.MainView
 import pl.kpob.dietdiary.views.utils.TimePicker
 import javax.inject.Inject
 
-
 /**
  * Created by kpob on 20.10.2017.
  */
@@ -27,23 +26,7 @@ class MainScreen : ScopedScreen<MainView>(), PopupDisplayer, AnkoLogger {
 
     @Inject lateinit var presenter: MainPresenter
 
-    override fun createView(context: Context?) = MainView(context!!).also {
-        it.toolbarTitle = context.getString(R.string.app_name) ?: ""
-        it.navigationView.setNavigationItemSelectedListener { menuItem ->
-            launch(uiContext) {
-                view?.closeDrawers()
-                delay(500)
-                when (menuItem.itemId) {
-                    R.id.nav_ingredients -> navigator.goTo(IngredientsListScreen())
-                    R.id.nav_stats -> navigator.goTo(CalendarScreen())
-                }
-            }
-            false
-        }
-    }
-
-    override fun onShow(context: Context?) {
-        super.onShow(context)
+    override fun createView(context: Context?): MainView {
         DaggerMainComponent.builder()
                 .appComponent(appComponent)
                 .navigatorModule(NavigatorModule(navigator))
@@ -51,7 +34,22 @@ class MainScreen : ScopedScreen<MainView>(), PopupDisplayer, AnkoLogger {
                 .popupModule(PopupModule(this))
                 .mainModule(MainModule())
                 .build().inject(this)
-        presenter.onShow(view)
+
+        return MainView(context!!).also {
+            it.toolbarTitle = context.getString(R.string.app_name) ?: ""
+            it.navigationView.setNavigationItemSelectedListener { menuItem ->
+                launch(uiContext) {
+                    view?.closeDrawers()
+                    delay(250)
+                    when (menuItem.itemId) {
+                        R.id.nav_ingredients -> presenter.onIngredientListClick()
+                        R.id.nav_stats -> navigator.goTo(CalendarScreen())
+                    }
+                }
+                false
+            }
+            presenter.onShow(it)
+        }
     }
 
     override fun onHide(context: Context?) {
@@ -72,10 +70,7 @@ class MainScreen : ScopedScreen<MainView>(), PopupDisplayer, AnkoLogger {
 
     fun onItemClick(item: Meal) = presenter.onItemClick(item)
 
-    fun onTimeClick(item: Meal) {
-
-        presenter.onTimeClick(item)
-    }
+    fun onTimeClick(item: Meal) = presenter.onTimeClick(item)
 
     fun onDeleteClick(item: Meal) = presenter.onDeleteClick(item)
 

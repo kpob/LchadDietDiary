@@ -23,7 +23,10 @@ import pl.kpob.dietdiary.App
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.hide
 import pl.kpob.dietdiary.screens.MainScreen
+import pl.kpob.dietdiary.sharedcode.model.MealType
 import pl.kpob.dietdiary.sharedcode.view.MainView
+import pl.kpob.dietdiary.sharedcode.viewmodel.DayLabelViewModel
+import pl.kpob.dietdiary.sharedcode.viewmodel.MealItemViewModel
 import pl.kpob.dietdiary.sharedcode.viewmodel.MealsViewModel
 import pl.kpob.dietdiary.show
 
@@ -86,21 +89,13 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
         loader.hide()
     }
 
-    override fun hideSyncBar() {
-        syncBar.hide()
-    }
+    override fun hideSyncBar() = syncBar.hide()
 
-    override fun showSyncBar() {
-        syncBar.show()
-    }
+    override fun showSyncBar() = syncBar.show()
 
-    override fun closeDrawers() {
-        drawerLayout.closeDrawers()
-    }
+    override fun closeDrawers() = drawerLayout.closeDrawers()
 
-    override fun hideMeals() {
-        meals.hide()
-    }
+    override fun hideMeals() = meals.hide()
 
     inner class Adapter(var data: MealsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -116,27 +111,10 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
             val type = getItemViewType(position)
             if(type == MealsViewModel.MEAL_ITEM_VIEW_TYPE) {
                 val viewModel = data.mealViewModelByPosition(position)
-
-                holder.itemView?.let {
-                    it.find<ImageView>(R.id.meal_type).setImageResource(viewModel.icon.intValue)
-                    it.find<TextView>(R.id.meal_time).text = viewModel.time
-                    it.findOptional<TextView>(R.id.meal_calories)?.text = viewModel.calories
-                    it.find<TextView>(R.id.meal_lct).text = viewModel.lct
-                    it.find<View>(R.id.delete).onClick { screen.onDeleteClick(viewModel.meal) }
-                    it.find<View>(R.id.edit).onClick { screen.onEditClick(viewModel.meal) }
-                    it.find<View>(R.id.meal_row).onClick { screen.onItemClick(viewModel.meal) }
-                    it.find<View>(R.id.meal_time).onClick { screen.onTimeClick(viewModel.meal) }
-                    viewBinderHelper.bind(it.find(R.id.swipe_layout), viewModel.meal.id)
-                }
+                bindMealItem(holder, viewModel)
             } else {
                 val viewModel = data.labelViewModelByPosition(position)
-                holder.itemView?.let {
-                    val meals = data.mealsData[ranges.indexOfFirst { it.first > position }].meals
-                    it.find<TextView>(R.id.time).text = viewModel.date
-                    it.find<TextView>(R.id.meal_lct).text = viewModel.lct
-                    it.find<TextView>(R.id.meal_calories).text = viewModel.calories
-                    it.onClick { screen.onLabelClick(meals) }
-                }
+                bindLabelItem(holder, position, viewModel)
             }
         }
 
@@ -147,6 +125,40 @@ class MainView(ctx: Context) : BaseScreenView<MainScreen>(ctx), ToolbarManager, 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val viewRes = if(viewType == MealsViewModel.LABEL_VIEW_TYPE) R.layout.item_meal_header else R.layout.item_meal
             return object : RecyclerView.ViewHolder(View.inflate(context, viewRes, null)) {}
+        }
+
+        private fun bindMealItem(holder: RecyclerView.ViewHolder, viewModel: MealItemViewModel) {
+            holder.itemView?.let {
+                it.find<ImageView>(R.id.meal_type).setImageResource(icon(viewModel.meal.type))
+                it.find<TextView>(R.id.meal_time).text = viewModel.time
+                it.findOptional<TextView>(R.id.meal_calories)?.text = viewModel.calories
+                it.find<TextView>(R.id.meal_lct).text = viewModel.lct
+                it.find<View>(R.id.delete).onClick { screen.onDeleteClick(viewModel.meal) }
+                it.find<View>(R.id.edit).onClick { screen.onEditClick(viewModel.meal) }
+                it.find<View>(R.id.meal_row).onClick { screen.onItemClick(viewModel.meal) }
+                it.find<View>(R.id.meal_time).onClick { screen.onTimeClick(viewModel.meal) }
+                viewBinderHelper.bind(it.find(R.id.swipe_layout), viewModel.meal.id)
+            }
+        }
+
+        private fun bindLabelItem(holder: RecyclerView.ViewHolder, position: Int, viewModel: DayLabelViewModel) {
+            val idx = ranges.indexOfFirst { it.first > position }
+            if (idx == -1) return
+            val meals = data.mealsData[idx].meals
+
+            holder.itemView?.let {
+                it.find<TextView>(R.id.time).text = viewModel.date
+                it.find<TextView>(R.id.meal_lct).text = viewModel.lct
+                it.find<TextView>(R.id.meal_calories).text = viewModel.calories
+                it.onClick { screen.onLabelClick(meals) }
+            }
+        }
+
+        private fun icon(mealType: MealType) = when(mealType) {
+            MealType.DESSERT -> R.drawable.ic_porridge
+            MealType.MILK -> R.drawable.ic_milk_bottle
+            MealType.DINNER -> R.drawable.ic_dinner
+            else -> R.drawable.ic_ingerdient
         }
 
     }

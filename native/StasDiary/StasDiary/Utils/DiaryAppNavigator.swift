@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import sharedcode
+import main
 import UIKit
 
 class DiaryAppNavigator: NSObject, AppNavigator {
-    
     
     let contoller: UINavigationController
     
@@ -20,7 +19,8 @@ class DiaryAppNavigator: NSObject, AppNavigator {
     }
     
     func goToAddMealView(type: MealType) {
-        self.contoller.pushViewController(AddMealViewController(), animated: true)
+        let vc = Assembly.ViewControllers.addMeal(ofType: type)
+        self.contoller.pushViewController(vc, animated: true)
         print("go to add meal!!! \(type)")
     }
     
@@ -28,21 +28,32 @@ class DiaryAppNavigator: NSObject, AppNavigator {
         
     }
     
-    func goToAddIngredientView() {
-        
+    func goToAddIngredientView(item: FbIngredient?) {
+        print("goToAddIngredientView \(item)")
     }
     
     func goToPieChartView(ids: [String]) {
-        
+        print("go to day summary")
     }
     
     func goToPieChartView(id: String) {
-        
+        goTo(Assembly.ViewControllers.singleMealStats(withId: id))
+        print("go to meal summary")
     }
     
     func goBack() {
         _ = contoller.popViewController(animated: true)
     }
     
+    func goToRangeSummary(first: Day, last: Day) {
+        
+    }
     
+    func goToIngredientList() {
+        self.contoller.pushViewController(IngredientListTableViewController(), animated: true)
+    }
+    
+    private func goTo(_ vc: UIViewController) {
+        self.contoller.pushViewController(vc, animated: true)
+    }
 }

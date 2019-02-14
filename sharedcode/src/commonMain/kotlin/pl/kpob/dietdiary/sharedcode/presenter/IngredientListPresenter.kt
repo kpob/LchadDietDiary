@@ -38,7 +38,7 @@ class IngredientListPresenter(
     }
 
     fun onEditClick(item: Ingredient) {
-        appNavigator.goToAddIngredientView(/*item.toFirebase()*/)
+        appNavigator.goToAddIngredientView(ingredientHandler.asFbModel(item))
     }
 
     private fun deleteIngredient(item: Ingredient)  {

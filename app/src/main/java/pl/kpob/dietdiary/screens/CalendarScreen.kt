@@ -16,20 +16,16 @@ class CalendarScreen: ScopedScreen<MyCalendarView>(), AnkoLogger {
     @Inject lateinit var presenter: CalendarPresenter
 
     override fun createView(context: Context?): MyCalendarView {
-        return MyCalendarView(context!!).apply {
-            enableHomeAsUp { navigator.goBack() }
-        }
-    }
-
-    override fun onShow(context: Context?) {
-        super.onShow(context)
-
         DaggerCalendarComponent.builder()
                 .appComponent(appComponent)
                 .navigatorModule(NavigatorModule(navigator))
                 .calendarModule(CalendarModule())
                 .build().inject(this)
-        presenter.onShow(view)
+
+        return MyCalendarView(context!!).apply {
+            presenter.onShow(this)
+            enableHomeAsUp { navigator.goBack() }
+        }
     }
 
     fun onMonthSelected(date: CalendarDay) = presenter.onMonthSelected(date.asDay())
@@ -43,8 +39,6 @@ class CalendarScreen: ScopedScreen<MyCalendarView>(), AnkoLogger {
 
     fun onLastMothClick() = presenter.onLastMothClick()
 
+    private fun CalendarDay.asDay(): Day = Day.from(year, month, day)
 
-    private fun CalendarDay.asDay(): Day {
-        return Day.from(year, month, day)
-    }
 }

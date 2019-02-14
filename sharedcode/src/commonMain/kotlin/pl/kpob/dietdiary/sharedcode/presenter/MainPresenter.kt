@@ -103,6 +103,8 @@ class MainPresenter(
 
     fun onLabelClick(meals: List<Meal>) = appNavigator.goToPieChartView(meals.map { it.id })
 
+    fun onIngredientListClick() = appNavigator.goToIngredientList()
+
     fun updateData() {
         if (!isAppSyncing) {
             view?.hideSyncBar()

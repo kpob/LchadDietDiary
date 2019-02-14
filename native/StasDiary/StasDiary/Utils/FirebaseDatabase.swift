@@ -7,10 +7,12 @@
 //
 
 import Foundation
-import sharedcode
+import main
 
 class FirebaseDatabase: NSObject, RemoteDatabase {
-    
+    func addToken(token: String) {
+        
+    }
     
     func saveIngredients(data: [FbIngredient]) {
         

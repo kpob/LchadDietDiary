@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import sharedcode
+import main
 
 class DayCell: UITableViewCell {
 
@@ -37,6 +37,14 @@ class DayCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    static var nib:UINib {
+        return UINib(nibName: identifier, bundle: nil)
+    }
+    
+    static var identifier: String {
+        return String(describing: self)
     }
     
 }

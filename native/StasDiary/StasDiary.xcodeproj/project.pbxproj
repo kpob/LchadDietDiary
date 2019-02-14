@@ -7,19 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5328CA0A21DE5C31002053BB /* AppIngredientHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328CA0921DE5C31002053BB /* AppIngredientHandler.swift */; };
+		5328CA0D21DE60ED002053BB /* IngredientListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328CA0B21DE60ED002053BB /* IngredientListTableViewController.swift */; };
+		5328CA0E21DE60ED002053BB /* IngredientListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5328CA0C21DE60ED002053BB /* IngredientListTableViewController.xib */; };
+		5328CA1221DE639B002053BB /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328CA1021DE639B002053BB /* LabelTableViewCell.swift */; };
+		5328CA1321DE639B002053BB /* LabelTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5328CA1121DE639B002053BB /* LabelTableViewCell.xib */; };
+		5328CA1621DE9556002053BB /* IngredientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328CA1421DE9556002053BB /* IngredientCell.swift */; };
+		5328CA1721DE9556002053BB /* IngredientCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5328CA1521DE9556002053BB /* IngredientCell.xib */; };
+		534C2BB621E20D0D00940DB8 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C2BB421E20D0D00940DB8 /* StatsViewController.swift */; };
+		534C2BB721E20D0D00940DB8 /* StatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534C2BB521E20D0D00940DB8 /* StatsViewController.xib */; };
+		534C2BBA21E2379900940DB8 /* StatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C2BB821E2379900940DB8 /* StatsTableViewCell.swift */; };
+		534C2BBB21E2379900940DB8 /* StatsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 534C2BB921E2379900940DB8 /* StatsTableViewCell.xib */; };
+		537AA1FE220F24C600AA03E1 /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537AA1FD220F24C600AA03E1 /* main.framework */; };
+		537AA1FF220F24C600AA03E1 /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 537AA1FD220F24C600AA03E1 /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5383CFE621DE9F8800633B1B /* AppTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFE521DE9F8800633B1B /* AppTokenProvider.swift */; };
+		5383CFE821DE9FE800633B1B /* AppMealSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFE721DE9FE800633B1B /* AppMealSaver.swift */; };
+		5383CFEC21DEA0B900633B1B /* AppTemplateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFEB21DEA0B900633B1B /* AppTemplateHandler.swift */; };
+		5383CFEF21DEAD4600633B1B /* MealTemplateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFEE21DEAD4600633B1B /* MealTemplateModel.swift */; };
+		5383CFF121DF66AE00633B1B /* DiaryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFF021DF66AE00633B1B /* DiaryVC.swift */; };
+		5383CFF321DF672D00633B1B /* Nibs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFF221DF672D00633B1B /* Nibs.swift */; };
+		5383CFF521DF678C00633B1B /* NibResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFF421DF678C00633B1B /* NibResource.swift */; };
+		5383CFF821DF698200633B1B /* DiaryTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFF721DF698200633B1B /* DiaryTableVC.swift */; };
+		5383CFFC21DF6ACF00633B1B /* AddMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFFA21DF6ACF00633B1B /* AddMealViewController.swift */; };
+		5383CFFD21DF6ACF00633B1B /* AddMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5383CFFB21DF6ACF00633B1B /* AddMealViewController.xib */; };
+		5383D00121DF6BD400633B1B /* NewIngredientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383CFFF21DF6BD400633B1B /* NewIngredientCell.swift */; };
+		5383D00221DF6BD400633B1B /* NewIngredientCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5383D00021DF6BD400633B1B /* NewIngredientCell.xib */; };
+		5383D00521DF6C0900633B1B /* AddNextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D00321DF6C0900633B1B /* AddNextCell.swift */; };
+		5383D00621DF6C0900633B1B /* AddNextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5383D00421DF6C0900633B1B /* AddNextCell.xib */; };
+		5383D00921DF6C1C00633B1B /* SummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D00721DF6C1C00633B1B /* SummaryCell.swift */; };
+		5383D00A21DF6C1C00633B1B /* SummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5383D00821DF6C1C00633B1B /* SummaryCell.xib */; };
+		5383D00C21DF738500633B1B /* AddMealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D00B21DF738500633B1B /* AddMealViewModel.swift */; };
 		538AEEB621D2877700C6E177 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEEB521D2877700C6E177 /* AppDelegate.swift */; };
 		538AEEBD21D2877800C6E177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEBC21D2877800C6E177 /* Assets.xcassets */; };
 		538AEEC021D2877800C6E177 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEBE21D2877800C6E177 /* LaunchScreen.storyboard */; };
-		538AEEC821D2C48100C6E177 /* sharedcode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 538AEEC721D2C48100C6E177 /* sharedcode.framework */; };
-		538AEEC921D2C48100C6E177 /* sharedcode.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 538AEEC721D2C48100C6E177 /* sharedcode.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		538AEECF21D3890F00C6E177 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEECD21D3890F00C6E177 /* HomeViewController.swift */; };
 		538AEED021D3890F00C6E177 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEECE21D3890F00C6E177 /* HomeViewController.xib */; };
 		538AEED321D38A6F00C6E177 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED121D38A6F00C6E177 /* MealCell.swift */; };
 		538AEED421D38A6F00C6E177 /* MealCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEED221D38A6F00C6E177 /* MealCell.xib */; };
 		538AEED721D38B4900C6E177 /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED521D38B4900C6E177 /* DayCell.swift */; };
 		538AEED821D38B4900C6E177 /* DayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEED621D38B4900C6E177 /* DayCell.xib */; };
-		538AEEDB21D3A92800C6E177 /* TmpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538AEED921D3A92800C6E177 /* TmpViewController.swift */; };
-		538AEEDC21D3A92800C6E177 /* TmpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 538AEEDA21D3A92800C6E177 /* TmpViewController.xib */; };
+		53B5252421E0BB3B00C508E3 /* SearchTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53B5252321E0BB3B00C508E3 /* SearchTextField.framework */; };
 		53F2ADC721D78B16002B5718 /* AddSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADC621D78B16002B5718 /* AddSelectionViewModel.swift */; };
 		53F2ADCA21D78C11002B5718 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADC921D78C11002B5718 /* AppStateManager.swift */; };
 		53F2ADCC21D78C5C002B5718 /* FirebaseDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */; };
@@ -27,18 +54,17 @@
 		53F2ADD021D78D77002B5718 /* DiaryAppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */; };
 		53F2ADD321D78E6F002B5718 /* RealmDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */; };
 		53F2ADD521D7D3DA002B5718 /* AddOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD421D7D3DA002B5718 /* AddOption.swift */; };
-		53F2ADD821D82010002B5718 /* AddMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F2ADD621D82010002B5718 /* AddMealViewController.swift */; };
-		53F2ADD921D82010002B5718 /* AddMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53F2ADD721D82010002B5718 /* AddMealViewController.xib */; };
+		6AA5F4AD069A30FDC0A8FBEC /* Pods_StasDiary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E93A1AC3054BAC71745DD90 /* Pods_StasDiary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		538AEECA21D2C48100C6E177 /* Embed Frameworks */ = {
+		537AA200220F24C600AA03E1 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				538AEEC921D2C48100C6E177 /* sharedcode.framework in Embed Frameworks */,
+				537AA1FF220F24C600AA03E1 /* main.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,20 +72,49 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E93A1AC3054BAC71745DD90 /* Pods_StasDiary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StasDiary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F7AC21935698A9E9EF2D2FA /* Pods-StasDiary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StasDiary.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StasDiary/Pods-StasDiary.debug.xcconfig"; sourceTree = "<group>"; };
+		5328CA0921DE5C31002053BB /* AppIngredientHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIngredientHandler.swift; sourceTree = "<group>"; };
+		5328CA0B21DE60ED002053BB /* IngredientListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientListTableViewController.swift; sourceTree = "<group>"; };
+		5328CA0C21DE60ED002053BB /* IngredientListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IngredientListTableViewController.xib; sourceTree = "<group>"; };
+		5328CA1021DE639B002053BB /* LabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
+		5328CA1121DE639B002053BB /* LabelTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LabelTableViewCell.xib; sourceTree = "<group>"; };
+		5328CA1421DE9556002053BB /* IngredientCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientCell.swift; sourceTree = "<group>"; };
+		5328CA1521DE9556002053BB /* IngredientCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IngredientCell.xib; sourceTree = "<group>"; };
+		534C2BB421E20D0D00940DB8 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		534C2BB521E20D0D00940DB8 /* StatsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StatsViewController.xib; sourceTree = "<group>"; };
+		534C2BB821E2379900940DB8 /* StatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsTableViewCell.swift; sourceTree = "<group>"; };
+		534C2BB921E2379900940DB8 /* StatsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StatsTableViewCell.xib; sourceTree = "<group>"; };
+		537AA1FD220F24C600AA03E1 /* main.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = main.framework; path = "../../sharedcode/build/xcode-frameworks/main.framework"; sourceTree = "<group>"; };
+		5383CFE521DE9F8800633B1B /* AppTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTokenProvider.swift; sourceTree = "<group>"; };
+		5383CFE721DE9FE800633B1B /* AppMealSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMealSaver.swift; sourceTree = "<group>"; };
+		5383CFEB21DEA0B900633B1B /* AppTemplateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTemplateHandler.swift; sourceTree = "<group>"; };
+		5383CFEE21DEAD4600633B1B /* MealTemplateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTemplateModel.swift; sourceTree = "<group>"; };
+		5383CFF021DF66AE00633B1B /* DiaryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryVC.swift; sourceTree = "<group>"; };
+		5383CFF221DF672D00633B1B /* Nibs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nibs.swift; sourceTree = "<group>"; };
+		5383CFF421DF678C00633B1B /* NibResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibResource.swift; sourceTree = "<group>"; };
+		5383CFF721DF698200633B1B /* DiaryTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryTableVC.swift; sourceTree = "<group>"; };
+		5383CFFA21DF6ACF00633B1B /* AddMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewController.swift; sourceTree = "<group>"; };
+		5383CFFB21DF6ACF00633B1B /* AddMealViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMealViewController.xib; sourceTree = "<group>"; };
+		5383CFFF21DF6BD400633B1B /* NewIngredientCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIngredientCell.swift; sourceTree = "<group>"; };
+		5383D00021DF6BD400633B1B /* NewIngredientCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewIngredientCell.xib; sourceTree = "<group>"; };
+		5383D00321DF6C0900633B1B /* AddNextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNextCell.swift; sourceTree = "<group>"; };
+		5383D00421DF6C0900633B1B /* AddNextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddNextCell.xib; sourceTree = "<group>"; };
+		5383D00721DF6C1C00633B1B /* SummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCell.swift; sourceTree = "<group>"; };
+		5383D00821DF6C1C00633B1B /* SummaryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SummaryCell.xib; sourceTree = "<group>"; };
+		5383D00B21DF738500633B1B /* AddMealViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewModel.swift; sourceTree = "<group>"; };
 		538AEEB221D2877700C6E177 /* StasDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StasDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		538AEEB521D2877700C6E177 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		538AEEBC21D2877800C6E177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		538AEEBF21D2877800C6E177 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		538AEEC121D2877800C6E177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		538AEEC721D2C48100C6E177 /* sharedcode.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = sharedcode.framework; path = "../../sharedcode/build/xcode-frameworks/sharedcode.framework"; sourceTree = "<group>"; };
 		538AEECD21D3890F00C6E177 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		538AEECE21D3890F00C6E177 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		538AEED121D38A6F00C6E177 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		538AEED221D38A6F00C6E177 /* MealCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MealCell.xib; sourceTree = "<group>"; };
 		538AEED521D38B4900C6E177 /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
 		538AEED621D38B4900C6E177 /* DayCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DayCell.xib; sourceTree = "<group>"; };
-		538AEED921D3A92800C6E177 /* TmpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmpViewController.swift; sourceTree = "<group>"; };
-		538AEEDA21D3A92800C6E177 /* TmpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TmpViewController.xib; sourceTree = "<group>"; };
+		53B5252321E0BB3B00C508E3 /* SearchTextField.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SearchTextField.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53F2ADC621D78B16002B5718 /* AddSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSelectionViewModel.swift; sourceTree = "<group>"; };
 		53F2ADC921D78C11002B5718 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
 		53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDatabase.swift; sourceTree = "<group>"; };
@@ -67,8 +122,7 @@
 		53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryAppNavigator.swift; sourceTree = "<group>"; };
 		53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDatabase.swift; sourceTree = "<group>"; };
 		53F2ADD421D7D3DA002B5718 /* AddOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOption.swift; sourceTree = "<group>"; };
-		53F2ADD621D82010002B5718 /* AddMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewController.swift; sourceTree = "<group>"; };
-		53F2ADD721D82010002B5718 /* AddMealViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMealViewController.xib; sourceTree = "<group>"; };
+		FD448CB56A4DF3E4D0DF8558 /* Pods-StasDiary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StasDiary.release.xcconfig"; path = "Pods/Target Support Files/Pods-StasDiary/Pods-StasDiary.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,19 +130,101 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				538AEEC821D2C48100C6E177 /* sharedcode.framework in Frameworks */,
+				537AA1FE220F24C600AA03E1 /* main.framework in Frameworks */,
+				53B5252421E0BB3B00C508E3 /* SearchTextField.framework in Frameworks */,
+				6AA5F4AD069A30FDC0A8FBEC /* Pods_StasDiary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5328CA0421DE5B4E002053BB /* Ingredients */ = {
+			isa = PBXGroup;
+			children = (
+				5328CA0F21DE636E002053BB /* Cells */,
+				5328CA0B21DE60ED002053BB /* IngredientListTableViewController.swift */,
+				5328CA0C21DE60ED002053BB /* IngredientListTableViewController.xib */,
+			);
+			path = Ingredients;
+			sourceTree = "<group>";
+		};
+		5328CA0F21DE636E002053BB /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				5328CA1021DE639B002053BB /* LabelTableViewCell.swift */,
+				5328CA1121DE639B002053BB /* LabelTableViewCell.xib */,
+				5328CA1421DE9556002053BB /* IngredientCell.swift */,
+				5328CA1521DE9556002053BB /* IngredientCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		534C2BB321E20CDA00940DB8 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				534C2BB421E20D0D00940DB8 /* StatsViewController.swift */,
+				534C2BB521E20D0D00940DB8 /* StatsViewController.xib */,
+				534C2BB821E2379900940DB8 /* StatsTableViewCell.swift */,
+				534C2BB921E2379900940DB8 /* StatsTableViewCell.xib */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		5383CFED21DEAD3100633B1B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5383CFEE21DEAD4600633B1B /* MealTemplateModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5383CFF621DF694300633B1B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5383CFF221DF672D00633B1B /* Nibs.swift */,
+				5383CFF421DF678C00633B1B /* NibResource.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5383CFF921DF69D000633B1B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				534C2BB321E20CDA00940DB8 /* Stats */,
+				5383CFFE21DF6B5600633B1B /* AddMeal */,
+				5383CFF021DF66AE00633B1B /* DiaryVC.swift */,
+				5383CFF721DF698200633B1B /* DiaryTableVC.swift */,
+				5328CA0421DE5B4E002053BB /* Ingredients */,
+				53F2ADC521D78AFB002B5718 /* Home */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		5383CFFE21DF6B5600633B1B /* AddMeal */ = {
+			isa = PBXGroup;
+			children = (
+				5383CFFA21DF6ACF00633B1B /* AddMealViewController.swift */,
+				5383CFFB21DF6ACF00633B1B /* AddMealViewController.xib */,
+				5383CFFF21DF6BD400633B1B /* NewIngredientCell.swift */,
+				5383D00021DF6BD400633B1B /* NewIngredientCell.xib */,
+				5383D00321DF6C0900633B1B /* AddNextCell.swift */,
+				5383D00421DF6C0900633B1B /* AddNextCell.xib */,
+				5383D00721DF6C1C00633B1B /* SummaryCell.swift */,
+				5383D00821DF6C1C00633B1B /* SummaryCell.xib */,
+				5383D00B21DF738500633B1B /* AddMealViewModel.swift */,
+			);
+			path = AddMeal;
+			sourceTree = "<group>";
+		};
 		538AEEA921D2877700C6E177 = {
 			isa = PBXGroup;
 			children = (
-				538AEEC721D2C48100C6E177 /* sharedcode.framework */,
+				537AA1FD220F24C600AA03E1 /* main.framework */,
 				538AEEB421D2877700C6E177 /* StasDiary */,
 				538AEEB321D2877700C6E177 /* Products */,
+				AF5C7899979ED04E06B4E548 /* Frameworks */,
+				7A581F72BC6F0505B6ACDCB3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,19 +239,16 @@
 		538AEEB421D2877700C6E177 /* StasDiary */ = {
 			isa = PBXGroup;
 			children = (
+				5383CFF921DF69D000633B1B /* Controller */,
+				5383CFED21DEAD3100633B1B /* Model */,
 				53F2ADD121D78DE7002B5718 /* Repository */,
 				53F2ADC821D78BFB002B5718 /* Utils */,
-				53F2ADC521D78AFB002B5718 /* Home */,
 				538AEECC21D388E200C6E177 /* Cell */,
 				538AEEB521D2877700C6E177 /* AppDelegate.swift */,
 				538AEEBC21D2877800C6E177 /* Assets.xcassets */,
 				538AEEBE21D2877800C6E177 /* LaunchScreen.storyboard */,
 				538AEEC121D2877800C6E177 /* Info.plist */,
-				538AEED921D3A92800C6E177 /* TmpViewController.swift */,
-				538AEEDA21D3A92800C6E177 /* TmpViewController.xib */,
 				53F2ADD221D78E6F002B5718 /* RealmDatabase.swift */,
-				53F2ADD621D82010002B5718 /* AddMealViewController.swift */,
-				53F2ADD721D82010002B5718 /* AddMealViewController.xib */,
 			);
 			path = StasDiary;
 			sourceTree = "<group>";
@@ -144,11 +277,16 @@
 		53F2ADC821D78BFB002B5718 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5383CFF621DF694300633B1B /* Resources */,
 				53F2ADC921D78C11002B5718 /* AppStateManager.swift */,
 				53F2ADCB21D78C5C002B5718 /* FirebaseDatabase.swift */,
 				53F2ADCD21D78CA9002B5718 /* Assembly.swift */,
 				53F2ADCF21D78D77002B5718 /* DiaryAppNavigator.swift */,
 				53F2ADD421D7D3DA002B5718 /* AddOption.swift */,
+				5328CA0921DE5C31002053BB /* AppIngredientHandler.swift */,
+				5383CFE521DE9F8800633B1B /* AppTokenProvider.swift */,
+				5383CFE721DE9FE800633B1B /* AppMealSaver.swift */,
+				5383CFEB21DEA0B900633B1B /* AppTemplateHandler.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -160,6 +298,24 @@
 			path = Repository;
 			sourceTree = "<group>";
 		};
+		7A581F72BC6F0505B6ACDCB3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3F7AC21935698A9E9EF2D2FA /* Pods-StasDiary.debug.xcconfig */,
+				FD448CB56A4DF3E4D0DF8558 /* Pods-StasDiary.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		AF5C7899979ED04E06B4E548 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				53B5252321E0BB3B00C508E3 /* SearchTextField.framework */,
+				0E93A1AC3054BAC71745DD90 /* Pods_StasDiary.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -167,11 +323,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 538AEEC421D2877800C6E177 /* Build configuration list for PBXNativeTarget "StasDiary" */;
 			buildPhases = (
+				0E83CB8E50FFD01F6A58F0AD /* [CP] Check Pods Manifest.lock */,
 				538AEECB21D2C55200C6E177 /* Build Kotlin Module */,
 				538AEEAE21D2877700C6E177 /* Sources */,
 				538AEEAF21D2877700C6E177 /* Frameworks */,
 				538AEEB021D2877700C6E177 /* Resources */,
-				538AEECA21D2C48100C6E177 /* Embed Frameworks */,
+				3ADD82891B67578E2553701E /* [CP] Embed Pods Frameworks */,
+				537AA200220F24C600AA03E1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -222,18 +380,25 @@
 			files = (
 				538AEED421D38A6F00C6E177 /* MealCell.xib in Resources */,
 				538AEEC021D2877800C6E177 /* LaunchScreen.storyboard in Resources */,
+				534C2BB721E20D0D00940DB8 /* StatsViewController.xib in Resources */,
+				5328CA0E21DE60ED002053BB /* IngredientListTableViewController.xib in Resources */,
+				5383D00221DF6BD400633B1B /* NewIngredientCell.xib in Resources */,
 				538AEEBD21D2877800C6E177 /* Assets.xcassets in Resources */,
-				53F2ADD921D82010002B5718 /* AddMealViewController.xib in Resources */,
 				538AEED821D38B4900C6E177 /* DayCell.xib in Resources */,
-				538AEEDC21D3A92800C6E177 /* TmpViewController.xib in Resources */,
+				5383CFFD21DF6ACF00633B1B /* AddMealViewController.xib in Resources */,
+				5328CA1721DE9556002053BB /* IngredientCell.xib in Resources */,
+				5328CA1321DE639B002053BB /* LabelTableViewCell.xib in Resources */,
+				5383D00621DF6C0900633B1B /* AddNextCell.xib in Resources */,
+				5383D00A21DF6C1C00633B1B /* SummaryCell.xib in Resources */,
 				538AEED021D3890F00C6E177 /* HomeViewController.xib in Resources */,
+				534C2BBB21E2379900940DB8 /* StatsTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		538AEECB21D2C55200C6E177 /* Build Kotlin Module */ = {
+		0E83CB8E50FFD01F6A58F0AD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -241,10 +406,52 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "Build Kotlin Module";
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
 			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-StasDiary-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3ADD82891B67578E2553701E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-StasDiary/Pods-StasDiary-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/SearchTextField/SearchTextField.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SearchTextField.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-StasDiary/Pods-StasDiary-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		538AEECB21D2C55200C6E177 /* Build Kotlin Module */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build Kotlin Module";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,19 +465,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				538AEEDB21D3A92800C6E177 /* TmpViewController.swift in Sources */,
 				53F2ADD021D78D77002B5718 /* DiaryAppNavigator.swift in Sources */,
+				534C2BBA21E2379900940DB8 /* StatsTableViewCell.swift in Sources */,
 				53F2ADCA21D78C11002B5718 /* AppStateManager.swift in Sources */,
 				53F2ADC721D78B16002B5718 /* AddSelectionViewModel.swift in Sources */,
+				5383CFF321DF672D00633B1B /* Nibs.swift in Sources */,
+				5383D00521DF6C0900633B1B /* AddNextCell.swift in Sources */,
+				5383CFF521DF678C00633B1B /* NibResource.swift in Sources */,
+				5328CA1621DE9556002053BB /* IngredientCell.swift in Sources */,
 				538AEED321D38A6F00C6E177 /* MealCell.swift in Sources */,
+				5383D00121DF6BD400633B1B /* NewIngredientCell.swift in Sources */,
+				534C2BB621E20D0D00940DB8 /* StatsViewController.swift in Sources */,
+				5383CFF121DF66AE00633B1B /* DiaryVC.swift in Sources */,
+				5383CFE821DE9FE800633B1B /* AppMealSaver.swift in Sources */,
 				53F2ADCE21D78CA9002B5718 /* Assembly.swift in Sources */,
+				5328CA1221DE639B002053BB /* LabelTableViewCell.swift in Sources */,
+				5383D00C21DF738500633B1B /* AddMealViewModel.swift in Sources */,
+				5383CFE621DE9F8800633B1B /* AppTokenProvider.swift in Sources */,
 				538AEEB621D2877700C6E177 /* AppDelegate.swift in Sources */,
 				53F2ADD321D78E6F002B5718 /* RealmDatabase.swift in Sources */,
 				53F2ADD521D7D3DA002B5718 /* AddOption.swift in Sources */,
+				5383CFF821DF698200633B1B /* DiaryTableVC.swift in Sources */,
+				5328CA0D21DE60ED002053BB /* IngredientListTableViewController.swift in Sources */,
 				538AEED721D38B4900C6E177 /* DayCell.swift in Sources */,
-				53F2ADD821D82010002B5718 /* AddMealViewController.swift in Sources */,
 				538AEECF21D3890F00C6E177 /* HomeViewController.swift in Sources */,
+				5383CFEC21DEA0B900633B1B /* AppTemplateHandler.swift in Sources */,
+				5383D00921DF6C1C00633B1B /* SummaryCell.swift in Sources */,
 				53F2ADCC21D78C5C002B5718 /* FirebaseDatabase.swift in Sources */,
+				5383CFFC21DF6ACF00633B1B /* AddMealViewController.swift in Sources */,
+				5328CA0A21DE5C31002053BB /* AppIngredientHandler.swift in Sources */,
+				5383CFEF21DEAD4600633B1B /* MealTemplateModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,11 +630,15 @@
 		};
 		538AEEC521D2877800C6E177 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3F7AC21935698A9E9EF2D2FA /* Pods-StasDiary.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../sharedcode/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/kpob/AndroidStudioProjects/DietDiary/sharedcode/build/xcode-frameworks",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = StasDiary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -425,11 +653,15 @@
 		};
 		538AEEC621D2877800C6E177 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD448CB56A4DF3E4D0DF8558 /* Pods-StasDiary.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../sharedcode/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"/Users/kpob/AndroidStudioProjects/DietDiary/sharedcode/build/xcode-frameworks",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = StasDiary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

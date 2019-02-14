@@ -33,7 +33,6 @@ class AddIngredientView(ctx: Context): BaseScreenView<AddIngredientScreen>(ctx),
     private val saveBtn by lazy { find<View>(R.id.save_btn) }
     private val categorySpinner by lazy { find<ReSpinner>(R.id.category) }
 
-
     init {
         View.inflate(ctx, R.layout.screen_add_ingredient, this)
 

@@ -14,7 +14,6 @@ class RealmAddTransaction<T>: AddTransaction<T> where T: RealmObject {
 
     override fun execute(input: T, db: Database<T>) {
         (db as? RealmDatabase<T>)?.realm?.insertOrUpdate(input)
-
     }
 
     override fun execute(input: Collection<T>, db: Database<T>) {

@@ -30,16 +30,16 @@ object MockDataProvider {
             Ingredient("2", "Hip jabłka z brzoskwiniami", category = IngredientCategory.FRUITS.value),
             Ingredient("3", "Bobvita brzoskwinia, jabłka, banany, kiwi", category = IngredientCategory.FRUITS.value),
             Ingredient("4", "Marchewkowa Z Ryżem", category = IngredientCategory.DINNERS.value),
-            Ingredient("5", "Kaszka manna owocowa", category = IngredientCategory.PORRIDGE.value),
+            Ingredient("5", "Kaszka manna owocowa", category = IngredientCategory.PORRIDGE.value, useCount = 31),
             Ingredient("6", "Żarłaki", category = IngredientCategory.OTHERS.value),
             Ingredient("7", "Jabłuszka Z kaszką manną", category = IngredientCategory.FRUITS.value),
             Ingredient("8", "Kaszka Waniliowa", category = IngredientCategory.PORRIDGE.value),
             Ingredient("9", "Jabłka, morele i brzoskwinie z biszkoptem", category = IngredientCategory.FRUITS.value),
-            Ingredient("10", "Mleczko (proszek)", category = IngredientCategory.OTHERS.value),
-            Ingredient("11", "Mleko 0.5%", category = IngredientCategory.OTHERS.value),
+            Ingredient("10", "Mleczko (proszek)", category = IngredientCategory.OTHERS.value, useCount = 33),
+            Ingredient("11", "Mleko 0.5%", category = IngredientCategory.OTHERS.value, useCount = 40),
             Ingredient("12", "Mleczko (płyn)", category = IngredientCategory.OTHERS.value),
             Ingredient("13", "Olej MCT", category = IngredientCategory.OILS.value),
             Ingredient("14", "\"Rosołek z kurczaka z ryżem", category = IngredientCategory.DINNERS.value)
-    )
+    ).sortedBy { it.useCount }
 
 }

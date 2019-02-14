@@ -17,6 +17,7 @@ import pl.kpob.dietdiary.delegates.TextViewFloatValueDelegate
 import pl.kpob.dietdiary.screens.AddMealScreen
 import pl.kpob.dietdiary.sharedcode.model.Ingredient
 import pl.kpob.dietdiary.sharedcode.model.MealIngredient
+import pl.kpob.dietdiary.sharedcode.model.MealPart
 import pl.kpob.dietdiary.sharedcode.view.AddMealView
 import kotlin.properties.Delegates
 
@@ -159,10 +160,10 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
         requestFocus()
     }
 
-    private fun obtainData(): List<Pair<Ingredient, Float>> = container
+    private fun obtainData(): List<MealPart> = container
             .mapTypedChild<ViewGroup, Pair<Ingredient?, Float>> { rowToData(it) }
             .filter { it.first != null }
-            .map { it.first!! to it.second }
+            .map { MealPart(it.first!!, it.second) }
 
 
     private fun obtainIngredients(): List<Ingredient> = container
@@ -245,7 +246,6 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), AnkoLogger
                 val data = results?.values as List<Ingredient>? ?: return
                 if (data.isNotEmpty()) {
                     val names = data.map { it.name }
-                    info { names }
                     clear()
                     addAll(names)
                     notifyDataSetChanged()

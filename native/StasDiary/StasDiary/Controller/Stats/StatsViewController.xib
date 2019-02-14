@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StatsViewController" customModule="StasDiary" customModuleProvider="target">
+            <connections>
+                <outlet property="pieChartView" destination="5Wa-el-WhH" id="XQT-tl-JQB"/>
+                <outlet property="statsTableView" destination="peS-TU-wu1" id="yi8-ze-1Sk"/>
+                <outlet property="tabs" destination="tfp-QG-7p9" id="PeP-LK-JqK"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tfp-QG-7p9">
+                    <rect key="frame" x="16" y="36" width="343" height="29"/>
+                    <segments>
+                        <segment title="Lista"/>
+                        <segment title="Wykres"/>
+                    </segments>
+                    <connections>
+                        <action selector="tabChanged:" destination="-1" eventType="valueChanged" id="g4W-kr-1WI"/>
+                    </connections>
+                </segmentedControl>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="peS-TU-wu1">
+                    <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Wa-el-WhH" customClass="PieChartView" customModule="Charts">
+                    <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="5Wa-el-WhH" firstAttribute="top" secondItem="tfp-QG-7p9" secondAttribute="bottom" constant="32" id="54W-z6-tRR"/>
+                <constraint firstItem="peS-TU-wu1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="8Z7-bp-E9R"/>
+                <constraint firstItem="peS-TU-wu1" firstAttribute="top" secondItem="tfp-QG-7p9" secondAttribute="bottom" constant="32" id="Ceq-Sc-1iB"/>
+                <constraint firstItem="tfp-QG-7p9" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="Dhn-rJ-Hci"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tfp-QG-7p9" secondAttribute="trailing" constant="16" id="FhB-FK-vXL"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="5Wa-el-WhH" secondAttribute="bottom" id="LeB-kG-PJc"/>
+                <constraint firstItem="5Wa-el-WhH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="N7B-70-tuf"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="peS-TU-wu1" secondAttribute="trailing" id="NgT-z4-7jI"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="peS-TU-wu1" secondAttribute="bottom" id="SED-vT-qkc"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5Wa-el-WhH" secondAttribute="trailing" id="reQ-cT-eER"/>
+                <constraint firstItem="tfp-QG-7p9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="s9j-tN-cOJ"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="138.40000000000001" y="121.88905547226388"/>
+        </view>
+    </objects>
+</document>

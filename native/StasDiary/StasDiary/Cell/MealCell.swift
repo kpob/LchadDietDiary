@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import sharedcode
+import main
 
 class MealCell: UITableViewCell {
 
@@ -38,6 +38,12 @@ class MealCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    static var nib:UINib {
+        return UINib(nibName: identifier, bundle: nil)
+    }
     
+    static var identifier: String {
+        return String(describing: self)
+    }
     
 }
