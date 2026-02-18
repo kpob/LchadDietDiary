@@ -2,7 +2,7 @@ package pl.kpob.dietdiary
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.jetbrains.anko.defaultSharedPreferences
+import androidx.preference.PreferenceManager
 
 /**
  * Created by kpob on 20.10.2017.
@@ -15,7 +15,7 @@ abstract class Preferences {
         get() = preferences.edit()
 
     fun init(ctx: Context) {
-        preferences = ctx.defaultSharedPreferences
+        preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     }
 
     @Suppress("UNCHECKED_CAST")

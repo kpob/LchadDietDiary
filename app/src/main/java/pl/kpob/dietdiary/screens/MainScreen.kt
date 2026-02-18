@@ -1,11 +1,12 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import com.wealthfront.magellan.rx.RxScreen
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+import pl.kpob.dietdiary.AnkoLogger
 import pl.kpob.dietdiary.MainActivity
 import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
@@ -63,10 +64,10 @@ class MainScreen() : RxScreen<MainView>(), AnkoLogger {
 
     fun onTimeClick(item: Meal) = showDialog {
         TimePicker().dialog(activity) { m, h ->
-            val newTimestamp = DateTime(item.timestamp)
-                    .withMinuteOfHour(m)
-                    .withHourOfDay(h)
-                    .millis
+            val newTimestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(item.timestamp), ZoneId.systemDefault())
+                    .withMinute(m)
+                    .withHour(h)
+                    .toInstant().toEpochMilli()
             item.updateTimestamp(newTimestamp)
         }
     }

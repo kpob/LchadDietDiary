@@ -2,7 +2,7 @@ package pl.kpob.dietdiary.screens
 
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
-import org.jetbrains.anko.AnkoLogger
+import pl.kpob.dietdiary.AnkoLogger
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver

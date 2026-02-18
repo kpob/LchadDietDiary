@@ -1,7 +1,9 @@
 package pl.kpob.dietdiary.mapper
 
 import io.realm.Realm
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.db.IngredientDTO
 import pl.kpob.dietdiary.db.MealDTO
@@ -21,8 +23,8 @@ abstract class BaseMealMapper {
             mealIngredients.map { (i, weight) -> i.lct  * weight / 100f }.sum()
 
     protected fun Long.toDateString() =
-            DateTime(this).let {
-                val (h, m) = it.hourOfDay to it.minuteOfHour
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault()).let {
+                val (h, m) = it.hour to it.minute
                 "${if (h < 10) "0$h" else "$h"}:${if (m < 10) "0$m" else "$m"}"
             }
 

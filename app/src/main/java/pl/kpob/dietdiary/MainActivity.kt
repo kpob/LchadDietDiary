@@ -8,15 +8,12 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
 import io.realm.Realm
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.notificationManager
-import org.jetbrains.anko.toast
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FbMeal
@@ -29,6 +26,8 @@ import java.io.InputStreamReader
 
 
 class MainActivity : SingleActivity(), AnkoLogger {
+
+    private val TAG = "MainActivity"
 
     companion object {
         val EXTRA_MEAL = "EXTRA_MEAL"
@@ -95,7 +94,7 @@ class MainActivity : SingleActivity(), AnkoLogger {
                         firebaseDb.mealsRef.addValueEventListener(mealsListener)
                     } else {
                         info { "ex ${it.exception}" }
-                        toast("Nie można się zalogować")
+                        Toast.makeText(this, "Nie można się zalogować", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -107,14 +106,15 @@ class MainActivity : SingleActivity(), AnkoLogger {
         }
 
         supportsOreo {
+            val nm = getSystemService(NotificationManager::class.java)!!
             val channelId = "Default"
-            if (notificationManager.getNotificationChannel(channelId) == null) {
+            if (nm.getNotificationChannel(channelId) == null) {
                 val sound = Uri.parse("android.resource://$packageName/${R.raw.mniam}")
                 val channel = NotificationChannel(channelId, "Posiłki", NotificationManager.IMPORTANCE_DEFAULT).apply {
                     description = "Powiadomienia o posiłkach"
                     setSound(sound, AudioAttributes.Builder().setFlags(AudioAttributes.CONTENT_TYPE_MUSIC).build())
                 }
-                notificationManager.createNotificationChannel(channel)
+                nm.createNotificationChannel(channel)
             }
         }
 
@@ -152,11 +152,14 @@ class MainActivity : SingleActivity(), AnkoLogger {
 
     private fun initToken() {
         if(AppPrefs.token.isEmpty()) {
-            val token = FirebaseInstanceId.getInstance().token ?: return
-            firebaseDb.addToken(token)
-            AppPrefs.token = token
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result ?: return@addOnCompleteListener
+                    firebaseDb.addToken(token)
+                    AppPrefs.token = token
+                }
+            }
         }
-
     }
 
     private val credentials: Credentials get() {

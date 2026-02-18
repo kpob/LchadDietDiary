@@ -1,15 +1,15 @@
 package pl.kpob.dietdiary.views
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wealthfront.magellan.BaseScreenView
-import org.jetbrains.anko.find
+import pl.kpob.dietdiary.find
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.domain.Ingredient

@@ -3,20 +3,20 @@ package pl.kpob.dietdiary
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.graphics.*
 import android.graphics.drawable.Icon
-import android.support.multidex.MultiDexApplication
+import android.os.StrictMode
+import androidx.core.content.ContextCompat
+import androidx.multidex.MultiDexApplication
 import com.google.firebase.database.FirebaseDatabase
+import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.FieldAttribute
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import net.danlew.android.joda.JodaTimeAndroid
-import org.jetbrains.anko.shortcutManager
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.repo.IngredientContract
 import pl.kpob.dietdiary.repo.TagContract
-import android.support.v4.content.ContextCompat
-import android.os.StrictMode
 
 
 
@@ -31,7 +31,7 @@ class App: MultiDexApplication() {
         super.onCreate()
         Realm.init(this)
         AppPrefs.init(this)
-        JodaTimeAndroid.init(this)
+        AndroidThreeTen.init(this)
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
@@ -75,7 +75,7 @@ class App: MultiDexApplication() {
         Realm.setDefaultConfiguration(config)
 
         supportsNougat {
-            val shortcutManager = shortcutManager
+            val shortcutManager = getSystemService(ShortcutManager::class.java)!!
 
             if(shortcutManager.dynamicShortcuts.isEmpty()) {
                 val paint = Paint().apply {
@@ -90,7 +90,7 @@ class App: MultiDexApplication() {
 
                     ShortcutInfo.Builder(this, it.string)
                             .setShortLabel(it.string)
-                            .setLongLabel("Dodaj ${it.string.toLowerCase()}")
+                            .setLongLabel("Dodaj ${it.string.lowercase()}")
                             .setIcon(Icon.createWithBitmap(bmp))
                             .setIntent(Intent(this, MainActivity::class.java).apply {
                                 action = Intent.ACTION_VIEW

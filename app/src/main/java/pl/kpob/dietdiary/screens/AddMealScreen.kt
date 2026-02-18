@@ -2,9 +2,7 @@ package pl.kpob.dietdiary.screens
 
 import android.content.Context
 import com.wealthfront.magellan.rx.RxScreen
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
+import pl.kpob.dietdiary.AnkoLogger
 import pl.kpob.dietdiary.asReadableString
 import pl.kpob.dietdiary.currentTime
 import pl.kpob.dietdiary.domain.Ingredient
@@ -41,7 +39,7 @@ class AddMealScreen(private val type: MealType, private val meal: Meal? = null) 
     fun onAddClick(data: List<Pair<Ingredient, Float>>) {
         info { "data: ${data.map { it.first.name to it.second }}" }
         if (data.isEmpty() || data.all { it.second == .0f }) {
-            view?.context?.toast("Nie można zapisać pustego posiłku")
+            toast("Nie można zapisać pustego posiłku")
             return
         }
 

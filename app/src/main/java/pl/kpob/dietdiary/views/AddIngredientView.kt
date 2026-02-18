@@ -1,15 +1,14 @@
 package pl.kpob.dietdiary.views
 
 import android.content.Context
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import androidx.appcompat.widget.Toolbar
 import com.santalu.respinner.ReSpinner
 import com.wealthfront.magellan.BaseScreenView
-import kotlinx.android.synthetic.main.screen_add_ingredient.view.*
-import org.jetbrains.anko.find
+import pl.kpob.dietdiary.find
 import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.firebase.FbIngredient

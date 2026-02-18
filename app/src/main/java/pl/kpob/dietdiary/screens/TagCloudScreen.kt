@@ -1,10 +1,11 @@
 package pl.kpob.dietdiary.screens
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.wealthfront.magellan.rx.RxScreen
-import org.jetbrains.anko.*
+import pl.kpob.dietdiary.AnkoLogger
+import pl.kpob.dietdiary.opaque
 import pl.kpob.dietdiary.repo.TagRepository
 import pl.kpob.dietdiary.views.TagCloudView
 
@@ -49,22 +50,12 @@ class TagCloudScreen : RxScreen<TagCloudView>(), AnkoLogger {
     fun getTagColor(txt: String) = colors[txt.map { it.toInt() }.sum().rem(colors.size)]
 
     fun onNewTagClick() = showDialog {
-        AlertDialog.Builder(activity).apply {
-            setView(
-                    context.verticalLayout {
-                        val et = editText {
-                            hint = "Tag"
-                        }
-
-                        setPositiveButton("Ok") { dialog, which ->
-                            view.addTag(et.editableText.toString())
-                        }
-
-                        setNegativeButton("Anuluj") { dialog, which -> }
-                    }
-            )
-        }.create()
-
+        val et = EditText(activity).apply { hint = "Tag" }
+        AlertDialog.Builder(activity)
+            .setView(et)
+            .setPositiveButton("Ok") { _, _ -> view?.addTag(et.text.toString()) }
+            .setNegativeButton("Anuluj") { _, _ -> }
+            .create()
     }
 
 }

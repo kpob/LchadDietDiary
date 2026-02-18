@@ -3,8 +3,7 @@ package pl.kpob.dietdiary.firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import pl.kpob.dietdiary.AnkoLogger
 
 /**
  * Created by kpob on 27.10.2017.

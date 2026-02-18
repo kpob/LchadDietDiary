@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Handler
 import com.wealthfront.magellan.rx.RxScreen
 import io.realm.Realm
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.toast
+import pl.kpob.dietdiary.AnkoLogger
+import pl.kpob.dietdiary.toast
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebaseDb
@@ -41,7 +41,7 @@ class IngredientsListScreen: RxScreen<IngredientsListView>(), AnkoLogger {
         val count = mealRepository.query(spec).size
         when(count) {
             0 -> deleteIngredient(it, item)
-            else -> view.context.toast("Nie można usunąć - występuje w $count posiłkach")
+            else -> toast("Nie można usunąć - występuje w $count posiłkach")
         }
     }
 

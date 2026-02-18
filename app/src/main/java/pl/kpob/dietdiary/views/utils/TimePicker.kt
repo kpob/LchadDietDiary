@@ -1,13 +1,13 @@
 package pl.kpob.dietdiary.views.utils
 
 import android.app.Activity
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.TextView
-import org.jetbrains.anko.find
-import org.joda.time.DateTime
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import org.threeten.bp.ZonedDateTime
+import pl.kpob.dietdiary.find
 import pl.kpob.dietdiary.R
 
 /**
@@ -15,10 +15,10 @@ import pl.kpob.dietdiary.R
  */
 class TimePicker {
 
-    val dt = DateTime()
+    val dt = ZonedDateTime.now()
 
-    private var minutes = dt.minuteOfHour
-    private var hours = dt.hourOfDay
+    private var minutes = dt.minute
+    private var hours = dt.hour
 
     private val minutesScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -64,7 +64,7 @@ class TimePicker {
     private fun initList(activity: Activity, list: RecyclerView, mode: Int) {
         list.layoutManager = LinearLayoutManager(activity)
         list.adapter = numberAdapter(activity, if(mode == MINUTES) 60 else 24)
-        list.layoutManager.scrollToPosition(if(mode == MINUTES) dt.minuteOfHour else dt.hourOfDay)
+        list.layoutManager?.scrollToPosition(if(mode == MINUTES) dt.minute else dt.hour)
         list.addOnScrollListener(if(mode == MINUTES) minutesScrollListener else hoursScrollListener)
     }
 

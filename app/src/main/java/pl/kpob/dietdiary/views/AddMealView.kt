@@ -2,17 +2,20 @@ package pl.kpob.dietdiary.views
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.widget.AppCompatSeekBar
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.widget.AppCompatSeekBar
+import androidx.appcompat.widget.Toolbar
 import com.wealthfront.magellan.BaseScreenView
-import org.jetbrains.anko.*
-import org.jetbrains.anko.internals.AnkoInternals
-import org.jetbrains.anko.sdk25.listeners.onClick
-import org.jetbrains.anko.sdk25.listeners.onSeekBarChangeListener
+import pl.kpob.dietdiary.AnkoLogger
+import pl.kpob.dietdiary.attempt
+import pl.kpob.dietdiary.find
+import pl.kpob.dietdiary.forEachChild
+import pl.kpob.dietdiary.firstChild
+import pl.kpob.dietdiary.noGetter
+import pl.kpob.dietdiary.onClick
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.domain.MealIngredient
@@ -37,11 +40,11 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), ToolbarMan
     private val progressValue by lazy { find<TextView>(R.id.progress_value) }
 
     var time: String
-        get() = AnkoInternals.noGetter()
+        get() = noGetter()
         set(value) { timeView.text = value }
 
     var progress: String
-        get() = AnkoInternals.noGetter()
+        get() = noGetter()
         set(value) { progressValue.text = value }
 
     init {
@@ -63,9 +66,13 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), ToolbarMan
             screen.onTimeEditClick()
         }
 
-        seekBar.onSeekBarChangeListener {
-            onProgressChanged { _, progress, _ -> screen.onProgressChanged(progress) }
-        }
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                screen.onProgressChanged(progress)
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     fun addInitialRow() = addRow()
@@ -192,7 +199,7 @@ class AddMealView(ctx: Context) : BaseScreenView<AddMealScreen>(ctx), ToolbarMan
                         info { "constraint $constraint" }
                         suggestions.clear()
                         val filtered = tmpItems.filter {
-                            it.name.toLowerCase().contains(constraint.toString().toLowerCase())
+                            it.name.lowercase().contains(constraint.toString().lowercase())
                         }
                         suggestions.addAll(filtered)
 

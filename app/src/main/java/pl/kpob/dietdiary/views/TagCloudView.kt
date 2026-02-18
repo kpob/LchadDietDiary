@@ -2,16 +2,16 @@ package pl.kpob.dietdiary.views
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.Toolbar
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import com.adroitandroid.chipcloud.Chip
 import com.adroitandroid.chipcloud.ChipCloud
 import com.adroitandroid.chipcloud.ChipListener
 import com.wealthfront.magellan.BaseScreenView
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.find
-import org.jetbrains.anko.opaque
-import org.jetbrains.anko.sdk25.listeners.onClick
+import pl.kpob.dietdiary.dip
+import pl.kpob.dietdiary.find
+import pl.kpob.dietdiary.onClick
+import pl.kpob.dietdiary.opaque
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.screens.TagCloudScreen
 

@@ -1,6 +1,8 @@
 package pl.kpob.dietdiary.mapper
 
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.db.MealDTO
@@ -14,11 +16,11 @@ class MealDetailsMapper: Mapper<MealDTO, MealDetails>, BaseMealMapper() {
     override fun map(input: MealDTO?): MealDetails? {
         if(input == null) return null
         val ingredientsWithWeight = input.toIngredientsWithWeight()
-        val dt = DateTime(input.time)
+        val dt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(input.time), ZoneId.systemDefault())
 
         return MealDetails(
                 time = input.time.toDateString(),
-                date = "${dt.dayOfMonth}-${dt.monthOfYear}-${dt.year}",
+                date = "${dt.dayOfMonth}-${dt.monthValue}-${dt.year}",
                 type = input.name.toMealType(),
                 caloriesTotal = calculateCalories(ingredientsWithWeight),
                 protein = amountOfNutrient(ingredientsWithWeight) { it.protein },

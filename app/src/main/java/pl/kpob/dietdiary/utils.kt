@@ -2,15 +2,22 @@
 
 package pl.kpob.dietdiary
 
+import android.content.Context
 import android.os.Build
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wealthfront.magellan.Screen
 import io.realm.Realm
-import org.jetbrains.anko.toast
-import org.joda.time.DateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FbMeal
 import java.util.*
@@ -18,6 +25,68 @@ import java.util.*
 /**
  * Created by kpob on 21.10.2017.
  */
+
+/**
+ * ANKO REPLACEMENTS
+ * Drop-in replacements for the removed Anko library.
+ */
+
+/** Replaces org.jetbrains.anko.AnkoLogger */
+interface AnkoLogger {
+    val logTag: String get() = this::class.java.simpleName ?: "AnkoLogger"
+    fun info(msg: () -> Any?) { Log.i(logTag, msg()?.toString() ?: "null") }
+}
+
+/** Replaces anko.find<T>(id) — non-nullable view lookup */
+fun <T : View> View.find(@IdRes id: Int): T =
+    checkNotNull(findViewById(id)) { "View with id $id not found" }
+
+/** Replaces anko.findOptional<T>(id) — nullable view lookup */
+fun <T : View> View.findOptional(@IdRes id: Int): T? = findViewById(id)
+
+/** Replaces anko.sdk25.listeners.onClick */
+inline fun View.onClick(crossinline f: () -> Unit) = setOnClickListener { f() }
+
+/** Replaces anko.dip() on a View */
+fun View.dip(n: Int): Int = (n * context.resources.displayMetrics.density).toInt()
+
+/** Replaces Int.opaque from Anko — sets alpha to 0xFF */
+val Int.opaque: Int get() = this or 0xFF000000.toInt()
+
+/** Replaces Context.toast() from Anko */
+fun Context.toast(message: CharSequence) =
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+/** Replaces Context.toast(resId) from Anko */
+fun Context.toast(@StringRes id: Int) =
+    Toast.makeText(this, id, Toast.LENGTH_SHORT).show()
+
+/** Replaces Context.layoutInflater from Anko */
+val Context.layoutInflater: LayoutInflater get() = LayoutInflater.from(this)
+
+/** Replaces ViewGroup.forEachChild from Anko */
+fun ViewGroup.forEachChild(action: (View) -> Unit) {
+    for (i in 0 until childCount) action(getChildAt(i))
+}
+
+/** Replaces ViewGroup.firstChild { predicate } from Anko */
+fun ViewGroup.firstChild(predicate: (View) -> Boolean): View {
+    for (i in 0 until childCount) {
+        val child = getChildAt(i)
+        if (predicate(child)) return child
+    }
+    throw NoSuchElementException("No child matching predicate found")
+}
+
+/** Replaces anko.attempt { } */
+inline fun attempt(f: () -> Unit) {
+    try { f() } catch (_: Exception) {}
+}
+
+/** Replaces AnkoInternals.noGetter() */
+fun noGetter(): Nothing =
+    throw UnsupportedOperationException("Property does not have a getter")
+
 
 /**
  * VIEW UTILITIES
@@ -60,9 +129,9 @@ inline fun supportsNougat(action: () -> Unit) {
 fun nextId(): String = UUID.randomUUID().toString()
 fun currentTime(): Long = System.currentTimeMillis()
 val Long.asReadableString: String get() =
-    DateTime(this).let {
-        val h = it.hourOfDay
-        val m = it.minuteOfHour
+    ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault()).let {
+        val h = it.hour
+        val m = it.minute
         "$h:${if(m < 10) "0$m" else m.toString()}"
     }
 
@@ -122,7 +191,6 @@ fun DatabaseReference.addMeal(m: FbMeal, update: Boolean = false) {
             it.child(m.id).setValue(m)
         }
     }
-//    testRef.child(m.id).setValue(m)
 }
 fun DatabaseReference.addToken(token: String) {
     usersRef.child(token).setValue(true)
