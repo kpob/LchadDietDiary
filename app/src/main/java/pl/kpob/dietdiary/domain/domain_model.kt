@@ -6,6 +6,29 @@ import pl.kpob.dietdiary.db.IngredientCategory
 /**
  * Created by kpob on 21.10.2017.
  */
+data class Ingredient(
+        val id: String,
+        val name: String,
+        val mtc: Float,
+        val lct: Float,
+        val carbohydrates: Float,
+        val protein: Float,
+        val salt: Float,
+        val roughage: Float,
+        val calories: Float,
+        val category: Int,
+        val useCount: Int
+)
+
+data class Tag(
+        val id: String,
+        val tagName: String,
+        val color: Int,
+        val activeColor: Int,
+        val textColor: Int,
+        val activeTextColor: Int
+)
+
 data class Meal(
         val id: String,
         val time: String,
