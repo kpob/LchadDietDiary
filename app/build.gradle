@@ -1,23 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
-apply plugin: 'io.fabric'
-
-kapt {
-    generateStubs = true
-}
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdk 35
     defaultConfig {
         applicationId "pl.kpob.dietdiary"
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdk 21
+        targetSdk 35
         versionCode 4
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
     buildTypes {
@@ -26,56 +20,73 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-//    java {
-//        srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
-//    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    namespace 'pl.kpob.dietdiary'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:design:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // AndroidX — replaces com.android.support
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
+
+    // Java 8+ API desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+
+    // Navigation (Magellan — kept at 1.0.0 until AndroidX-compatible version confirmed)
     def magellanVersion = '1.0.0'
     implementation 'com.wealthfront:magellan:' + magellanVersion
     implementation 'com.wealthfront:magellan-support:' + magellanVersion
     implementation 'com.wealthfront:magellan-rx:' + magellanVersion
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
-    compile 'com.github.santalu:respinner:1.0.1'
-    compile 'com.github.arcadefire:nice-spinner:1.3'
-    compile 'com.github.dekoservidoni:omfm:1.0.0'
-    compile 'net.danlew:android.joda:2.9.9'
 
-    compile 'com.google.firebase:firebase-core:11.4.2'
-    compile 'com.google.firebase:firebase-database:11.4.2'
-    compile 'com.google.firebase:firebase-messaging:11.4.2'
-    compile 'com.google.android.gms:play-services-vision:11.4.2'
-    compile 'com.google.firebase:firebase-auth:11.4.2'
+    // Charting
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
-    compile 'net.codecrafted:lineartimepicker:1.0.0'
-    compile 'com.github.florent37:singledateandtimepicker:1.2.2'
+    // Spinners / pickers
+    implementation 'com.github.santalu:respinner:1.0.1'
+    implementation 'com.github.arcadefire:nice-spinner:1.3'
+    implementation 'com.github.dekoservidoni:omfm:1.0.0'
 
-    def anko_version = '0.10.2'
-    compile "org.jetbrains.anko:anko-commons:$anko_version"
-    compile "org.jetbrains.anko:anko-sdk25-listeners:$anko_version"
-    compile "org.jetbrains.anko:anko-design:$anko_version"
-    compile "org.jetbrains.anko:anko-sdk25:$anko_version"
-    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    // Date/Time — ThreeTenABP for java.time backport (minSdk 21)
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.7'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
-        transitive = true
-    }
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.github.adroitandroid:ChipCloud:2.2.1'
+    // Firebase — managed via BoM for consistent versions
+    implementation platform('com.google.firebase:firebase-bom:33.8.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
-    compile project(':mapper-annotation')
+    // Google Play Services (Vision)
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+
+    // Swipe layout / pickers
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
+    implementation 'net.codecrafted:lineartimepicker:1.0.0'
+    implementation 'com.github.florent37:singledateandtimepicker:1.2.2'
+
+    // Chip cloud
+    implementation 'com.github.adroitandroid:ChipCloud:2.2.1'
+
+    // Annotation processor modules
+    implementation project(':mapper-annotation')
     kapt project(':mapper-proccesor')
-
-
 }
 
 apply plugin: 'com.google.gms.google-services'
-
