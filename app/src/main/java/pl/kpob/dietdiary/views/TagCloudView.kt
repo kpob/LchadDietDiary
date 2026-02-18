@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import com.adroitandroid.chipcloud.Chip
 import com.adroitandroid.chipcloud.ChipCloud
-import com.adroitandroid.chipcloud.ChipListener
+
 import com.wealthfront.magellan.BaseScreenView
 import pl.kpob.dietdiary.dip
 import pl.kpob.dietdiary.find

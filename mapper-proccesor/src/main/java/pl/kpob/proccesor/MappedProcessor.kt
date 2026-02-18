@@ -84,7 +84,7 @@ class MappedProcessor : AbstractProcessor() {
                                     .build())
                             .addProperties(
                                     fields.map {
-                                        val name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, it.name).toUpperCase()
+                                        val name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, it.name).uppercase()
                                         PropertySpec.builder(name, String::class)
                                                 .initializer("%S", it.name)
                                                 .build()
@@ -124,12 +124,12 @@ class MappedProcessor : AbstractProcessor() {
     private fun buildFirebaseInterface() =
             TypeSpec
                 .interfaceBuilder(FIREBASE_INTERFACE)
-                .addTypeVariable(TypeVariableName.invoke("T", ClassName("io.realm", "RealmObject")))
+                .addTypeVariable(TypeVariableName("T", ClassName("io.realm", "RealmObject")))
                 .addFunction(FunSpec.builder("toRealm")
-                        .returns(TypeVariableName.invoke("T"))
+                        .returns(TypeVariableName("T"))
                         .addModifiers(KModifier.ABSTRACT)
                         .build())
-                .addProperty(PropertySpec.builder("deleted", Boolean::class.java).build())
+                .addProperty(PropertySpec.builder("deleted", Boolean::class.asTypeName()).build())
                 .build()
 
     private fun buildFbClass(fbClassName: String, inputClassName: String, elements: List<CustomElement>): TypeSpec {
@@ -143,20 +143,20 @@ class MappedProcessor : AbstractProcessor() {
         return TypeSpec
                 .classBuilder(fbClassName)
                 .addModifiers(KModifier.DATA)
-                .addSuperinterface(ParameterizedTypeName.get(FIREBASE_INTERFACE, inputClass))
+                .addSuperinterface(FIREBASE_INTERFACE.parameterizedBy(inputClass))
                 .primaryConstructor(FunSpec.constructorBuilder()
                         .addParameters(params)
                         .addParameter(
-                                ParameterSpec.builder("deleted", Boolean::class.java, KModifier.OVERRIDE)
+                                ParameterSpec.builder("deleted", Boolean::class.asTypeName())
                                         .defaultValue("false")
+                                        .addModifiers(KModifier.OVERRIDE)
                                         .build())
                         .build())
                 .apply {
                     addProperties(properties)
                     addProperty(PropertySpec
-                            .builder("deleted", Boolean::class.java, KModifier.OVERRIDE)
+                            .builder("deleted", Boolean::class.asTypeName(), KModifier.OVERRIDE)
                             .initializer("deleted")
-
                             .build())
                 }
                 .addFunction(FunSpec.builder("toRealm")
@@ -191,8 +191,7 @@ class MappedProcessor : AbstractProcessor() {
                     .build()
 
     private fun buildRepoClass(domainClassName: String, inputClassName: String): TypeSpec {
-        val superclass = ParameterizedTypeName.get(
-                REPO_INTERFACE,
+        val superclass = REPO_INTERFACE.parameterizedBy(
                 ClassName(PACKAGE_DB, inputClassName),
                 ClassName(PACKAGE_DOMAIN, domainClassName)
         )
@@ -206,18 +205,18 @@ class MappedProcessor : AbstractProcessor() {
         val inputClass = ClassName(PACKAGE_DB, inputClassName)
         val outputClass = ClassName(PACKAGE_DOMAIN, domainClassName)
 
-        val superclass = ParameterizedTypeName.get(MAPPER_INTERFACE, inputClass, outputClass)
+        val superclass = MAPPER_INTERFACE.parameterizedBy(inputClass, outputClass)
 
-        val inputList = ParameterizedTypeName.get(List::class.asClassName(), WildcardTypeName.subtypeOf(inputClass))
-        val outputList = ParameterizedTypeName.get(List::class.asClassName(), WildcardTypeName.subtypeOf(outputClass))
+        val inputList = List::class.asClassName().parameterizedBy(WildcardTypeName.producerOf(inputClass))
+        val outputList = List::class.asClassName().parameterizedBy(WildcardTypeName.producerOf(outputClass))
 
         return TypeSpec.classBuilder("${domainClassName}Mapper")
                 .addSuperinterface(superclass)
                 .addFunction(
                         FunSpec.builder("map")
                                 .addModifiers(KModifier.OVERRIDE)
-                                .addParameter("input", inputClass.asNullable())
-                                .returns(outputClass.asNullable())
+                                .addParameter("input", inputClass.copy(nullable = true))
+                                .returns(outputClass.copy(nullable = true))
                                 .addStatement("if(input == null) return null")
                                 .addStatement(
                                         "return $domainClassName(%L)",
