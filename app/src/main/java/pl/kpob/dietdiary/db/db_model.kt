@@ -1,57 +1,62 @@
 package pl.kpob.dietdiary.db
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import pl.kpob.mapper_annotation.Ignore
-import pl.kpob.mapper_annotation.MapAs
-import pl.kpob.mapper_annotation.AutoMapping
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 /**
  * Created by kpob on 20.10.2017.
  */
-@AutoMapping
-open class IngredientDTO(
-        @PrimaryKey open var id: String = "",
-        open var name: String = "",
-        open var mtc: Float = .0f,
-        open var lct: Float = .0f,
-        open var carbohydrates: Float = .0f,
-        open var protein: Float = .0f,
-        open var salt: Float = .0f,
-        open var roughage: Float = .0f,
-        open var calories: Float = .0f,
-        open var category: Int = 0,
-        open var useCount: Int = 0
-): RealmObject()
+@Entity(tableName = "IngredientDTO")
+data class IngredientDTO(
+        @PrimaryKey val id: String = "",
+        val name: String = "",
+        val mtc: Float = 0f,
+        val lct: Float = 0f,
+        val carbohydrates: Float = 0f,
+        val protein: Float = 0f,
+        val salt: Float = 0f,
+        val roughage: Float = 0f,
+        val calories: Float = 0f,
+        val category: Int = 0,
+        val useCount: Int = 0
+)
 
-@AutoMapping(generateDomainModel = false, generateFirebaseModel = false, generateRepository = false, generateContract = true)
-open class MealDTO(
-        @PrimaryKey open var id: String = "",
-        open var time: Long = 0L,
-        open var name: String = "",
-        open var ingredients: RealmList<MealIngredientDTO> = RealmList()
-): RealmObject()
+@Entity(tableName = "MealDTO")
+data class MealDTO(
+        @PrimaryKey val id: String = "",
+        val time: Long = 0L,
+        val name: String = ""
+)
 
-@AutoMapping(generateDomainModel = false, generateRepository = false)
-open class MealIngredientDTO(
-        open var ingredientId: String = "",
-        open var weight: Float = .0f
-): RealmObject()
+@Entity(
+        tableName = "MealIngredientDTO",
+        primaryKeys = ["mealId", "ingredientId"],
+        foreignKeys = [ForeignKey(
+                entity = MealDTO::class,
+                parentColumns = ["id"],
+                childColumns = ["mealId"],
+                onDelete = ForeignKey.CASCADE
+        )],
+        indices = [Index("mealId")]
+)
+data class MealIngredientDTO(
+        val mealId: String = "",
+        val ingredientId: String = "",
+        val weight: Float = 0f
+)
 
-@AutoMapping
-open class TagDTO(
-        @PrimaryKey open var id: String = "",
-        @Ignore
-        open var creationTime: Long = 0L,
-        @MapAs(mapAs = "tagName")
-        open var name: String = "",
-        open var color: Int = 0,
-        open var activeColor: Int = 0,
-        open var textColor: Int = 0,
-        open var activeTextColor: Int = 0
-
-): RealmObject()
+@Entity(tableName = "TagDTO")
+data class TagDTO(
+        @PrimaryKey val id: String = "",
+        val creationTime: Long = 0L,
+        val name: String = "",
+        val color: Int = 0,
+        val activeColor: Int = 0,
+        val textColor: Int = 0,
+        val activeTextColor: Int = 0
+)
 
 enum class IngredientCategory(val value: Int, val label: String) {
     PORRIDGE(1, "Kaszka"),

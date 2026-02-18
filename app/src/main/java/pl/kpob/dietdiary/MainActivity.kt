@@ -6,19 +6,18 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.media.AudioAttributes
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
-import io.realm.Realm
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FbMeal
 import pl.kpob.dietdiary.firebase.valueEventListener
-import pl.kpob.dietdiary.repo.*
+import pl.kpob.dietdiary.repo.IngredientRepository
+import pl.kpob.dietdiary.repo.MealRepository
 import pl.kpob.dietdiary.screens.AddMealScreen
 import pl.kpob.dietdiary.screens.MainScreen
 import java.io.BufferedReader
@@ -37,24 +36,21 @@ class MainActivity : SingleActivity(), AnkoLogger {
     private val mealRepo = MealRepository()
     private val ingredientRepo = IngredientRepository()
 
-    private lateinit var realm: Realm
-
     private val ingredientsListener = valueEventListener {
 
         dataChanged {
             val ingredients = it?.children?.map { it.getValue(FbIngredient::class.java)!! } ?: return@dataChanged
             val ingredientsToDelete = ingredients.filter { it.deleted }
-            val ingredientsToSave = ingredients.subtract(ingredientsToDelete).map { it.toRealm() }
+            val ingredientsToSave = ingredients.subtract(ingredientsToDelete.toSet()).map { it.toDto() }
             val idsToDelete = ingredientsToDelete.map { it.id }.toTypedArray()
 
-            usingRealm {
-                it.executeTransactionAsync {
-                    ingredientRepo.insert(ingredientsToSave, RealmAddTransaction(it))
-                    val spec = IngredientsByIdsSpecification(it, idsToDelete)
-                    ingredientRepo.delete(spec, RealmRemoveTransaction())
-                }
-            }
-
+            dbAsync(
+                block = {
+                    ingredientRepo.insertOrUpdateAll(ingredientsToSave)
+                    ingredientRepo.deleteByIds(idsToDelete)
+                },
+                callback = { updateView() }
+            )
         }
     }
 
@@ -63,15 +59,16 @@ class MainActivity : SingleActivity(), AnkoLogger {
         dataChanged {
             val meals = it?.children?.map { it.getValue(FbMeal::class.java)!! } ?: return@dataChanged
             val mealsToDelete = meals.filter { it.deleted }
-            val mealsToSave = meals.subtract(mealsToDelete).map { it.toRealm() }
+            val mealsToSave = meals.subtract(mealsToDelete.toSet()).map { it.toDtoPair() }
             val idsToDelete = mealsToDelete.map { it.id }.toTypedArray()
 
-            usingRealm {
-                it.executeTransactionAsync {
-                    mealRepo.insert(mealsToSave, RealmAddTransaction(it))
-                    mealRepo.delete(MealsByIdsSpecification(it, idsToDelete), RealmRemoveTransaction())
-                }
-            }
+            dbAsync(
+                block = {
+                    mealRepo.insertAllMealsWithIngredients(mealsToSave)
+                    mealRepo.deleteByIds(idsToDelete)
+                },
+                callback = { updateView() }
+            )
         }
 
     }
@@ -98,13 +95,6 @@ class MainActivity : SingleActivity(), AnkoLogger {
                     }
                 }
 
-        realm = Realm.getDefaultInstance().apply {
-            addChangeListener {
-                info { "db changed" }
-                updateView()
-            }
-        }
-
         supportsOreo {
             val nm = getSystemService(NotificationManager::class.java)!!
             val channelId = "Default"
@@ -129,10 +119,6 @@ class MainActivity : SingleActivity(), AnkoLogger {
         firebaseDb.ingredientsRef.removeEventListener(ingredientsListener)
         firebaseDb.mealsRef.removeEventListener(mealsListener)
         auth.signOut()
-        realm.let {
-            it.removeAllChangeListeners()
-            it.close()
-        }
         super.onDestroy()
     }
 

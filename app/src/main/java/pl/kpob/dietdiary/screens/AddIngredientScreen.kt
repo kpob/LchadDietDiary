@@ -7,9 +7,6 @@ import pl.kpob.dietdiary.db.IngredientCategory
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebase.FirebaseSaver
 import pl.kpob.dietdiary.nextId
-import pl.kpob.dietdiary.realmAsyncTransaction
-import pl.kpob.dietdiary.repo.IngredientRepository
-import pl.kpob.dietdiary.repo.RealmAddTransaction
 import pl.kpob.dietdiary.screens.utils.IngredientDataInteractor
 import pl.kpob.dietdiary.screens.utils.Traits
 import pl.kpob.dietdiary.views.AddIngredientView

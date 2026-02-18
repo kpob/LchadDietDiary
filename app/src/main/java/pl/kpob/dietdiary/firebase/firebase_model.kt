@@ -1,7 +1,5 @@
 package pl.kpob.dietdiary.firebase
 
-import io.realm.RealmList
-import io.realm.RealmObject
 import pl.kpob.dietdiary.AppPrefs
 import pl.kpob.dietdiary.db.IngredientDTO
 import pl.kpob.dietdiary.db.MealDTO
@@ -12,8 +10,7 @@ import pl.kpob.dietdiary.db.TagDTO
 /**
  * Created by kpob on 22.10.2017.
  */
-interface FirebaseModel<T : RealmObject> {
-    fun toRealm(): T
+interface FirebaseModel {
     val deleted: Boolean
 }
 
@@ -24,16 +21,24 @@ data class FbMeal(
         val ingredients: List<FbMealIngredient> = listOf(),
         override val deleted: Boolean = false,
         val senderToken: String = AppPrefs.token
-) : FirebaseModel<MealDTO> {
-    override fun toRealm() = MealDTO(id, time, name, RealmList<MealIngredientDTO>().apply { addAll(ingredients.map { it.toRealm() }) })
+) : FirebaseModel {
+    fun toDtoPair(): Pair<MealDTO, List<MealIngredientDTO>> {
+        val meal = MealDTO(id = id, time = time, name = name)
+        val ingredientDtos = ingredients.map { it.toDto(id) }
+        return meal to ingredientDtos
+    }
 }
 
 data class FbMealIngredient(
         val ingredientId: String = "",
         val weight: Float = 0f,
         override val deleted: Boolean = false
-) : FirebaseModel<MealIngredientDTO> {
-    override fun toRealm() = MealIngredientDTO(ingredientId = ingredientId, weight = weight)
+) : FirebaseModel {
+    fun toDto(mealId: String) = MealIngredientDTO(
+            mealId = mealId,
+            ingredientId = ingredientId,
+            weight = weight
+    )
 }
 
 data class FbIngredient(
@@ -49,8 +54,8 @@ data class FbIngredient(
         val category: Int = 0,
         val useCount: Int = 0,
         override val deleted: Boolean = false
-) : FirebaseModel<IngredientDTO> {
-    override fun toRealm() = IngredientDTO(
+) : FirebaseModel {
+    fun toDto() = IngredientDTO(
             id = id, name = name, mtc = mtc, lct = lct,
             carbohydrates = carbohydrates, protein = protein, salt = salt,
             roughage = roughage, calories = calories, category = category, useCount = useCount
@@ -66,8 +71,8 @@ data class FbTag(
         val textColor: Int = 0,
         val activeTextColor: Int = 0,
         override val deleted: Boolean = false
-) : FirebaseModel<TagDTO> {
-    override fun toRealm() = TagDTO(
+) : FirebaseModel {
+    fun toDto() = TagDTO(
             id = id, creationTime = creationTime, name = name,
             color = color, activeColor = activeColor,
             textColor = textColor, activeTextColor = activeTextColor

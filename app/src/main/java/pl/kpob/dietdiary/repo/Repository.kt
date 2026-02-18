@@ -1,49 +1,56 @@
 package pl.kpob.dietdiary.repo
 
-import io.realm.Realm
-import io.realm.RealmObject
-import pl.kpob.dietdiary.*
-import pl.kpob.dietdiary.db.IngredientDTO
-import pl.kpob.dietdiary.db.MealDTO
-import pl.kpob.dietdiary.db.TagDTO
-import pl.kpob.dietdiary.domain.Ingredient
-import pl.kpob.dietdiary.domain.Meal
-import pl.kpob.dietdiary.domain.MealDetails
-import pl.kpob.dietdiary.domain.Tag
-import pl.kpob.dietdiary.mapper.IngredientMapper
-import pl.kpob.dietdiary.mapper.MealDetailsMapper
-import pl.kpob.dietdiary.mapper.MealMapper
-import pl.kpob.dietdiary.mapper.TagMapper
+import pl.kpob.dietdiary.App
+import pl.kpob.dietdiary.db.*
+import pl.kpob.dietdiary.domain.*
+import pl.kpob.dietdiary.mapper.*
 
 /**
  * Created by kpob on 22.10.2017.
  */
-interface Repository<In, out Out> {
+class IngredientRepository(private val dao: IngredientDao = App.db.ingredientDao()) {
+    private val mapper = IngredientMapper()
 
-    val mapper: Mapper<In, Out>
+    fun getAll(): List<Ingredient> = mapper.map(dao.getAll())
+    fun getById(id: String): Ingredient? = mapper.map(dao.getById(id))
+    fun getByCategories(categories: IntArray): List<Ingredient> =
+            mapper.map(dao.getByCategories(categories))
+    fun getByIds(ids: Array<String>): List<Ingredient> = mapper.map(dao.getByIds(ids))
+    fun insertOrUpdate(dto: IngredientDTO) = dao.insertOrUpdate(dto)
+    fun insertOrUpdateAll(dtos: List<IngredientDTO>) = dao.insertOrUpdateAll(dtos)
+    fun deleteById(id: String) = dao.deleteById(id)
+    fun deleteByIds(ids: Array<String>) = dao.deleteByIds(ids)
+}
 
-    fun query(spec: Specification<In>): List<Out> = mapper.map(spec.collection)
-    fun querySingle(spec: Specification<In>): Out? {
-        val item: In = spec.single ?: return null
-        return mapper.map(item)
+class MealRepository(private val dao: MealDao = App.db.mealDao()) {
+    fun getAll(): List<Meal> = MealMapper.map(dao.getAllWithIngredients())
+    fun getByIds(ids: Array<String>): List<Meal> = MealMapper.map(dao.getByIdsWithIngredients(ids))
+    fun getMealsContainingIngredient(ingredientId: String): List<Meal> =
+            MealMapper.map(dao.getMealsContainingIngredient(ingredientId))
+    fun insertMealWithIngredients(meal: MealDTO, ingredients: List<MealIngredientDTO>) {
+        dao.insertMeal(meal)
+        dao.insertIngredients(ingredients)
     }
-    fun update(spec: Specification<In>, transaction: Transaction<In>) = transaction.execute(spec.collection)
-    fun insert(item: In, transaction: AddTransaction<In>) =  transaction.execute(item)
-    fun insert(list: List<In>, transaction: AddTransaction<In>) = transaction.execute(list)
-    fun delete(spec: Specification<In>, transaction: RemoveTransaction<In>) = transaction.execute(spec.collection)
+    fun insertAllMealsWithIngredients(meals: List<Pair<MealDTO, List<MealIngredientDTO>>>) {
+        dao.insertMeals(meals.map { it.first })
+        dao.insertIngredients(meals.flatMap { it.second })
+    }
+    fun deleteByIds(ids: Array<String>) = dao.deleteByIds(ids)
 }
 
-abstract class RealmRepository<T: RealmObject, V>(override val mapper: Mapper<T, V>): Repository<T, V> {
+class MealDetailsRepository(private val dao: MealDao = App.db.mealDao()) {
+    private val mapper = MealDetailsMapper()
 
-    inline fun<R> withRealm(crossinline f: RealmRepository<T, V>.(Realm) -> R): R = usingRealm { f(it) }
-    inline fun withRealmQuery(crossinline spec: (Realm) -> Specification<T>): List<V>  = usingRealm { query(spec(it)) }
-    inline fun withRealmSingleQuery(crossinline spec: (Realm) -> Specification<T>): V?  = usingRealm { querySingle(spec(it)) }
-
+    fun getAll(): List<MealDetails> = mapper.map(dao.getAllWithIngredients())
+    fun getById(id: String): MealDetails? = mapper.map(dao.getByIdWithIngredients(id))
+    fun getByIds(ids: Array<String>): List<MealDetails> =
+            mapper.map(dao.getByIdsWithIngredients(ids))
 }
 
+class TagRepository(private val dao: TagDao = App.db.tagDao()) {
+    private val mapper = TagMapper()
 
-
-class MealRepository: RealmRepository<MealDTO, Meal>(MealMapper)
-class MealDetailsRepository: RealmRepository<MealDTO, MealDetails>(MealDetailsMapper())
-class IngredientRepository: RealmRepository<IngredientDTO, Ingredient>(IngredientMapper())
-class TagRepository: RealmRepository<TagDTO, Tag>(TagMapper())
+    fun getAll(): List<Tag> = mapper.map(dao.getAll())
+    fun insertOrUpdate(dto: TagDTO) = dao.insertOrUpdate(dto)
+    fun delete(dto: TagDTO) = dao.delete(dto)
+}

@@ -1,26 +1,28 @@
 package pl.kpob.dietdiary.mapper
 
-import io.realm.Realm
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import pl.kpob.dietdiary.App
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.db.IngredientDTO
-import pl.kpob.dietdiary.db.MealDTO
+import pl.kpob.dietdiary.db.MealWithIngredients
 
 /**
  * Created by kpob on 11.12.2017.
  */
-abstract class BaseMealMapper {
+abstract class BaseMealMapper(
+        private val allIngredients: List<IngredientDTO> = App.db.ingredientDao().getAll()
+) {
 
-    protected fun amountOfNutrient(mealIngredients: List<Pair<IngredientDTO, Float>>, nutrient: (IngredientDTO) -> Float) : Float =
-            mealIngredients.map { (i, w) -> nutrient(i) * w * 0.01f}.sum()
+    protected fun amountOfNutrient(mealIngredients: List<Pair<IngredientDTO, Float>>, nutrient: (IngredientDTO) -> Float): Float =
+            mealIngredients.map { (i, w) -> nutrient(i) * w * 0.01f }.sum()
 
     protected fun calculateCalories(mealIngredients: List<Pair<IngredientDTO, Float>>): Float =
             mealIngredients.map { (i, weight) -> i.calories * weight / 100f }.sum()
 
     protected fun calculateLct(mealIngredients: List<Pair<IngredientDTO, Float>>): Float =
-            mealIngredients.map { (i, weight) -> i.lct  * weight / 100f }.sum()
+            mealIngredients.map { (i, weight) -> i.lct * weight / 100f }.sum()
 
     protected fun Long.toDateString() =
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault()).let {
@@ -30,16 +32,10 @@ abstract class BaseMealMapper {
 
     protected fun String.toMealType() = MealType.fromString(this)
 
-    protected fun MealDTO.toIngredientsWithWeight(): List<Pair<IngredientDTO, Float>> {
-        val mealIngredientsIds = ingredients.map { it.ingredientId }
-        return this@BaseMealMapper.ingredients
-                .filter { mealIngredientsIds.contains(it.id) }
-                .map { i -> i to ingredients.first { it.ingredientId == i.id }.weight }
+    protected fun MealWithIngredients.toIngredientsWithWeight(): List<Pair<IngredientDTO, Float>> {
+        return ingredients.mapNotNull { mealIngredient ->
+            val dto = allIngredients.firstOrNull { it.id == mealIngredient.ingredientId }
+            dto?.let { it to mealIngredient.weight }
+        }
     }
-
-    protected val ingredients: MutableList<IngredientDTO> by lazy {
-        usingRealm { it.copyFromRealm(it.where(IngredientDTO::class.java).findAll()) }
-    }
-
-    private inline fun <T> usingRealm(crossinline f: (Realm) -> T) = Realm.getDefaultInstance().use { f(it) }
 }

@@ -3,15 +3,15 @@ package pl.kpob.dietdiary.screens
 import android.content.Context
 import android.os.Handler
 import com.wealthfront.magellan.rx.RxScreen
-import io.realm.Realm
 import pl.kpob.dietdiary.AnkoLogger
+import pl.kpob.dietdiary.dbAsync
 import pl.kpob.dietdiary.toast
 import pl.kpob.dietdiary.domain.Ingredient
 import pl.kpob.dietdiary.firebase.FbIngredient
 import pl.kpob.dietdiary.firebaseDb
 import pl.kpob.dietdiary.ingredientsRef
-import pl.kpob.dietdiary.repo.*
-import pl.kpob.dietdiary.usingRealm
+import pl.kpob.dietdiary.repo.IngredientRepository
+import pl.kpob.dietdiary.repo.MealRepository
 import pl.kpob.dietdiary.views.IngredientsListView
 
 /**
@@ -21,7 +21,7 @@ class IngredientsListScreen: RxScreen<IngredientsListView>(), AnkoLogger {
 
     private val ingredientRepository by lazy { IngredientRepository() }
     private val mealRepository by lazy { MealRepository() }
-    private val data: List<Ingredient> get() = ingredientRepository.withRealmQuery {  AllIngredientsSpecification(it) }
+    private val data: List<Ingredient> get() = ingredientRepository.getAll()
 
     private val handler = Handler()
 
@@ -36,24 +36,22 @@ class IngredientsListScreen: RxScreen<IngredientsListView>(), AnkoLogger {
         }
     }
 
-    fun onDeleteClick(item: Ingredient) = usingRealm {
-        val spec = MealsWithIngredientSpecification(it, item.id)
-        val count = mealRepository.query(spec).size
-        when(count) {
-            0 -> deleteIngredient(it, item)
+    fun onDeleteClick(item: Ingredient) {
+        val count = mealRepository.getMealsContainingIngredient(item.id).size
+        when (count) {
+            0 -> deleteIngredient(item)
             else -> toast("Nie można usunąć - występuje w $count posiłkach")
         }
     }
 
-    private fun deleteIngredient(realm: Realm, item: Ingredient) {
+    private fun deleteIngredient(item: Ingredient) {
         val toUpdate = mapOf<String, Any>(item.id to item.toFirebase(true))
         firebaseDb.ingredientsRef.updateChildren(toUpdate)
 
-        val spec = IngredientByIdSpecification(realm, item.id)
-        realm.executeTransaction {
-            ingredientRepository.delete(spec, RealmRemoveTransaction())
-        }
-        handler.post { view.updateList(data) }
+        dbAsync(
+            block = { ingredientRepository.deleteById(item.id) },
+            callback = { handler.post { view.updateList(data) } }
+        )
     }
 
     fun onEditClick(item: Ingredient) {

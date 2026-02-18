@@ -14,7 +14,9 @@ import androidx.annotation.StringRes
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.wealthfront.magellan.Screen
-import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -137,17 +139,13 @@ val Long.asReadableString: String get() =
 
 
 /**
- * REALM
+ * DB ASYNC — runs block on IO thread, invokes callback on main thread
  */
-inline fun <T> usingRealm(crossinline f: (Realm) -> T) = Realm.getDefaultInstance().use {
-    f(it)
-}
-
-inline fun <T> realmAsyncTransaction(crossinline transaction: (Realm) -> T, crossinline callback: () -> Unit) {
-    val realm = Realm.getDefaultInstance()
-    realm.executeTransactionAsync(
-            { transaction(it)}, { callback(); realm.close()} , { callback(); realm.close() }
-    )
+fun dbAsync(block: () -> Unit, callback: () -> Unit = {}) {
+    App.appScope.launch(Dispatchers.IO) {
+        block()
+        withContext(Dispatchers.Main) { callback() }
+    }
 }
 
 

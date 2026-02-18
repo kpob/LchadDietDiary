@@ -5,23 +5,23 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.domain.MealIngredient
-import pl.kpob.dietdiary.db.MealDTO
+import pl.kpob.dietdiary.db.MealWithIngredients
 import pl.kpob.dietdiary.repo.Mapper
 
 /**
  * Created by kpob on 11.12.2017.
  */
-class MealDetailsMapper: Mapper<MealDTO, MealDetails>, BaseMealMapper() {
+class MealDetailsMapper : Mapper<MealWithIngredients, MealDetails>, BaseMealMapper() {
 
-    override fun map(input: MealDTO?): MealDetails? {
-        if(input == null) return null
+    override fun map(input: MealWithIngredients?): MealDetails? {
+        if (input == null) return null
         val ingredientsWithWeight = input.toIngredientsWithWeight()
-        val dt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(input.time), ZoneId.systemDefault())
+        val dt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(input.meal.time), ZoneId.systemDefault())
 
         return MealDetails(
-                time = input.time.toDateString(),
+                time = input.meal.time.toDateString(),
                 date = "${dt.dayOfMonth}-${dt.monthValue}-${dt.year}",
-                type = input.name.toMealType(),
+                type = input.meal.name.toMealType(),
                 caloriesTotal = calculateCalories(ingredientsWithWeight),
                 protein = amountOfNutrient(ingredientsWithWeight) { it.protein },
                 carbohydrates = amountOfNutrient(ingredientsWithWeight) { it.carbohydrates },
@@ -33,6 +33,6 @@ class MealDetailsMapper: Mapper<MealDTO, MealDetails>, BaseMealMapper() {
         )
     }
 
-    override fun map(input: List<MealDTO>): List<MealDetails> = input.mapNotNull { map(it) }
+    override fun map(input: List<MealWithIngredients>): List<MealDetails> = input.mapNotNull { map(it) }
 
 }

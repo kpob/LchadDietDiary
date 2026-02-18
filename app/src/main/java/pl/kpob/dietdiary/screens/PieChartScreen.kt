@@ -7,8 +7,6 @@ import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.domain.MealDetails
 import pl.kpob.dietdiary.domain.MealIngredient
 import pl.kpob.dietdiary.repo.MealDetailsRepository
-import pl.kpob.dietdiary.repo.MealsByIdsSpecification
-import pl.kpob.dietdiary.usingRealm
 import pl.kpob.dietdiary.views.PieChartView
 
 /**
@@ -27,12 +25,7 @@ class PieChartScreen() : RxScreen<PieChartView>(), AnkoLogger {
     }
 
     private val meals: List<MealDetails> by lazy {
-        usingRealm {
-            val repo = MealDetailsRepository()
-            val spec = MealsByIdsSpecification(it, ids.toTypedArray())
-
-            repo.query(spec)
-        }
+        MealDetailsRepository().getByIds(ids.toTypedArray())
     }
 
     private val nutrients: Map<String, Float> by lazy {

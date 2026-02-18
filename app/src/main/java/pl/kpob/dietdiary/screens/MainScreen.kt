@@ -12,7 +12,6 @@ import pl.kpob.dietdiary.domain.Meal
 import pl.kpob.dietdiary.domain.MealType
 import pl.kpob.dietdiary.R
 import pl.kpob.dietdiary.firebase.FirebaseSaver
-import pl.kpob.dietdiary.repo.AllMealsSortedSpecification
 import pl.kpob.dietdiary.repo.MealRepository
 import pl.kpob.dietdiary.views.MainView
 import pl.kpob.dietdiary.views.utils.TimePicker
@@ -27,7 +26,7 @@ class MainScreen() : RxScreen<MainView>(), AnkoLogger {
 
     private val fbSaver by lazy { FirebaseSaver() }
 
-    private val meals get() = repo.withRealmQuery { AllMealsSortedSpecification(it) }
+    private val meals get() = repo.getAll()
 
     override fun createView(context: Context?) = MainView(context!!)
 
